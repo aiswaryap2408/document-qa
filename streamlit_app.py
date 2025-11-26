@@ -1,53 +1,117 @@
 import streamlit as st
+import os
+from dotenv import load_dotenv
 from openai import OpenAI
+import google.generativeai as genai
 
-# Show title and description.
-st.title("📄 Document question answering Module")
-st.write(
-    "Upload a document below and ask a question about it – GPT will answer! "
-    "To use this app, you need to provide an OpenAI API key, which you can get [here](https://platform.openai.com/account/api-keys). "
+st.set_page_config(page_title="Document QA", layout="centered")
+
+# Load environment variables
+load_dotenv(".env")
+
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+
+if GEMINI_API_KEY:
+    genai.configure(api_key=GEMINI_API_KEY)
+
+st.title("📘 Document Question Answering (OpenAI + Gemini)")
+st.caption("Environment keys are loaded from .env")
+
+# -----------------------------
+# MODEL SELECTION
+# -----------------------------
+provider = st.selectbox(
+    "Select Model Provider:",
+    ["OpenAI", "Google Gemini"]
 )
 
-# Ask user for their OpenAI API key via `st.text_input`.
-# Alternatively, you can store the API key in `./.streamlit/secrets.toml` and access it
-# via `st.secrets`, see https://docs.streamlit.io/develop/concepts/connections/secrets-management
-openai_api_key = st.text_input("OpenAI API Key", type="password")
-if not openai_api_key:
-    st.info("Please add your OpenAI API key to continue.", icon="🗝️")
-else:
-
-    # Create an OpenAI client.
-    client = OpenAI(api_key=openai_api_key)
-
-    # Let the user upload a file via `st.file_uploader`.
-    uploaded_file = st.file_uploader(
-        "Upload a document (.txt or .md)", type=("txt", "md")
+if provider == "OpenAI":
+    model = st.selectbox(
+        "Select OpenAI Model",
+        ["gpt-4.1-mini", "gpt-4.1", "gpt-5", "gpt-5.1"]
+    )
+elif provider == "Google Gemini":
+    model = st.selectbox(
+        "Select Gemini Model",
+        ["gemini-1.5-flash", "gemini-1.5-pro", "gemini-2.0-flash", "gemini-2.0-pro"]
     )
 
-    # Ask the user for a question via `st.text_area`.
-    question = st.text_area(
-        "Now ask a question about the document!",
-        placeholder="Can you give me a short summary?",
-        disabled=not uploaded_file,
-    )
+# -----------------------------
+# FILE UPLOAD
+# -----------------------------
+uploaded_file = st.file_uploader(
+    "Upload .txt or .md file",
+    type=["txt", "md"]
+)
 
-    if uploaded_file and question:
+def read_file_chunks(file_obj, chunk_size=1024*1024*3):
+    file_obj.seek(0)
+    while True:
+        chunk = file_obj.read(chunk_size)
+        if not chunk:
+            break
+        yield chunk
 
-        # Process the uploaded file and question.
-        document = uploaded_file.read().decode()
-        messages = [
-            {
-                "role": "user",
-                "content": f"Here's a document: {document} \n\n---\n\n {question}",
-            }
-        ]
+document_text = ""
+if uploaded_file:
+    for chunk in read_file_chunks(uploaded_file):
+        document_text += chunk.decode("utf-8", errors="ignore")
 
-        # Generate an answer using the OpenAI API.
-        stream = client.chat.completions.create(
-            model="gpt-3.5-turbo",
-            messages=messages,
-            stream=True,
-        )
+# -----------------------------
+# QUESTION
+# -----------------------------
+question = st.text_input("Ask a question from the document")
 
-        # Stream the response to the app using `st.write_stream`.
-        st.write_stream(stream)
+# -----------------------------
+# RUN QA
+# -----------------------------
+if st.button("Run Question Answering"):
+
+    if not uploaded_file:
+        st.error("Upload a document first.")
+    elif not question.strip():
+        st.error("Please enter a question.")
+    else:
+        st.info("Processing...")
+
+        if provider == "OpenAI":
+
+            if not OPENAI_API_KEY:
+                st.error("OPENAI_API_KEY missing. Set it under Environment page.")
+            else:
+                client = OpenAI(api_key=OPENAI_API_KEY)
+                prompt = f"""
+Document:
+{document_text}
+
+Question: {question}
+Answer using only the document.
+"""
+
+                response = client.chat.completions.create(
+                    model=model,
+                    messages=[{"role": "user", "content": prompt}]
+                )
+                st.success("Answer:")
+                st.write(response.choices[0].message.content)
+
+        elif provider == "Google Gemini":
+
+            if not GEMINI_API_KEY:
+                st.error("GEMINI_API_KEY missing. Set it under Environment page.")
+            else:
+                model_ai = genai.GenerativeModel(model)
+                prompt = f"""
+Document:
+{document_text}
+
+Question: {question}
+Answer using only the document.
+"""
+                response = model_ai.generate_content(prompt)
+                st.success("Answer:")
+                st.write(response.text)
+
+st.markdown("---")
+st.caption("Use the Environment page to configure your API keys.")
