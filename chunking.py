@@ -1,15 +1,33 @@
 from typing import List
 from bs4 import BeautifulSoup
 import re
+import numpy as np
+from openai import OpenAI
 
-# -------------------------------------
-# SIMPLE CHUNKER
-# -------------------------------------
+# ------------------------------------------------------
+# OpenAI Embedding Client
+# ------------------------------------------------------
+client = OpenAI()
 
+def embed_text(text: str):
+    """Return embedding using OpenAI Ada model"""
+    try:
+        emb = client.embeddings.create(
+            model="text-embedding-3-small",
+            input=text
+        )
+        return emb.data[0].embedding
+    except Exception:
+        # fallback for development
+        return np.zeros(1536).tolist()
+
+
+# ------------------------------------------------------
+# Extract Hierarchy from Markdown (#, ##, ###, ####)
+# ------------------------------------------------------
 def extract_hierarchy_from_markdown(md_text: str):
     """
-    Convert markdown (#, ##, ###, ####) into hierarchical records similar to extract_hierarchy().
-    Produces records with h1/h2/h3/h4 and content fields.
+    Convert markdown into hierarchical records (h1-h4 + content)
     """
     records = []
     current = {"h1": None, "h2": None, "h3": None, "h4": None}
@@ -19,7 +37,7 @@ def extract_hierarchy_from_markdown(md_text: str):
         if not line:
             continue
 
-        # Match markdown heading: #, ##, ###, ####
+        # detect # heading
         match = re.match(r'^(#{1,4})\s+(.*)', line)
         if match:
             level = len(match.group(1))
@@ -33,9 +51,10 @@ def extract_hierarchy_from_markdown(md_text: str):
                 current["h3"], current["h4"] = title, None
             elif level == 4:
                 current["h4"] = title
+
             continue
 
-        # Normal content under the last heading
+        # content under last heading
         records.append({
             "h1": current["h1"],
             "h2": current["h2"],
@@ -46,31 +65,11 @@ def extract_hierarchy_from_markdown(md_text: str):
 
     return records
 
-def chunk_text(text: str, chunk_size: int = 1000, overlap: int = 200) -> List[str]:
-    if chunk_size <= overlap:
-        raise ValueError("chunk_size must be larger than overlap")
 
-    chunks = []
-    start = 0
-    L = len(text)
-
-    while start < L:
-        end = start + chunk_size
-        chunk = text[start:end]
-        chunks.append(chunk.strip())
-
-        if end >= L:
-            break
-
-        start = end - overlap
-
-    return [c for c in chunks if c]
-
-
-# ================================================================
-# Extract H1 / H2 / H3 / H4 structure
-# ================================================================
-def extract_hierarchy(html: str):
+# ------------------------------------------------------
+# Extract Hierarchy from HTML (h1–h4 + paragraphs)
+# ------------------------------------------------------
+def extract_hierarchy_from_html(html: str):
     soup = BeautifulSoup(html, "html.parser")
 
     records = []
@@ -79,6 +78,8 @@ def extract_hierarchy(html: str):
     for tag in soup.find_all(["h1", "h2", "h3", "h4", "p", "li", "div", "ul"]):
 
         text = tag.get_text(strip=True)
+        if not text:
+            continue
 
         if tag.name == "h1":
             current_h1 = text
@@ -96,26 +97,21 @@ def extract_hierarchy(html: str):
             current_h4 = text
 
         else:
-            if text:
-                records.append({
-                    "h1": current_h1,
-                    "h2": current_h2,
-                    "h3": current_h3,
-                    "h4": current_h4,
-                    "content": text
-                })
+            records.append({
+                "h1": current_h1,
+                "h2": current_h2,
+                "h3": current_h3,
+                "h4": current_h4,
+                "content": text
+            })
 
     return records
 
 
-# ================================================================
-# Hierarchy Chunker (H4-H3-H2-H1 headings)
-# ================================================================
-def chunk_hierarchy_for_rag(
-        records,
-        chunk_size=1000,
-        overlap=200
-    ):
+# ------------------------------------------------------
+# Hierarchy Chunker (H4-H3-H2-H1 headings → large blocks)
+# ------------------------------------------------------
+def chunk_hierarchy_for_rag(records, chunk_size=1000, overlap=200):
     chunks = []
 
     # Build hierarchical heading
@@ -127,14 +123,14 @@ def chunk_hierarchy_for_rag(
         if r["h1"]: parts.append(r["h1"])
         return " - ".join(parts)
 
-    # Group by heading
+    # group content by hierarchical heading
     grouped = {}
     for r in records:
-        key = make_heading(r)
-        grouped.setdefault(key, [])
-        grouped[key].append(r["content"])
+        heading = make_heading(r)
+        grouped.setdefault(heading, [])
+        grouped[heading].append(r["content"])
 
-    # Chunk each section
+    # chunk each heading section
     for heading, contents in grouped.items():
 
         block = f"{heading}\n\n" + "\n".join(contents)
@@ -144,11 +140,11 @@ def chunk_hierarchy_for_rag(
 
         while start < L:
             end = start + chunk_size
+            chunk_text = block[start:end].strip()
 
-            chunk_text_block = block[start:end].strip()
             chunks.append({
                 "heading": heading,
-                "text": chunk_text_block
+                "text": chunk_text
             })
 
             if end >= L:
@@ -157,3 +153,41 @@ def chunk_hierarchy_for_rag(
             start = end - overlap
 
     return chunks
+
+
+# ------------------------------------------------------
+# FINAL API: Extract + Chunk + Embed
+# ------------------------------------------------------
+def build_rag_chunks(doc_id: str, raw_html_or_md: str, is_html: bool):
+    """
+    This is the function your RAG processor will call.
+    It returns PROPER RAG chunks:
+
+        [
+            {
+                "doc_id": "file.txt",
+                "heading": "H3 - H2 - H1",
+                "text": "...",
+                "embedding": [...]
+            }
+        ]
+    """
+
+    if is_html:
+        records = extract_hierarchy_from_html(raw_html_or_md)
+    else:
+        records = extract_hierarchy_from_markdown(raw_html_or_md)
+
+    hierarchical_chunks = chunk_hierarchy_for_rag(records)
+
+    final_chunks = []
+
+    for ch in hierarchical_chunks:
+        final_chunks.append({
+            "doc_id": doc_id,
+            "heading": ch["heading"],
+            "text": ch["text"],
+            "embedding": embed_text(ch["text"])
+        })
+
+    return final_chunks

@@ -1,154 +1,132 @@
 import streamlit as st
-import os
-import hashlib
-
+import fitz  # PyMuPDF
+from vectorstore import InMemoryVectorStore
 from chunking import (
-    chunk_text,
-    extract_hierarchy,
+    extract_hierarchy_from_html,
     extract_hierarchy_from_markdown,
-    chunk_hierarchy_for_rag
+    build_rag_chunks
 )
 
-from rag_engine import RAGEngine
-from vectorstore import InMemoryVectorStore
+st.set_page_config(page_title="RAG Document Processor", layout="wide")
+st.title("📄 RAG Document Processor")
 
-
-# ------------------------------------------------
-# PAGE SETUP
-# ------------------------------------------------
-st.set_page_config(page_title="RAG Processor", layout="wide")
-st.title("📄 RAG Processor — Upload → Chunk → Embed")
-
-# ------------------------------------------------
-# SESSION STATE INIT
-# ------------------------------------------------
+# -----------------------------------------------------
+# Initialize Vectorstore
+# -----------------------------------------------------
 if "vectorstore" not in st.session_state:
     st.session_state["vectorstore"] = InMemoryVectorStore()
 
-if "cached_docs" not in st.session_state:
-    st.session_state["cached_docs"] = set()
+vectorstore = st.session_state["vectorstore"]
 
+# -----------------------------------------------------
+# List Currently Vectorized Documents
+# -----------------------------------------------------
+# -----------------------------------------------------
+# DOCUMENTS ALREADY PROCESSED (Auto-refresh)
+# -----------------------------------------------------
+st.subheader("📘 Documents Already Processed")
 
-# ------------------------------------------------
-# HELPER — Detect HTML inside file content
-# ------------------------------------------------
-def is_html_content(text: str) -> bool:
-    html_indicators = [
-        "<html", "<body", "<head",
-        "<h1", "<h2", "<h3", "<h4",
-        "<div", "<span", "<p"
-    ]
-    lower = text.lower()
-    return any(tag in lower for tag in html_indicators)
+doc_list = vectorstore.document_names
 
+if not doc_list:
+    st.info("No documents processed yet.")
+else:
+    st.success(f"{len(doc_list)} document(s) available:")
+    st.write(doc_list)
 
-# ------------------------------------------------
-# FILE UPLOAD
-# ------------------------------------------------
-uploaded = st.file_uploader(
-    "Upload .txt, .md, .html, .htm",
-    type=["txt", "md", "html", "htm"]
+st.markdown("---")
+
+# -----------------------------------------------------
+# Upload Section
+# -----------------------------------------------------
+st.subheader("📤 Upload Document for RAG Processing")
+
+file = st.file_uploader(
+    "Upload .txt, .md, .html, or .pdf",
+    type=["txt", "md", "html", "pdf"]
 )
 
-chunk_size = st.number_input("Chunk size", min_value=300, max_value=5000, value=1200)
-overlap = st.number_input("Overlap", min_value=0, max_value=2000, value=200)
+if file:
+    doc_id = file.name
+    st.write(f"Processing **{doc_id}** ...")
 
-if uploaded:
-    text = uploaded.read().decode("utf-8", errors="ignore")
+    raw_text = ""
+    is_html = False
 
-    st.subheader("📘 Document Preview")
-    st.text_area("Preview (first 2000 chars)", text[:2000], height=200)
+    # -----------------------------------------------------
+    # FILE TYPE: TXT
+    # -----------------------------------------------------
+    if file.type == "text/plain":
+        raw_text = file.read().decode("utf-8")
+        structured = extract_hierarchy_from_markdown(raw_text)
+        is_html = False
 
-    # Unique doc ID
-    doc_id = hashlib.sha1((uploaded.name + str(len(text))).encode()).hexdigest()
+    # -----------------------------------------------------
+    # FILE TYPE: MD
+    # -----------------------------------------------------
+    elif file.type == "text/markdown":
+        raw_text = file.read().decode("utf-8")
+        structured = extract_hierarchy_from_markdown(raw_text)
+        is_html = False
 
-    # ------------------------------------------------
-    # PROCESSING BUTTON
-    # ------------------------------------------------
-    if st.button("Chunk & Embed Document"):
+    # -----------------------------------------------------
+    # FILE TYPE: HTML
+    # -----------------------------------------------------
+    elif file.type == "text/html":
+        raw_html = file.read().decode("utf-8")
+        structured = extract_hierarchy_from_html(raw_html)
+        is_html = True
 
-        filename = uploaded.name.lower()
-        rag_chunks = None
+    # -----------------------------------------------------
+    # FILE TYPE: PDF
+    # -----------------------------------------------------
+    elif file.type == "application/pdf":
+        pdf_bytes = file.read()
+        pdf = fitz.open(stream=pdf_bytes, filetype="pdf")
+        text = ""
+        for page in pdf:
+            text += page.get_text()
+        raw_text = text
+        structured = extract_hierarchy_from_markdown(raw_text)  # PDF → text → markdown parsing
+        is_html = False
 
-        # ------------------------------------------------
-        # CASE 1: HTML FILE (.html or .htm)
-        # ------------------------------------------------
-        if filename.endswith((".html", ".htm")):
-            st.info("HTML detected → Using hierarchical chunking (H1 → H4).")
+    else:
+        st.error("Unsupported file type")
+        st.stop()
 
-            records = extract_hierarchy(text)
-            rag_chunks = chunk_hierarchy_for_rag(records, chunk_size, overlap)
+    st.success("✔ Document parsed successfully.")
 
-        # ------------------------------------------------
-        # CASE 2: MD FILE, use markdown heading extraction
-        # ------------------------------------------------
-        elif filename.endswith(".md"):
-            st.info("Markdown detected → Parsing #, ##, ###, #### as headings.")
+    # -----------------------------------------------------
+    # Build final RAG chunks (heading + text + embedding)
+    # -----------------------------------------------------
+    rag_chunks = build_rag_chunks(
+        doc_id=doc_id,
+        raw_html_or_md=raw_text if not is_html else file.read(),
+        is_html=is_html
+    )
 
-            records = extract_hierarchy_from_markdown(text)
-            rag_chunks = chunk_hierarchy_for_rag(records, chunk_size, overlap)
+    # -----------------------------------------------------
+    # Save document to vectorstore
+    # -----------------------------------------------------
+    st.session_state["vectorstore"].add_document(doc_id, rag_chunks)
 
-        # ------------------------------------------------
-        # CASE 3: TXT FILE but contains HTML → treat as HTML
-        # ------------------------------------------------
-        elif is_html_content(text):
-            st.info(".txt file contains HTML → Using hierarchical chunking.")
+    st.success(f"🎉 Document '{doc_id}' has been vectorized and added to the store!")
+    st.snow()
+    st.rerun()
 
-            records = extract_hierarchy(text)
-            rag_chunks = chunk_hierarchy_for_rag(records, chunk_size, overlap)
+# -----------------------------------------------------
+# DELETE DOCUMENT (Auto-refresh)
+# -----------------------------------------------------
+st.subheader("🗑️ Delete a Document")
 
-        # ------------------------------------------------
-        # CASE 4: Plain text → simple chunking
-        # ------------------------------------------------
-        else:
-            st.info("Plain text detected → Using simple chunking.")
+if doc_list:
+    doc_to_delete = st.selectbox("Select document to delete", doc_list, key="delete_doc")
 
-            simple_chunks = chunk_text(text, chunk_size, overlap)
+    if st.button("Delete Selected Document"):
+        vectorstore.delete_document(doc_to_delete)
+        st.success(f"Document '{doc_to_delete}' deleted successfully!")
+        st.rerun()  # 🔥 auto-refresh page
+else:
+    st.info("No documents to delete.")
 
-            rag_chunks = [
-                {
-                    "heading": uploaded.name,
-                    "text": chunk
-                }
-                for chunk in simple_chunks
-            ]
-
-        # ------------------------------------------------
-        # Build final chunk list
-        # ------------------------------------------------
-        chunks = [c["text"] for c in rag_chunks]
-
-        metadatas = [
-            {
-                "doc_id": doc_id,
-                "heading": c["heading"] or uploaded.name,
-                "chunk_index": idx,
-                "text": c["text"],
-                "source": uploaded.name
-            }
-            for idx, c in enumerate(rag_chunks)
-        ]
-
-        # ------------------------------------------------
-        # Embed into vector store
-        # ------------------------------------------------
-        engine = RAGEngine(st.session_state["vectorstore"])
-        engine.embed_and_add(chunks, metadatas)
-
-        st.session_state["cached_docs"].add(doc_id)
-
-        st.success(f"Embedded {len(chunks)} chunks into the RAG vector store.")
-        st.balloons()
-
-        # ------------------------------------------------
-        # Display summary
-        # ------------------------------------------------
-        st.subheader("📦 Chunk Summary (First 10)")
-        for i, meta in enumerate(metadatas[:10]):
-            st.markdown(f"### Chunk {i}")
-            st.write(f"**Heading:** {meta['heading']}")
-            preview = meta["text"][:300] + ("..." if len(meta["text"]) > 300 else "")
-            st.caption(preview)
-
-        if len(metadatas) > 10:
-            st.info(f"Showing first 10 of {len(metadatas)} total chunks.")
+    
