@@ -1,132 +1,107 @@
 import streamlit as st
-import fitz  # PyMuPDF
+import os
+from chunking import extract_hierarchy, extract_hierarchy_from_markdown, chunk_hierarchy_for_rag
 from vectorstore import InMemoryVectorStore
-from chunking import (
-    extract_hierarchy_from_html,
-    extract_hierarchy_from_markdown,
-    build_rag_chunks
-)
+from rag_engine import RAGEngine
+from openai import OpenAI
 
-st.set_page_config(page_title="RAG Document Processor", layout="wide")
-st.title("📄 RAG Document Processor")
 
-# -----------------------------------------------------
-# Initialize Vectorstore
-# -----------------------------------------------------
+# ----------------------------------------------------------
+# Load Vectorstore
+# ----------------------------------------------------------
 if "vectorstore" not in st.session_state:
     st.session_state["vectorstore"] = InMemoryVectorStore()
 
 vectorstore = st.session_state["vectorstore"]
+rag = RAGEngine(vectorstore)
 
-# -----------------------------------------------------
-# List Currently Vectorized Documents
-# -----------------------------------------------------
-# -----------------------------------------------------
-# DOCUMENTS ALREADY PROCESSED (Auto-refresh)
-# -----------------------------------------------------
-st.subheader("📘 Documents Already Processed")
 
-doc_list = vectorstore.document_names
+# ----------------------------------------------------------
+# Page Title
+# ----------------------------------------------------------
+st.title("📄 RAG Document Processor")
 
-if not doc_list:
-    st.info("No documents processed yet.")
-else:
-    st.success(f"{len(doc_list)} document(s) available:")
-    st.write(doc_list)
 
-st.markdown("---")
+# ----------------------------------------------------------
+# File Upload
+# ----------------------------------------------------------
+uploaded_file = st.file_uploader("Upload .txt / .md / .html", type=["txt", "md", "html"])
 
-# -----------------------------------------------------
-# Upload Section
-# -----------------------------------------------------
-st.subheader("📤 Upload Document for RAG Processing")
+if uploaded_file:
 
-file = st.file_uploader(
-    "Upload .txt, .md, .html, or .pdf",
-    type=["txt", "md", "html", "pdf"]
-)
+    file_name = uploaded_file.name
+    doc_id = os.path.splitext(file_name)[0]
 
-if file:
-    doc_id = file.name
-    st.write(f"Processing **{doc_id}** ...")
+    st.write(f"### Processing Document: **{doc_id}**")
 
-    raw_text = ""
-    is_html = False
+    raw = uploaded_file.read().decode("utf-8", errors="ignore")
 
-    # -----------------------------------------------------
-    # FILE TYPE: TXT
-    # -----------------------------------------------------
-    if file.type == "text/plain":
-        raw_text = file.read().decode("utf-8")
-        structured = extract_hierarchy_from_markdown(raw_text)
-        is_html = False
-
-    # -----------------------------------------------------
-    # FILE TYPE: MD
-    # -----------------------------------------------------
-    elif file.type == "text/markdown":
-        raw_text = file.read().decode("utf-8")
-        structured = extract_hierarchy_from_markdown(raw_text)
-        is_html = False
-
-    # -----------------------------------------------------
-    # FILE TYPE: HTML
-    # -----------------------------------------------------
-    elif file.type == "text/html":
-        raw_html = file.read().decode("utf-8")
-        structured = extract_hierarchy_from_html(raw_html)
-        is_html = True
-
-    # -----------------------------------------------------
-    # FILE TYPE: PDF
-    # -----------------------------------------------------
-    elif file.type == "application/pdf":
-        pdf_bytes = file.read()
-        pdf = fitz.open(stream=pdf_bytes, filetype="pdf")
-        text = ""
-        for page in pdf:
-            text += page.get_text()
-        raw_text = text
-        structured = extract_hierarchy_from_markdown(raw_text)  # PDF → text → markdown parsing
-        is_html = False
-
+    # ----------------------------------------------------------
+    # Detect file format
+    # ----------------------------------------------------------
+    if file_name.endswith(".md"):
+        records = extract_hierarchy_from_markdown(raw)
     else:
-        st.error("Unsupported file type")
-        st.stop()
+        records = extract_hierarchy(raw)
 
-    st.success("✔ Document parsed successfully.")
+    st.write(f"Extracted {len(records)} structural items.")
 
-    # -----------------------------------------------------
-    # Build final RAG chunks (heading + text + embedding)
-    # -----------------------------------------------------
-    rag_chunks = build_rag_chunks(
-        doc_id=doc_id,
-        raw_html_or_md=raw_text if not is_html else file.read(),
-        is_html=is_html
-    )
+    # ----------------------------------------------------------
+    # Chunking
+    # ----------------------------------------------------------
+    chunks = chunk_hierarchy_for_rag(records, chunk_size=1000, overlap=200)
 
-    # -----------------------------------------------------
-    # Save document to vectorstore
-    # -----------------------------------------------------
-    st.session_state["vectorstore"].add_document(doc_id, rag_chunks)
+    st.write(f"Created **{len(chunks)}** chunks.")
 
-    st.success(f"🎉 Document '{doc_id}' has been vectorized and added to the store!")
-    st.snow()
-    st.rerun()
+    # ----------------------------------------------------------
+    # Embed Chunks
+    # ----------------------------------------------------------
+    embedded_chunks = []
+    client = OpenAI()
 
-# -----------------------------------------------------
-# DELETE DOCUMENT (Auto-refresh)
-# -----------------------------------------------------
-st.subheader("🗑️ Delete a Document")
+    for i, c in enumerate(chunks):
+        emb = client.embeddings.create(
+            model="text-embedding-3-small",
+            input=c["text"]
+        ).data[0].embedding
 
-if doc_list:
-    doc_to_delete = st.selectbox("Select document to delete", doc_list, key="delete_doc")
+        embedded_chunks.append({
+            "heading": c["heading"],
+            "text": c["text"],
+            "embedding": emb,
+            "doc_id": doc_id,
+            "chunk_index": i
+        })
 
-    if st.button("Delete Selected Document"):
-        vectorstore.delete_document(doc_to_delete)
-        st.success(f"Document '{doc_to_delete}' deleted successfully!")
-        st.rerun()  # 🔥 auto-refresh page
+    # ----------------------------------------------------------
+    # Save JSON
+    # ----------------------------------------------------------
+    vectorstore.add_document(doc_id, file_name, embedded_chunks)
+
+    st.success(f"Document `{doc_id}` processed and saved!")
+
+
+# ----------------------------------------------------------
+# List Processed Documents
+# ----------------------------------------------------------
+st.subheader("📚 Processed Documents")
+
+if vectorstore.document_names:
+    for d in vectorstore.document_names:
+        st.write(f"• {d}")
 else:
-    st.info("No documents to delete.")
+    st.info("No documents processed yet.")
 
-    
+# ----------------------------------------------------------
+# Delete Document
+# ----------------------------------------------------------
+with st.expander("🗑️ Delete Document"):
+    if vectorstore.document_names:
+        del_name = st.selectbox("Select Document", vectorstore.document_names)
+
+        if st.button("Delete"):
+            vectorstore.delete_document(del_name)
+            st.success(f"Deleted {del_name}")
+            st.rerun()
+    else:
+        st.info("No documents to delete.")
