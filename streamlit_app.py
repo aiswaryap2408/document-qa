@@ -97,7 +97,7 @@ openai_model = st.sidebar.selectbox(
 
 gemini_model = st.sidebar.selectbox(
     "Gemini Model",
-    ["gemini-1.5-flash", "gemini-1.5-pro", "gemini-2.0-flash", "gemini-2.0-pro"]
+    [ "gemini-2.0-flash", "gemini-2.5-pro", "gemini-2.5-flash"]
 )
 
 top_k = st.sidebar.slider("Top-K Chunks", 1, 10, 4)

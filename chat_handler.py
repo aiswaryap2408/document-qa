@@ -1,8 +1,12 @@
 # chat_handler.py
 import os
+import requests
+import json
 from openai import OpenAI
 import google.generativeai as genai
 from typing import List, Dict, Any
+
+
 
 def get_openai_client(api_key: str = None):
     if api_key is None:
@@ -155,4 +159,34 @@ def stream_gemini(system_prompt, context_chunks, conversation_history, question,
     for event in stream:
         if hasattr(event, "text"):
             yield event.text
+
+def build_gemini_prompt(system_prompt, chunks, history, question):
+    context = "\n\n".join(
+        [f"[chunk {i+1}] {c['text']}" for i, c in enumerate(chunks)]
+    )
+
+    conv = ""
+    for msg in history:
+        role = "User" if msg["role"] == "user" else "Assistant"
+        conv += f"{role}: {msg['content']}\n"
+
+    prompt = f"""
+        SYSTEM:
+        {system_prompt}
+
+        CONVERSATION:
+        {conv}
+
+        CONTEXT:
+        {context}
+
+        QUESTION:
+        {question}
+
+        Answer ONLY using the context above.
+        If missing, answer: "Not found in document."
+        """.strip()
+
+    return prompt
+
 
