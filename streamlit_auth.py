@@ -29,7 +29,7 @@ def require_auth():
     
     # Show login form
     st.title("🔒 Authentication Required")
-    st.info("💡 **Local development**: Default password is `admin123`")
+    # st.info("💡 **Local development**: Default password is `admin123`")
     
     with st.form("login_form"):
         password = st.text_input("Password", type="password")
@@ -45,8 +45,8 @@ def require_auth():
                 st.error("Invalid password")
     
     st.markdown("---")
-    st.caption("**For deployment**: Set `APP_PASSWORD` in Streamlit secrets to your hashed password.")
-    st.caption(f"**Generate hash**: Run `python -c \"import hashlib; print(hashlib.sha256(b'YourPassword').hexdigest())\"`")
+    # st.caption("**For deployment**: Set `APP_PASSWORD` in Streamlit secrets to your hashed password.")
+    # st.caption(f"**Generate hash**: Run `python -c \"import hashlib; print(hashlib.sha256(b'YourPassword').hexdigest())\"`")
     
     st.stop()
     return False
