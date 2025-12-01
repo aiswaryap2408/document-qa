@@ -1,45 +1,80 @@
 import streamlit as st
-import requests
+import hashlib
+import os
 
-FLASK_AUTH_URL = "http://localhost:5000/verify_token"
+def hash_password(password: str) -> str:
+    """Simple password hashing."""
+    return hashlib.sha256(password.encode()).hexdigest()
 
 def require_auth():
     """
-    Enforce authentication. 
-    If not authenticated, show a warning and stop execution.
+    Enforce authentication using Streamlit's session state.
+    Works both locally and on Streamlit Cloud.
     """
-    # Check if user is already authenticated in session
-    if "user_email" in st.session_state:
+    # Check if user is already authenticated
+    if "user_email" in st.session_state and st.session_state.get("authenticated"):
         return True
-
-    # Check for token in query params
-    # st.query_params is the new way, fallback for older versions if needed
-    query_params = st.query_params
-    token = query_params.get("token")
-
-    if token:
-        try:
-            response = requests.get(f"{FLASK_AUTH_URL}?token={token}")
-            if response.status_code == 200:
-                data = response.json()
-                if data.get("valid"):
-                    st.session_state["user_email"] = data["email"]
-                    return True
-        except Exception as e:
-            st.error(f"Auth Error: {e}")
     
-    # If we get here, not authenticated
+    # Show login form
     st.title("🔒 Authentication Required")
-    st.warning("You must sign in to access this application.")
-    st.markdown(f"[👉 Click here to Sign In](http://localhost:5000/signin)", unsafe_allow_html=True)
+    
+    tab1, tab2 = st.tabs(["Sign In", "Sign Up"])
+    
+    with tab1:
+        with st.form("signin_form"):
+            email = st.text_input("Email")
+            password = st.text_input("Password", type="password")
+            submit = st.form_submit_button("Sign In")
+            
+            if submit:
+                if authenticate_user(email, password):
+                    st.session_state["user_email"] = email
+                    st.session_state["authenticated"] = True
+                    st.success("Login successful!")
+                    st.rerun()
+                else:
+                    st.error("Invalid credentials")
+    
+    with tab2:
+        with st.form("signup_form"):
+            new_email = st.text_input("Email")
+            new_password = st.text_input("Password", type="password")
+            confirm_password = st.text_input("Confirm Password", type="password")
+            signup = st.form_submit_button("Sign Up")
+            
+            if signup:
+                if new_password != confirm_password:
+                    st.error("Passwords don't match")
+                elif len(new_password) < 6:
+                    st.error("Password must be at least 6 characters")
+                else:
+                    try:
+                        create_user(new_email, new_password)
+                        st.success("Account created! Please sign in.")
+                    except ValueError as e:
+                        st.error(str(e))
+    
     st.stop()
     return False
+
+def authenticate_user(email: str, password: str) -> bool:
+    """Authenticate user against MongoDB."""
+    try:
+        from auth_pages.auth import authenticate_user as mongo_auth
+        return mongo_auth(email, password)
+    except Exception as e:
+        st.error(f"Authentication error: {e}")
+        return False
+
+def create_user(email: str, password: str):
+    """Create a new user in MongoDB."""
+    from auth_pages.auth import create_user as mongo_create
+    mongo_create(email, password)
 
 def add_logout_button():
     """Add a logout button to the sidebar."""
     if "user_email" in st.session_state:
         st.sidebar.success(f"Logged in as: {st.session_state['user_email']}")
         if st.sidebar.button("Logout"):
-            del st.session_state["user_email"]
-            st.query_params.clear()
+            st.session_state.clear()
             st.rerun()
