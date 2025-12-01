@@ -16,7 +16,7 @@ def typing_indicator(container):
     dots = ["⠁", "⠃", "⠇", "⠧", "⠷", "⠿", "⠷", "⠧"]
     i = 0
     while True:
-        container.markdown(f"🧘 Guruji is thinking... {dots[i % len(dots)]}")
+        container.markdown(f"AI Assistant is thinking... {dots[i % len(dots)]}")
         time.sleep(0.12)
         i += 1
         yield
@@ -145,6 +145,21 @@ if st.sidebar.button("🧹 Clear Chat"):
     st.session_state["chat_history"] = []
     st.rerun()
 
+if st.sidebar.button("🔄 Reload Documents"):
+    st.session_state["vectorstore"] = InMemoryVectorStore()
+    st.rerun()
+
+# Show stats
+if selected_docs:
+    # Count chunks for selected docs
+    # We need to access the internal chunks list. 
+    # vectorstore.chunks is a list of (chunk_dict, score)
+    # chunk_dict has "doc_id"
+    count = sum(1 for c, _ in vectorstore.chunks if c["doc_id"] in selected_docs)
+    st.sidebar.caption(f"Searching **{count}** chunks across **{len(selected_docs)}** document(s).")
+else:
+    st.sidebar.caption("No documents selected.")
+
 
 # -------------------------------------------------------------------
 # System Prompt
@@ -176,15 +191,9 @@ if user_input:
         "content": user_input
     })
 
-    # Retrieve RAG chunks
-    raw_chunks = engine.retrieve(user_input, top_k=top_k)
-
-    # Filter selected documents
-    filtered_chunks = [
-        (chunk, score)
-        for (chunk, score) in raw_chunks
-        if chunk["doc_id"] in selected_docs
-    ]
+    # Retrieve RAG chunks (with pre-filtering)
+    # selected_docs contains doc_ids
+    filtered_chunks = engine.retrieve(user_input, top_k=top_k, doc_ids=selected_docs)
 
     # Clean chunks for feeding to model
     clean_chunks = [

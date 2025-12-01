@@ -23,6 +23,6 @@ class RAGEngine:
     # ---------------------------------------------------------
     # Retrieve relevant chunks using vectorstore similarity search
     # ---------------------------------------------------------
-    def retrieve(self, query: str, top_k: int = 4):
+    def retrieve(self, query: str, top_k: int = 4, doc_ids: list[str] = None):
         query_vector = self.embed_query(query)
-        return self.vectorstore.similarity_search(query_vector, top_k=top_k)
+        return self.vectorstore.similarity_search(query_vector, top_k=top_k, doc_ids=doc_ids)

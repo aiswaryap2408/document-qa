@@ -101,34 +101,85 @@ class InMemoryVectorStore:
     # --------------------------------------------------------
     # Similarity Search
     # --------------------------------------------------------
+    # --------------------------------------------------------
+    # Similarity Search (Vectorized)
+    # --------------------------------------------------------
+    # --------------------------------------------------------
+    # Similarity Search (Vectorized)
+    # --------------------------------------------------------
     def similarity_search(
         self,
         query_vector: List[float],
-        top_k: int = 4
+        top_k: int = 4,
+        doc_ids: List[str] = None
     ) -> List[Tuple[Dict[str, Any], float]]:
-        """Retrieve top-K most similar chunks."""
+        """Retrieve top-K most similar chunks using vectorized operations."""
 
         if not self.chunks:
             return []
 
+        # Prepare data
         q = np.array(query_vector)
+        q_norm = np.linalg.norm(q)
+        
+        # Avoid division by zero
+        if q_norm < 1e-8:
+            return []
 
-        scored = []
-        for (chunk, _) in self.chunks:
-            emb = np.array(chunk["embedding"])
+        # Filter chunks if doc_ids provided
+        # We need to keep track of original indices if we filter
+        if doc_ids is not None:
+            allowed_set = set(doc_ids)
+            # Create a list of (index, chunk_tuple) for allowed chunks
+            filtered_indices_chunks = [
+                (i, c) for i, c in enumerate(self.chunks)
+                if c[0]["doc_id"] in allowed_set
+            ]
+            
+            if not filtered_indices_chunks:
+                return []
+                
+            # Unzip
+            indices = [x[0] for x in filtered_indices_chunks]
+            active_chunks = [x[1] for x in filtered_indices_chunks]
+        else:
+            indices = list(range(len(self.chunks)))
+            active_chunks = self.chunks
 
-            # Prevent dimension mismatch crashing
-            if emb.shape != q.shape:
-                continue
-
-            # Cosine similarity
-            score = float(np.dot(q, emb) /
-                          (np.linalg.norm(q) * np.linalg.norm(emb) + 1e-8))
-
-            scored.append((chunk, score))
-
-        # Sort by descending similarity
-        scored.sort(key=lambda x: x[1], reverse=True)
-
-        # Return top_k results
-        return scored[: min(top_k, len(scored))]
+        # Extract embeddings matrix from active chunks
+        embeddings = [c[0]["embedding"] for c in active_chunks]
+        
+        if not embeddings:
+            return []
+            
+        E = np.array(embeddings)
+        
+        # Calculate cosine similarity: (E . q) / (|E| * |q|)
+        # Dot product
+        dot_products = np.dot(E, q)
+        
+        # Norms of all embeddings
+        E_norms = np.linalg.norm(E, axis=1)
+        
+        # Avoid division by zero for embeddings
+        E_norms[E_norms < 1e-8] = 1e-8
+        
+        # Cosine scores
+        scores = dot_products / (E_norms * q_norm)
+        
+        # Get top_k indices (relative to active_chunks)
+        if len(scores) <= top_k:
+            top_relative_indices = np.argsort(scores)[::-1]
+        else:
+            top_relative_indices = np.argpartition(scores, -top_k)[-top_k:]
+            top_relative_indices = top_relative_indices[np.argsort(scores[top_relative_indices])[::-1]]
+            
+        # Construct result
+        results = []
+        for rel_idx in top_relative_indices:
+            # Map back to chunk
+            chunk = active_chunks[rel_idx][0]
+            score = float(scores[rel_idx])
+            results.append((chunk, score))
+            
+        return results

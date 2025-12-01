@@ -58,24 +58,37 @@ if uploaded_file:
     st.write(f"Created **{len(chunks)}** chunks.")
 
     # ----------------------------------------------------------
-    # Embed Chunks
+    # Embed Chunks (Batched)
     # ----------------------------------------------------------
     embedded_chunks = []
     client = OpenAI()
-
-    for i, c in enumerate(chunks):
-        emb = client.embeddings.create(
+    
+    # Prepare all texts for a single batch call
+    all_texts = [c["text"] for c in chunks]
+    
+    try:
+        # Call OpenAI API with list of texts
+        resp = client.embeddings.create(
             model="text-embedding-3-small",
-            input=c["text"]
-        ).data[0].embedding
-
-        embedded_chunks.append({
-            "heading": c["heading"],
-            "text": c["text"],
-            "embedding": emb,
-            "doc_id": doc_id,
-            "chunk_index": i
-        })
+            input=all_texts
+        )
+        
+        # Extract embeddings
+        embeddings = [d.embedding for d in resp.data]
+        
+        # Combine with chunk metadata
+        for i, (c, emb) in enumerate(zip(chunks, embeddings)):
+            embedded_chunks.append({
+                "heading": c["heading"],
+                "text": c["text"],
+                "embedding": emb,
+                "doc_id": doc_id,
+                "chunk_index": i
+            })
+            
+    except Exception as e:
+        st.error(f"Error generating embeddings: {e}")
+        st.stop()
 
     # ----------------------------------------------------------
     # Save JSON
