@@ -95,17 +95,6 @@ if uploaded_file:
     # ----------------------------------------------------------
     vectorstore.add_document(doc_id, file_name, embedded_chunks)
     
-    # Link to user profile if logged in
-    user_email = st.session_state.get("user_email")
-    if user_email:
-        try:
-            from auth_pages.auth import add_user_document
-            json_filename = f"{doc_id}.json"
-            add_user_document(user_email, json_filename)
-            st.success(f"Document linked to user profile: {user_email}")
-        except Exception as e:
-            st.warning(f"Could not link document to user profile: {e}")
-
     st.success(f"Document `{doc_id}` processed and saved!")
 
 
@@ -114,20 +103,11 @@ if uploaded_file:
 # ----------------------------------------------------------
 st.subheader("📚 Processed Documents")
 
-# Filter documents by user
-user_email = st.session_state.get("user_email")
-user_docs_ids = []
+# For single-user app, show all documents
+all_docs = vectorstore.document_names
 
-if user_email:
-    from auth_pages.auth import get_user_documents
-    user_docs = get_user_documents(user_email)
-    allowed_ids = {d.replace(".json", "") for d in user_docs}
-    user_docs_ids = [d for d in vectorstore.document_names if d in allowed_ids]
-else:
-    user_docs_ids = []
-
-if user_docs_ids:
-    for d in user_docs_ids:
+if all_docs:
+    for d in all_docs:
         st.write(f"• {d}")
 else:
     st.info("No documents processed yet.")
@@ -136,13 +116,11 @@ else:
 # Delete Document
 # ----------------------------------------------------------
 with st.expander("🗑️ Delete Document"):
-    if user_docs_ids:
-        del_name = st.selectbox("Select Document", user_docs_ids)
+    if all_docs:
+        del_name = st.selectbox("Select Document", all_docs)
 
         if st.button("Delete"):
             vectorstore.delete_document(del_name)
-            # Note: We are not currently removing it from MongoDB list, 
-            # but it won't show up here anyway since it's gone from vectorstore.
             st.success(f"Deleted {del_name}")
             st.rerun()
     else:

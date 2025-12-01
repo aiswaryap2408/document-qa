@@ -4,6 +4,3 @@ google-generativeai>=0.3.0
 python-dotenv
 numpy
 beautifulsoup4
-pymongo
-bcrypt
-requests
