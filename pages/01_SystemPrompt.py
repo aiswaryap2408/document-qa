@@ -1,8 +1,13 @@
 # pages/01_SystemPrompt.py
 import streamlit as st
 import os
+from streamlit_auth import require_auth, add_logout_button
 
-st.set_page_config(page_title="System Prompt Editor")
+st.set_page_config(page_title="System Prompt", layout="wide")
+
+require_auth()
+add_logout_button()
+
 st.title("⚙️ System Prompt Editor")
 
 PROMPT_FILE = "system_prompt.txt"

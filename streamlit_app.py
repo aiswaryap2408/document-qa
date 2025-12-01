@@ -67,7 +67,17 @@ except Exception:
 # Streamlit Config
 # -------------------------------------------------------------------
 st.set_page_config(page_title="RAG Guruji Chatbot", layout="wide")
+
+# -------------------------------------------------------------------
+# Authentication Check
+# -------------------------------------------------------------------
+from streamlit_auth import require_auth, add_logout_button
+
+require_auth()
+add_logout_button()
+
 st.title("RAG Chatbot")
+
 
 
 # -------------------------------------------------------------------
@@ -105,7 +115,26 @@ top_k = st.sidebar.slider("Top-K Chunks", 1, 10, 4)
 
 # List and filter documents
 st.sidebar.subheader("📚 RAG Documents")
-docs_available = vectorstore.document_names
+
+# Filter documents by user
+user_email = st.session_state.get("user_email")
+docs_available = []
+
+if user_email:
+    from auth_pages.auth import get_user_documents
+    user_docs = get_user_documents(user_email)
+    # user_docs are filenames like "doc_id.json"
+    # vectorstore.document_names are doc_ids
+    # We need to match them. Assuming doc_id is filename without extension.
+    
+    allowed_ids = {d.replace(".json", "") for d in user_docs}
+    
+    # Only show docs that exist in vectorstore AND are allowed for this user
+    docs_available = [d for d in vectorstore.document_names if d in allowed_ids]
+else:
+    # Fallback if no user logged in (shouldn't happen due to auth check)
+    docs_available = []
+
 selected_docs = st.sidebar.multiselect(
     "Use these documents:",
     docs_available,

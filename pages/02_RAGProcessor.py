@@ -4,8 +4,12 @@ from chunking import extract_hierarchy, extract_hierarchy_from_markdown, chunk_h
 from vectorstore import InMemoryVectorStore
 from rag_engine import RAGEngine
 from openai import OpenAI
+from streamlit_auth import require_auth, add_logout_button
 
+st.set_page_config(page_title="RAG Document Processor", layout="wide")
 
+require_auth()
+add_logout_button()
 # ----------------------------------------------------------
 # Load Vectorstore
 # ----------------------------------------------------------
@@ -77,6 +81,17 @@ if uploaded_file:
     # Save JSON
     # ----------------------------------------------------------
     vectorstore.add_document(doc_id, file_name, embedded_chunks)
+    
+    # Link to user profile if logged in
+    user_email = st.session_state.get("user_email")
+    if user_email:
+        try:
+            from auth_pages.auth import add_user_document
+            json_filename = f"{doc_id}.json"
+            add_user_document(user_email, json_filename)
+            st.success(f"Document linked to user profile: {user_email}")
+        except Exception as e:
+            st.warning(f"Could not link document to user profile: {e}")
 
     st.success(f"Document `{doc_id}` processed and saved!")
 
@@ -86,8 +101,20 @@ if uploaded_file:
 # ----------------------------------------------------------
 st.subheader("📚 Processed Documents")
 
-if vectorstore.document_names:
-    for d in vectorstore.document_names:
+# Filter documents by user
+user_email = st.session_state.get("user_email")
+user_docs_ids = []
+
+if user_email:
+    from auth_pages.auth import get_user_documents
+    user_docs = get_user_documents(user_email)
+    allowed_ids = {d.replace(".json", "") for d in user_docs}
+    user_docs_ids = [d for d in vectorstore.document_names if d in allowed_ids]
+else:
+    user_docs_ids = []
+
+if user_docs_ids:
+    for d in user_docs_ids:
         st.write(f"• {d}")
 else:
     st.info("No documents processed yet.")
@@ -96,11 +123,13 @@ else:
 # Delete Document
 # ----------------------------------------------------------
 with st.expander("🗑️ Delete Document"):
-    if vectorstore.document_names:
-        del_name = st.selectbox("Select Document", vectorstore.document_names)
+    if user_docs_ids:
+        del_name = st.selectbox("Select Document", user_docs_ids)
 
         if st.button("Delete"):
             vectorstore.delete_document(del_name)
+            # Note: We are not currently removing it from MongoDB list, 
+            # but it won't show up here anyway since it's gone from vectorstore.
             st.success(f"Deleted {del_name}")
             st.rerun()
     else:
