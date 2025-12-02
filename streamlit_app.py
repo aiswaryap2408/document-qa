@@ -7,6 +7,23 @@ import re
 from vectorstore import InMemoryVectorStore
 from rag_engine import RAGEngine
 from chat_handler import stream_openai, stream_gemini
+import streamlit.components.v1 as components
+
+
+# -------------------------------------------------------------------
+# Auto-Scroll Helper
+# -------------------------------------------------------------------
+def scroll_to_bottom():
+    """Inject JavaScript to scroll to the bottom of the page."""
+    scroll_script = """
+    <script>
+        window.parent.document.querySelector('section.main').scrollTo({
+            top: window.parent.document.querySelector('section.main').scrollHeight,
+            behavior: 'smooth'
+        });
+    </script>
+    """
+    components.html(scroll_script, height=0)
 
 
 # -------------------------------------------------------------------
@@ -238,6 +255,9 @@ if user_input:
         "grounding": grounding,
         "hallucination": hallucination
     })
+    
+    # Auto-scroll to bottom after response
+    scroll_to_bottom()
 
 
 # -------------------------------------------------------------------
