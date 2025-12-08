@@ -127,7 +127,7 @@ gemini_model = st.sidebar.selectbox(
     [ "gemini-2.0-flash", "gemini-2.5-pro", "gemini-2.5-flash"]
 )
 
-top_k = st.sidebar.slider("Top-K Chunks", 1, 10, 4)
+top_k = st.sidebar.slider("Top-K Chunks", 1, 15, 5)
 
 
 # List and filter documents
@@ -149,6 +149,20 @@ if st.sidebar.button("🧹 Clear Chat"):
 if st.sidebar.button("🔄 Reload Documents"):
     st.session_state["vectorstore"] = InMemoryVectorStore()
     st.rerun()
+
+# Prepare chat history for download
+chat_text = ""
+for msg in st.session_state.get("chat_history", []):
+    role = msg["role"].upper()
+    content = msg["content"]
+    chat_text += f"[{role}]\n{content}\n\n"
+
+st.sidebar.download_button(
+    label="📥 Download Chat History",
+    data=chat_text,
+    file_name="chat_history.txt",
+    mime="text/plain"
+)
 
 # Show stats
 if selected_docs:

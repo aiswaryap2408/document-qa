@@ -58,8 +58,12 @@ def extract_hierarchy(html: str):
 
     current_h1 = current_h2 = current_h3 = current_h4 = None
 
-    for tag in soup.find_all(["h1", "h2", "h3", "h4", "p", "li", "div", "ul"]):
-        text = tag.get_text(strip=True)
+    for tag in soup.find_all(["h1", "h2", "h3", "h4", "p", "li", "div", "ul", "table"]):
+        if tag.name == "table":
+            # Preserve the full HTML of the table so the LLM can see the structure
+            text = str(tag)
+        else:
+            text = tag.get_text(strip=True)
 
         if tag.name == "h1":
             current_h1 = text
@@ -90,11 +94,12 @@ def extract_hierarchy(html: str):
 # ============================================================
 def chunk_hierarchy_for_rag(
     records: List[Dict[str, Any]],
-    chunk_size: int = 1000,
-    overlap: int = 200
+    chunk_size: int = 1500,  # Increased default slightly to accommodate full tables
+    overlap: int = 300
 ):
     """
     Converts hierarchical records (h1-h4 + content) into chunked blocks.
+    Uses line-aware splitting to preserve table rows and list items.
     """
 
     chunks = []
@@ -113,30 +118,42 @@ def chunk_hierarchy_for_rag(
 
     for r in records:
         key = make_heading(r)
-
         if key:
             grouped.setdefault(key, [])
             grouped[key].append(r["content"])
 
-    # Chunk each section
     for heading, contents in grouped.items():
+        
+        # Simple Line-Aware Chunking (User requested removal of Atomic Logic)
+        current_chunk_lines = []
+        current_chunk_size = len(heading) + 2
 
-        full_text = f"{heading}\n\n" + "\n".join(contents)
-        L = len(full_text)
-        start = 0
+        # Flatten all content blocks into lines
+        all_lines = []
+        for content_block in contents:
+            all_lines.extend(content_block.splitlines())
 
-        while start < L:
-            end = start + chunk_size
-            chunk_text = full_text[start:end].strip()
-
-            chunks.append({
-                "heading": heading,
-                "text": chunk_text
-            })
-
-            if end >= L:
-                break
-
-            start = end - overlap
+        for line in all_lines:
+            line_len = len(line) + 1
+            
+            # If adding this line exceeds chunk size, start a new chunk
+            # Note: If a single line is massive (> chunk_size), it will create an oversized chunk.
+            # But we rely on token budgeting in retrieval to handle context size.
+            if (current_chunk_size + line_len > chunk_size) and current_chunk_lines:
+                chunk_text = f"{heading}\n\n" + "\n".join(current_chunk_lines)
+                chunks.append({"heading": heading, "text": chunk_text})
+                
+                # Simple overlap could be added here, but for now we reset cleanly 
+                # to avoid complexity as per user request.
+                current_chunk_lines = []
+                current_chunk_size = len(heading) + 2
+            
+            current_chunk_lines.append(line)
+            current_chunk_size += line_len
+            
+        # Final flush
+        if current_chunk_lines:
+            chunk_text = f"{heading}\n\n" + "\n".join(current_chunk_lines)
+            chunks.append({"heading": heading, "text": chunk_text})
 
     return chunks

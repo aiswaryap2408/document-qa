@@ -53,7 +53,7 @@ if uploaded_file:
     # ----------------------------------------------------------
     # Chunking
     # ----------------------------------------------------------
-    chunks = chunk_hierarchy_for_rag(records, chunk_size=1000, overlap=200)
+    chunks = chunk_hierarchy_for_rag(records, chunk_size=1500, overlap=300)
 
     st.write(f"Created **{len(chunks)}** chunks.")
 

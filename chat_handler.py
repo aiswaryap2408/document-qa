@@ -8,6 +8,27 @@ from typing import List, Dict, Any
 
 
 
+
+def apply_token_budget(chunks, max_chars=20000):
+    """
+    Returns a subset of chunks that fits within the max_chars budget.
+    20,000 chars is approx 5000 tokens. leaving 3000 for system+history+output.
+    """
+    current_chars = 0
+    selected_chunks = []
+    
+    for chunk in chunks:
+        # Crude estimate: 
+        text_len = len(chunk['text']) + len(chunk['heading']) + 50 # overhead
+        
+        if current_chars + text_len > max_chars:
+            break
+            
+        selected_chunks.append(chunk)
+        current_chars += text_len
+        
+    return selected_chunks
+
 def get_openai_client(api_key: str = None):
     if api_key is None:
         api_key = os.getenv("OPENAI_API_KEY")
@@ -87,6 +108,9 @@ def stream_openai(system_prompt, context_chunks, conversation_history, question,
 
     client = get_openai_client(api_key)
 
+    # Apply Token Budget logic
+    context_chunks = apply_token_budget(context_chunks)
+
     # Build context text
     context = "\n\n".join([f"[chunk {i+1}] {c['text']}" for i, c in enumerate(context_chunks)])
 
@@ -125,6 +149,9 @@ def stream_gemini(system_prompt, context_chunks, conversation_history, question,
 
     gem_api_key = api_key or os.getenv("GEMINI_API_KEY")
     genai.configure(api_key=gem_api_key)
+
+    # Apply Token Budget logic
+    context_chunks = apply_token_budget(context_chunks)
 
     # Build context text
     context = "\n\n".join([f"[chunk {i+1}] {c['text']}" for i, c in enumerate(context_chunks)])
