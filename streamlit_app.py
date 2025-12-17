@@ -109,88 +109,101 @@ if "chat_history" not in st.session_state:
 vectorstore = st.session_state["vectorstore"]
 engine = RAGEngine(vectorstore)
 
+# -------------------------------------------------------------------
+# Hide Sidebar if Not Authenticated (CSS)
+# -------------------------------------------------------------------
+
+
 
 # -------------------------------------------------------------------
 # Sidebar Configuration
 # -------------------------------------------------------------------
-st.sidebar.header("⚙️ Settings")
+if st.session_state.get("authenticated"):
+    st.sidebar.header("⚙️ Settings")
 
-provider = st.sidebar.selectbox("Model Provider", ["OpenAI", "Google Gemini"])
+    provider = st.sidebar.selectbox("Model Provider", ["OpenAI", "Google Gemini"])
 
-openai_model = st.sidebar.selectbox(
-    "OpenAI Model",
-    ["gpt-4.1-mini", "gpt-4.1", "gpt-5", "gpt-5.1"]
-)
-
-gemini_model = st.sidebar.selectbox(
-    "Gemini Model",
-    [ "gemini-2.0-flash", "gemini-2.5-pro", "gemini-2.5-flash"]
-)
-
-top_k = st.sidebar.slider("Top-K Chunks", 1, 15, 5)
-
-
-# List and filter documents
-st.sidebar.subheader("📚 RAG Documents")
-
-# For single-user app, show all documents
-# For single-user app, show all documents
-docs_available = vectorstore.document_names
-
-# Check if we have a specific user document locked in session
-user_doc_id = st.session_state.get("user_doc_id")
-
-if user_doc_id:
-    # If the specific doc is not loaded yet (race condition or first load), 
-    # it might be because vectorstore loaded before the new file was written?
-    # Actually, the app reruns after auth, so it should be loaded.
-    if user_doc_id in docs_available:
-        selected_docs = [user_doc_id]
-        st.sidebar.info(f"Using your horoscope report: {user_doc_id}")
-    else:
-        # Fallback if something went wrong saving the file
-        selected_docs = []
-        st.sidebar.warning("Your horoscope report was not found. Please contact support.")
-else:
-    # Admin/Dev fallback: Allow selecting any doc
-    selected_docs = st.sidebar.multiselect(
-        "Use these documents:",
-        docs_available,
-        default=docs_available
+    openai_model = st.sidebar.selectbox(
+        "OpenAI Model",
+        ["gpt-4.1-mini", "gpt-4.1", "gpt-5", "gpt-5.1"]
     )
 
-if st.sidebar.button("🧹 Clear Chat"):
-    st.session_state["chat_history"] = []
-    st.rerun()
+    gemini_model = st.sidebar.selectbox(
+        "Gemini Model",
+        [ "gemini-2.0-flash", "gemini-2.5-pro", "gemini-2.5-flash"]
+    )
 
-if st.sidebar.button("🔄 Reload Documents"):
-    st.session_state["vectorstore"] = InMemoryVectorStore()
-    st.rerun()
+    top_k = st.sidebar.slider("Top-K Chunks", 1, 15, 5)
 
-# Prepare chat history for download
-chat_text = ""
-for msg in st.session_state.get("chat_history", []):
-    role = msg["role"].upper()
-    content = msg["content"]
-    chat_text += f"[{role}]\n{content}\n\n"
 
-st.sidebar.download_button(
-    label="📥 Download Chat History",
-    data=chat_text,
-    file_name="chat_history.txt",
-    mime="text/plain"
-)
+    # List and filter documents
+    st.sidebar.subheader("📚 RAG Documents")
 
-# Show stats
-if selected_docs:
-    # Count chunks for selected docs
-    # We need to access the internal chunks list. 
-    # vectorstore.chunks is a list of (chunk_dict, score)
-    # chunk_dict has "doc_id"
-    count = sum(1 for c, _ in vectorstore.chunks if c.get("doc_id") in selected_docs)
-    st.sidebar.caption(f"Searching **{count}** chunks across **{len(selected_docs)}** document(s).")
+    # For single-user app, show all documents
+    # For single-user app, show all documents
+    docs_available = vectorstore.document_names
+
+    # Check if we have a specific user document locked in session
+    user_doc_id = st.session_state.get("user_doc_id")
+
+    if user_doc_id:
+        # If the specific doc is not loaded yet (race condition or first load), 
+        # it might be because vectorstore loaded before the new file was written?
+        # Actually, the app reruns after auth, so it should be loaded.
+        if user_doc_id in docs_available:
+            selected_docs = [user_doc_id]
+            st.sidebar.info(f"Using your horoscope report: {user_doc_id}")
+        else:
+            # Fallback if something went wrong saving the file
+            selected_docs = []
+            st.sidebar.warning("Your horoscope report was not found. Please contact support.")
+    else:
+        # Admin/Dev fallback: Allow selecting any doc
+        selected_docs = st.sidebar.multiselect(
+            "Use these documents:",
+            docs_available,
+            default=docs_available
+        )
+
+    if st.sidebar.button("🧹 Clear Chat"):
+        st.session_state["chat_history"] = []
+        st.rerun()
+
+    if st.sidebar.button("🔄 Reload Documents"):
+        st.session_state["vectorstore"] = InMemoryVectorStore()
+        st.rerun()
+
+    # Prepare chat history for download
+    chat_text = ""
+    for msg in st.session_state.get("chat_history", []):
+        role = msg["role"].upper()
+        content = msg["content"]
+        chat_text += f"[{role}]\n{content}\n\n"
+
+    st.sidebar.download_button(
+        label="📥 Download Chat History",
+        data=chat_text,
+        file_name="chat_history.txt",
+        mime="text/plain"
+    )
+
+    # Show stats
+    if selected_docs:
+        # Count chunks for selected docs
+        # We need to access the internal chunks list. 
+        # vectorstore.chunks is a list of (chunk_dict, score)
+        # chunk_dict has "doc_id"
+        count = sum(1 for c, _ in vectorstore.chunks if c.get("doc_id") in selected_docs)
+        st.sidebar.caption(f"Searching **{count}** chunks across **{len(selected_docs)}** document(s).")
+    else:
+        st.sidebar.caption("No documents selected.")
 else:
-    st.sidebar.caption("No documents selected.")
+    # Initialize variables to avoid NameError if sidebar is hidden
+    provider = "OpenAI"
+    openai_model = "gpt-4.1-mini"
+    gemini_model = "gemini-2.0-flash"
+    top_k = 5
+    selected_docs = []
 
 
 # -------------------------------------------------------------------

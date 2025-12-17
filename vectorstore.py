@@ -47,6 +47,9 @@ class InMemoryVectorStore:
 
                 # Add each chunk with score=0 (default)
                 for c in doc_json["chunks"]:
+                    # Ensure doc_id is in chunk
+                    if "doc_id" not in c:
+                        c["doc_id"] = doc_id
                     self.chunks.append((c, 0.0))
 
             except Exception as e:
@@ -57,6 +60,10 @@ class InMemoryVectorStore:
     # --------------------------------------------------------
     def add_document(self, doc_id: str, file_name: str, chunk_list: List[Dict[str, Any]]):
         """Save a document as a JSON file and load into memory."""
+
+        # Inject doc_id into all chunks
+        for c in chunk_list:
+            c["doc_id"] = doc_id
 
         # Prepare JSON structure
         doc_json = {

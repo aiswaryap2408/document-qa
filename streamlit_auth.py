@@ -6,6 +6,9 @@ import sys
 import requests
 import json
 from urllib.parse import unquote_plus
+import concurrent.futures
+import threading
+import random
 from pymongo import MongoClient
 from openai import OpenAI
 from chunking import extract_hierarchy, chunk_hierarchy_for_rag
@@ -61,20 +64,13 @@ def generate_astrology_report(name, gender, dob, tob, pob, mobile):
         }
         payload = {'xml': xml} 
         
-        st.write("Sending as param 'xml'...")
+        # st.write("Sending as param 'xml'...")
         response = requests.post(
             url,
             data=payload,
             headers=headers,
             timeout=30
         )
-
-        # st.write("### API Response (Raw)")
-        # st.write("Status Code:", response.status_code)
-        # st.text(response.text)
-        # st.stop()
-        # Proceed to parse JSON
-
         
         # 4. Handle Response
         if response.status_code == 200:
@@ -88,22 +84,18 @@ def generate_astrology_report(name, gender, dob, tob, pob, mobile):
                 return json.dumps(json_response, indent=2)
             except Exception as e:
                 # Not JSON?
-                st.warning("API returned non-JSON response. Raw output below:")
-                st.code(response.text) # Show full output
-                st.warning("API returned non-JSON response. Raw output below:")
-                st.code(response.text) # Show full output
-
-                st.stop() # Stop here to check output
-                return response.text
+                raise ValueError(f"API returned non-JSON response. Raw output: {response.text}")
         else:
-            st.error(f"API Error: {response.status_code}")
-            return f"Error: {response.status_code} - {response.text}"
-            st.stop()
+            raise requests.exceptions.RequestException(f"API Error: {response.status_code} - {response.text}")
 
     except Exception as e:
-        st.error(f"Failed to generate report: {e}")
-        st.stop()
-        return f"Local Error: {e}"
+        raise RuntimeError(f"Failed to generate report: {e}")
+
+# -------------------------------------------------------------------
+# Helper: Streaming Facts & Background Task
+# -------------------------------------------------------------------
+
+
 
 # -------------------------------------------------------------------
 # Auth Flow Logic
@@ -170,6 +162,11 @@ def require_auth():
                         st.session_state["authenticated"] = True
                         st.session_state["user_mobile"] = mobile
                         st.session_state["user_doc_id"] = mobile # The report doc ID is the mobile number
+                        
+                        # Force reload of vectorstore
+                        if "vectorstore" in st.session_state:
+                            del st.session_state["vectorstore"]
+
                         st.success("Welcome back!")
                         st.rerun()
                     else:
@@ -233,7 +230,6 @@ def require_auth():
                             "created_at": time.time()
                         }
                         users_col.insert_one(user_doc)
-
                         
                         # 3. Process for RAG
                         # Create a temporary vectorstore instance to process this doc
@@ -287,6 +283,10 @@ def require_auth():
                         st.session_state["user_mobile"] = mobile
                         st.session_state["user_doc_id"] = mobile
                         
+                        # Force reload of vectorstore to pick up new file
+                        if "vectorstore" in st.session_state:
+                            del st.session_state["vectorstore"]
+
                         st.success("Horoscope handled! Redirecting...")
                         time.sleep(1)
                         st.rerun()
