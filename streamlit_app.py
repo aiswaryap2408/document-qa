@@ -134,13 +134,30 @@ top_k = st.sidebar.slider("Top-K Chunks", 1, 15, 5)
 st.sidebar.subheader("📚 RAG Documents")
 
 # For single-user app, show all documents
+# For single-user app, show all documents
 docs_available = vectorstore.document_names
 
-selected_docs = st.sidebar.multiselect(
-    "Use these documents:",
-    docs_available,
-    default=docs_available
-)
+# Check if we have a specific user document locked in session
+user_doc_id = st.session_state.get("user_doc_id")
+
+if user_doc_id:
+    # If the specific doc is not loaded yet (race condition or first load), 
+    # it might be because vectorstore loaded before the new file was written?
+    # Actually, the app reruns after auth, so it should be loaded.
+    if user_doc_id in docs_available:
+        selected_docs = [user_doc_id]
+        st.sidebar.info(f"Using your horoscope report: {user_doc_id}")
+    else:
+        # Fallback if something went wrong saving the file
+        selected_docs = []
+        st.sidebar.warning("Your horoscope report was not found. Please contact support.")
+else:
+    # Admin/Dev fallback: Allow selecting any doc
+    selected_docs = st.sidebar.multiselect(
+        "Use these documents:",
+        docs_available,
+        default=docs_available
+    )
 
 if st.sidebar.button("🧹 Clear Chat"):
     st.session_state["chat_history"] = []
@@ -170,7 +187,7 @@ if selected_docs:
     # We need to access the internal chunks list. 
     # vectorstore.chunks is a list of (chunk_dict, score)
     # chunk_dict has "doc_id"
-    count = sum(1 for c, _ in vectorstore.chunks if c["doc_id"] in selected_docs)
+    count = sum(1 for c, _ in vectorstore.chunks if c.get("doc_id") in selected_docs)
     st.sidebar.caption(f"Searching **{count}** chunks across **{len(selected_docs)}** document(s).")
 else:
     st.sidebar.caption("No documents selected.")
