@@ -4,10 +4,18 @@ import requests
 import json
 from openai import OpenAI
 import google.generativeai as genai
+import re
 from typing import List, Dict, Any
 
 
-
+def convert_markdown_to_html(text: str) -> str:
+    """
+    Returns the text as is.
+    User requested to NOT re-enable formatting logic.
+    """
+    if not isinstance(text, str):
+        return text
+    return text.strip()
 
 def apply_token_budget(chunks, max_chars=20000):
     """
@@ -37,7 +45,7 @@ def get_openai_client(api_key: str = None):
     return OpenAI(api_key=api_key)
 
 def generate_with_openai(system_prompt, context_chunks, conversation_history, question,
-                         model="gpt-4.1", api_key=None):
+                         model="gpt-4o-mini", api_key=None):
 
     client = get_openai_client(api_key)
 
@@ -47,7 +55,14 @@ def generate_with_openai(system_prompt, context_chunks, conversation_history, qu
     # Build conversation messages
     messages = [
         {"role": "system", "content": system_prompt},
-        {"role": "system", "content": "Use ONLY the retrieved context to answer. If answer not in context, say 'Not found in document.'"}
+        {"role": "system", "content": (
+            "You are in a live astrology consultation. "
+            "1. Use the provided context for all factual predictions and planetary details. "
+            "2. If a user provides a short response (like 'yes', 'ok', 'go on') to your previous question, "
+            "be conversational and proceed with the relevant details from the context. "
+            "3. If the answer is truly missing from the context and history, say 'Not found in document.' "
+            "4. NEVER break character. Always end with your signature follow-up question: '🤔 What's Next?'"
+        )}
     ]
 
     # Append conversation history
@@ -66,7 +81,8 @@ def generate_with_openai(system_prompt, context_chunks, conversation_history, qu
         messages=messages
     )
 
-    return resp.choices[0].message.content
+    ans = resp.choices[0].message.content
+    return convert_markdown_to_html(ans)
 
 def generate_with_gemini(system_prompt, context_chunks, conversation_history, question,
                          model="gemini-1.5-pro", api_key=None):
@@ -101,10 +117,11 @@ def generate_with_gemini(system_prompt, context_chunks, conversation_history, qu
 
     model_ai = genai.GenerativeModel(model)
     res = model_ai.generate_content(prompt)
-    return getattr(res, "text", str(res))
+    ans = getattr(res, "text", str(res))
+    return convert_markdown_to_html(ans)
 
 def stream_openai(system_prompt, context_chunks, conversation_history, question,
-                  model="gpt-4.1-mini", api_key=None):
+                  model="gpt-4o-mini", api_key=None):
 
     client = get_openai_client(api_key)
 
@@ -140,7 +157,7 @@ def stream_openai(system_prompt, context_chunks, conversation_history, question,
         if chunk.choices and chunk.choices[0].delta:
             delta = chunk.choices[0].delta
             if hasattr(delta, "content") and delta.content:
-                yield delta.content
+                yield convert_markdown_to_html(delta.content)
 
 
 
@@ -185,7 +202,7 @@ def stream_gemini(system_prompt, context_chunks, conversation_history, question,
 
     for event in stream:
         if hasattr(event, "text"):
-            yield event.text
+            yield convert_markdown_to_html(event.text)
 
 def build_gemini_prompt(system_prompt, chunks, history, question):
     context = "\n\n".join(

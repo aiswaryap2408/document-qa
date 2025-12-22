@@ -6,3 +6,7 @@ numpy
 beautifulsoup4
 pymongo
 requests
+
+fastapi
+uvicorn
+pydantic

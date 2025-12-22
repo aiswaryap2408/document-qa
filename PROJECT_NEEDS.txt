@@ -1,0 +1,60 @@
+================================================================================
+PROJECT NEEDS & REQUIREMENTS
+================================================================================
+
+This document lists the general environment, hardware, and configuration needs 
+to successfully run and maintain this project.
+
+1. RUNTIME ENVIRONMENT
+----------------------
+   - Python Version: 3.8 or higher
+   - Operating System: Windows, macOS, or Linux
+   - Internet Connection: Required (constant) for API calls
+
+2. PYTHON DEPENDENCIES
+----------------------
+   (Install via `pip install -r requirements.txt`)
+   - streamlit>=1.20
+   - openai>=1.0.0
+   - google-generativeai>=0.3.0
+   - python-dotenv
+   - numpy
+   - beautifulsoup4
+
+3. API KEYS & SERVICES
+----------------------
+   You must have accounts and API keys for at least one of the following:
+   
+   A. OpenAI API (Required for Embeddings & optional for Chat)
+      - Key: OPENAI_API_KEY
+      - Permissions: Model access (text-embedding-3-small, gpt-4, etc.)
+      - Cost: Paid usage
+      
+   B. Google Gemini API (Optional for Chat)
+      - Key: GEMINI_API_KEY
+      - Permissions: Model access (gemini-2.0-flash, etc.)
+      - Cost: Free tier available (check limits)
+
+4. HARDWARE REQUIREMENTS
+------------------------
+   - RAM: Minimum 4GB (8GB recommended)
+   - CPU: No specific requirement (heavy lifting is done via APIs)
+   - Disk Space: ~500MB (mostly for local Python env + vectorstore growth)
+
+5. CONFIGURATION FILES
+----------------------
+   - .env (Local): specific file to store secrets locally.
+     Format:
+       OPENAI_API_KEY=sk-...
+       GEMINI_API_KEY=AIza...
+   
+   - .streamlit/secrets.toml (Deployment):
+     Format:
+       OPENAI_API_KEY = "sk-..."
+       GEMINI_API_KEY = "AIza..."
+       APP_PASSWORD = "..." (SHA-256 hash)
+
+6. BROWSER COMPATIBILITY
+------------------------
+   - Modern web browser (Chrome, Firefox, Safari, Edge)
+   - JavaScript enabled (for Streamlit interactivity)

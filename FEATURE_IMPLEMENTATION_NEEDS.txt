@@ -1,0 +1,62 @@
+================================================================================
+FEATURE IMPLEMENTATION NEEDS
+================================================================================
+
+This document outlines the specific requirements and dependencies for each 
+feature implemented in the RAG Chatbot.
+
+1. AUTHENTICATION (Simple Password Protection)
+-----------------------------------------------
+   - Implementation: streamlit_auth.py
+   - Library: hashlib (built-in)
+   - Setup: 
+     - Default password is 'admin123'
+     - For custom password: Set 'APP_PASSWORD' (SHA-256 hash) in .streamlit/secrets.toml
+   - Requirement: User must login before accessing the app.
+
+2. DOCUMENT PROCESSING (Upload & Chunking)
+------------------------------------------
+   - Implementation: chunking.py
+   - Libraries: beautifulsoup4 (for HTML)
+   - Functionality:
+     - Splits text into semantic chunks
+     - Maintains overlap to preserve context
+   - Requirement: Uploaded files must be .txt, .md, or .html.
+
+3. EMBEDDING GENERATION
+-----------------------
+   - Implementation: embeddings.py
+   - Libraries: openai, numpy
+   - API Requirement: OPENAI_API_KEY
+   - Model: text-embedding-3-small (cost-effective)
+   - Note: Requires active internet connection to contact OpenAI API.
+
+4. VECTOR STORAGE & RETRIEVAL
+-----------------------------
+   - Implementation: vectorstore.py, rag_engine.py
+   - Storage: Local JSON file (vectorstore.json)
+   - Logic: Simple in-memory vector search using Cosine Similarity (via NumPy)
+   - Requirement: Write permissions to the application directory.
+
+5. AI CHAT GENERATION (RAG)
+---------------------------
+   - Implementation: chat_handler.py
+   - Libraries: openai, google-generativeai
+   - Supported Providers:
+     - OpenAI (GPT-4.1, GPT-5) -> Needs OPENAI_API_KEY
+     - Google (Gemini 2.0/2.5) -> Needs GEMINI_API_KEY
+   - Requirement: API keys must be valid and likely billed/funded accounts.
+
+6. USER INTERFACE (Streamlit)
+-----------------------------
+   - Implementation: streamlit_app.py
+   - Library: streamlit
+   - Features: sidebar settings, chat window, typing indicators
+   - Requirement: Run with `streamlit run streamlit_app.py`
+
+7. SECRETS MANAGEMENT
+---------------------
+   - Implementation: .env file or Streamlit Secrets
+   - Library: python-dotenv
+   - Requirement: A `.env` file at root with API keys (for local) or usage of 
+     Streamlit Cloud secrets (for deployment).

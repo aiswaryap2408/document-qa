@@ -83,6 +83,23 @@ class InMemoryVectorStore:
             self.chunks.append((c, 0.0))
 
     # --------------------------------------------------------
+    # Add multiple chunks (helper for registration flow)
+    # --------------------------------------------------------
+    def add_chunks(self, chunks: List[Dict[str, Any]]):
+        """Helper to add chunks directly. Infers doc_id from first chunk."""
+        if not chunks:
+            return
+            
+        # Group by doc_id (usually just one for a new report)
+        doc_ids_in_batch = set(c.get("doc_id") for c in chunks if "doc_id" in c)
+        
+        for d_id in doc_ids_in_batch:
+            # Filter chunks for this doc_id
+            doc_chunks = [c for c in chunks if c.get("doc_id") == d_id]
+            # Use doc_id as the file_name for now
+            self.add_document(d_id, d_id, doc_chunks)
+
+    # --------------------------------------------------------
     # Delete a document from storage + memory
     # --------------------------------------------------------
     def delete_document(self, doc_id: str):

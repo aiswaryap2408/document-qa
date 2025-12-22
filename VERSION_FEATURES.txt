@@ -1,0 +1,78 @@
+================================================================================
+PROJECT ROADMAP: VERSION 1 vs VERSION 2 FEATURES
+================================================================================
+
+This document outlines the feature set for the current release (Process V1) and 
+planned features for the future release (Version 2).
+
+================================================================================
+VERSION 1 (CURRENT - MVP)
+================================================================================
+"The Personal Knowledge Base Edition"
+
+1. CORE ARCHITECTURE
+   - Single-user application (local or hosted)
+   - In-memory vector storage (using JSON files)
+   - Local file system storage for documents
+   - Stateless operation (mostly)
+
+2. AUTHENTICATION
+   - Type: Static Password
+   - Storage: Environment Variable / Secrets File
+   - Security: Simple SHA-256 Hashing
+   - Features: Login, Logout
+
+3. AI & RAG CAPABILITIES
+   - Models: OpenAI GPT-4.1/5, Google Gemini 2.0/2.5
+   - Embeddings: OpenAI text-embedding-3-small
+   - Search: Cosine Similarity (NumPy based)
+   - metrics: Basic hallucination/grounding score provided by rule-based keyword matching
+
+4. DOCUMENT SUPPORT
+   - Formats: .txt, .md, .html
+   - Features: 
+     - Upload multiple files
+     - Automatic chunking (fixed size with overlap)
+     - View chunks in UI
+
+5. UI/UX
+   - Streamlit Interface
+   - Sidebar for settings (Model selection, Top-K slider)
+   - Basic Chat History (persists for session only)
+   - Streaming text responses
+   - Dark/Light mode support (Standard Streamlit)
+
+================================================================================
+VERSION 2 (PLANNED / FUTURE)
+================================================================================
+"The Collaborative Enterprise Edition"
+
+1. CORE ARCHITECTURE
+   - Multi-user support with data isolation
+   - Persistent Database (PostgreSQL / MongoDB) for User Profiles & History
+   - Scalable Vector Database (ChromaDB, Pinecone, or pgvector)
+   - Dockerized container deployment
+
+2. AUTHENTICATION & SECURITY
+   - Type: Full User Management (Sign Up, Sign In, Forgot Password)
+   - OAuth Integration (Login with Google/GitHub)
+   - Role-Based Access Control (Admin vs Viewer)
+   - Encryption for sensitive document data
+
+3. ADVANCED RAG CAPABILITIES
+   - Hybrid Search (Keyword + Semantic)
+   - Reranking Step (using Cohere or Cross-Encoders)
+   - GraphRAG Implementation (Knowledge Graph integration)
+   - Multi-Modal Support (Images, Charts in documents)
+
+4. DOCUMENT SUPPORT ENHANCEMENTS
+   - Formats: .pdf (with OCR), .docx, .ppt, .csv
+   - Intelligent Chunking (Semantic splitters rather than fixed size)
+   - Document Parsing (Unstructured.io or LlamaParse integration)
+
+5. UI/UX UPGRADES
+   - Persistent Chat History (Saved to DB, load past content)
+   - Multiple Chat Sessions / Threads
+   - Admin Dashboard (Usage analytics, Cost monitoring)
+   - File Preview within the Chat UI
+   - Voice Input / Output support
