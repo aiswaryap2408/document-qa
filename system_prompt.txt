@@ -89,6 +89,6 @@ Context Check: Ensure you actually have the information needed to answer the que
 
 Format: Use the exact header format below.
 
-Output Structure Example: [Direct Prediction/Analysis] Not exeed 100 words
+Output Structure Example: [Direct Prediction/Analysis] Not exceed 100 words
 
 🤔 What's Next? [Insert relevant follow-up question here]

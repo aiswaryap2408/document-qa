@@ -1,15 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { sendOtp, verifyOtp, setAuthToken } from '../api';
 
 const Verify = () => {
     const navigate = useNavigate();
-    const [otp, setOtp] = useState('');
+    const [otp, setOtp] = useState(['', '', '', '']);
     const [mobile, setMobile] = useState('');
     const [loading, setLoading] = useState(false);
     const [resending, setResending] = useState(false);
     const [error, setError] = useState('');
     const [info, setInfo] = useState('');
+    const inputRefs = useRef([]);
 
     useEffect(() => {
         const storedMobile = localStorage.getItem('mobile');
@@ -43,13 +44,52 @@ const Verify = () => {
         }
     };
 
+    const handleOtpChange = (index, value) => {
+        // Only allow digits
+        if (value && !/^\d$/.test(value)) return;
+
+        const newOtp = [...otp];
+        newOtp[index] = value;
+        setOtp(newOtp);
+
+        // Auto-focus next input
+        if (value && index < 3) {
+            inputRefs.current[index + 1]?.focus();
+        }
+    };
+
+    const handleKeyDown = (index, e) => {
+        // Handle backspace
+        if (e.key === 'Backspace' && !otp[index] && index > 0) {
+            inputRefs.current[index - 1]?.focus();
+        }
+    };
+
+    const handlePaste = (e) => {
+        e.preventDefault();
+        const pastedData = e.clipboardData.getData('text').slice(0, 4);
+        if (/^\d+$/.test(pastedData)) {
+            const newOtp = pastedData.split('').concat(['', '', '', '']).slice(0, 4);
+            setOtp(newOtp);
+            // Focus the next empty box or last box
+            const nextIndex = Math.min(pastedData.length, 3);
+            inputRefs.current[nextIndex]?.focus();
+        }
+    };
+
     const handleOtpSubmit = async (e) => {
         e.preventDefault();
+        const otpString = otp.join('');
+        if (otpString.length !== 4) {
+            setError('Please enter all 4 digits');
+            return;
+        }
+
         setLoading(true);
         setError('');
         setInfo('');
         try {
-            const res = await verifyOtp(mobile, otp);
+            const res = await verifyOtp(mobile, otpString);
             const { access_token, is_new_user } = res.data;
 
             setAuthToken(access_token);
@@ -95,15 +135,23 @@ const Verify = () => {
                     <div className="text-center text-sm text-gray-500">
                         Enter OTP sent to {mobile}
                     </div>
-                    <input
-                        type="text"
-                        required
-                        className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-center tracking-widest text-2xl"
-                        placeholder="1234"
-                        maxLength={4}
-                        value={otp}
-                        onChange={(e) => setOtp(e.target.value)}
-                    />
+                    <div className="flex justify-center gap-3">
+                        {otp.map((digit, index) => (
+                            <input
+                                key={index}
+                                ref={(el) => (inputRefs.current[index] = el)}
+                                type="text"
+                                inputMode="numeric"
+                                maxLength={1}
+                                value={digit}
+                                onChange={(e) => handleOtpChange(index, e.target.value)}
+                                onKeyDown={(e) => handleKeyDown(index, e)}
+                                onPaste={handlePaste}
+                                className="w-14 h-14 text-center text-2xl font-bold border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
+                                required
+                            />
+                        ))}
+                    </div>
                     <button
                         type="submit"
                         disabled={loading || resending}

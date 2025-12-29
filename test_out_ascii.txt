@@ -1,3 +1,0 @@
-1. Sending first OTP...
-Response: {'message': 'OTP sent to 9999999999', 'status': 'success', 'otp': '9876'}
-FAILED: 

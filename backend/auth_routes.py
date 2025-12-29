@@ -3,7 +3,7 @@ from backend.models import MobileRequest, OTPRequest, UserRegistration, LoginRes
 from backend.db import get_db_collection
 from backend.astrology_service import generate_astrology_report
 from backend.rag_service import get_rag_engine
-from chunking import extract_hierarchy, chunk_hierarchy_for_rag
+from rag_modules.chunking import extract_hierarchy, chunk_hierarchy_for_rag
 import time
 import os
 from pydantic import BaseModel
@@ -268,7 +268,7 @@ async def chat(request: ChatMessage):
             
             if report_text:
                 from backend.rag_service import get_rag_engine as get_rag
-                from chunking import extract_hierarchy, chunk_hierarchy_for_rag
+                from rag_modules.chunking import extract_hierarchy, chunk_hierarchy_for_rag
                 _, vec = get_rag()
                 hierarchy = extract_hierarchy(report_text)
                 chunks = chunk_hierarchy_for_rag(hierarchy)
@@ -286,7 +286,7 @@ async def chat(request: ChatMessage):
             else:
                 print(f"DEBUG: No report found in DB or Disk for {request.mobile}")
 
-        from chat_handler import generate_with_openai
+        from rag_modules.chat_handler import generate_with_openai
         
         system_prompt = "You are Astrology Guruji. Answer using only context if possible."
         if os.path.exists("system_prompt.txt"):
@@ -345,7 +345,7 @@ class EndChatRequest(BaseModel):
 @router.post("/end-chat")
 async def end_chat(request: EndChatRequest):
     try:
-        from chat_handler import generate_with_openai
+        from rag_modules.chat_handler import generate_with_openai
         
         history_text = ""
         for msg in request.history:

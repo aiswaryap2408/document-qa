@@ -1,5 +1,5 @@
-from vectorstore import InMemoryVectorStore
-from rag_engine import RAGEngine
+from rag_modules.vectorstore import InMemoryVectorStore
+from rag_modules.rag_engine import RAGEngine
 import os
 
 # Initialize global instances
