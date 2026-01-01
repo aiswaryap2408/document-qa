@@ -1,5 +1,6 @@
 import os
 from pymongo import MongoClient
+import certifi
 
 # -------------------------------------------------------------------
 # MongoDB Connection
@@ -17,7 +18,12 @@ def get_db_collection(collection_name="users"):
     # Use environment variable or default local
     uri = os.getenv("MONGODB_URI", "mongodb://localhost:27017/")
     if _client is None:
-        _client = MongoClient(uri)
+        # Cosmos DB (and many cloud Mongo providers) requires SSL with valid certs
+        # certifi.where() provides a robust set of CA credentials
+        if "localhost" in uri or "127.0.0.1" in uri:
+            _client = MongoClient(uri)
+        else:
+            _client = MongoClient(uri, tlsCAFile=certifi.where())
     
     db = _client["auth_db"]
     return db[collection_name]

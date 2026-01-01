@@ -5,7 +5,7 @@ import { sendMessage, endChat } from '../api';
 const Chat = () => {
     const navigate = useNavigate();
     const [messages, setMessages] = useState([
-        { role: 'assistant', content: 'Namaste! I am your Astrology Guruji. How can I help you today?' }
+        { role: 'assistant', content: 'Namaste! I am Maya, the receptionist. How can I help you reach Guruji today? 🙏' }
     ]);
     const [input, setInput] = useState('');
     const [loading, setLoading] = useState(false);

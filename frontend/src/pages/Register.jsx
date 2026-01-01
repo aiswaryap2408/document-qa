@@ -55,7 +55,7 @@ const Register = () => {
 
             setAuthToken(access_token);
             localStorage.setItem('token', access_token);
-            navigate('/chat');
+            navigate('/onboarding');
         } catch (err) {
             console.error("Registration Error:", err);
             const msg = err.response?.data?.detail || err.message;

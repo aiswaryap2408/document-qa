@@ -222,6 +222,21 @@ async def chat(request: ChatMessage):
             raise HTTPException(status_code=500, detail="OpenAI API key not configured on server.")
 
         print(f"DEBUG: Chat request received for mobile: {request.mobile}")
+
+        # --- Maya Receptionist Check ---
+        from rag_modules.maya_receptionist import check_with_maya
+        print("DEBUG: Checking with Maya Receptionist...")
+        maya_decision = check_with_maya(request.message, request.history)
+        print(f"DEBUG: Maya decision: {maya_decision}")
+
+        if maya_decision.get("action") == "BLOCK":
+            return {
+                "content": maya_decision.get("message", "Please upgrade to continue."),
+                "context": [],
+                "metrics": {"rag_score": 0, "modelling_score": 0, "maya_blocked": True}
+            }
+        # -------------------------------
+
         engine, vectorstore = get_rag_engine()
         print(f"DEBUG: Vectorstore doc_ids: {vectorstore.document_names}")
         
@@ -302,6 +317,15 @@ async def chat(request: ChatMessage):
         )
         print("DEBUG: OpenAI response received.")
         
+        # --- Maya Handover (First Query Only) ---
+        # If there are no previous USER messages in history, this is the first interaction.
+        previous_user_msgs = [m for m in request.history if m['role'] == 'user']
+        if len(previous_user_msgs) == 0:
+            print("DEBUG: First query detection. Prepending Maya handover message.")
+            maya_preamble = "**Maya**: I have received your query. forwarding it to Guruji... 🧘‍♂️\n\n"
+            response = maya_preamble + response
+        # ----------------------------------------
+
         # Calculate Metrics
         scores = [score for (chunk, score) in filtered_chunks]
         avg_score = sum(scores) / len(scores) if scores else 0

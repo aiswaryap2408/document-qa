@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import Login from './pages/Login';
 import Verify from './pages/Verify';
 import Register from './pages/Register';
+import Onboarding from './pages/Onboarding';
 import Chat from './pages/Chat';
 
 import AdminLogin from './pages/admin/AdminLogin';
@@ -34,6 +35,14 @@ function App() {
         <Route path="/" element={<Login />} />
         <Route path="/verify" element={<Verify />} />
         <Route path="/register" element={<Register />} />
+        <Route
+          path="/onboarding"
+          element={
+            <ProtectedRoute>
+              <Onboarding />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/chat"
           element={
