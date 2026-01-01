@@ -64,11 +64,16 @@ def compute_grounding_percent(answer: str, retrieved_chunks):
 # -------------------------------------------------------------------
 # Load Keys (Secret-friendly)
 # -------------------------------------------------------------------
-load_dotenv(".env")
+load_dotenv(override=True)
 
 
 # Fallback to .env
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+if not OPENAI_API_KEY:
+    # Try one more time with current directory explicit path
+    load_dotenv(os.path.join(os.getcwd(), ".env"), override=True)
+    OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
 try:
@@ -87,12 +92,6 @@ st.set_page_config(page_title="RAG Guruji Chatbot", layout="wide")
 
 from streamlit_auth import landing_page, add_logout_button
 
-landing_page()
-add_logout_button()
-
-st.title("RAG Chatbot")
-
-
 
 # -------------------------------------------------------------------
 # Initialize Session State
@@ -102,6 +101,15 @@ if "vectorstore" not in st.session_state:
 
 if "chat_history" not in st.session_state:
     st.session_state["chat_history"] = []
+
+landing_page()
+add_logout_button()
+
+st.title("RAG Chatbot")
+
+
+
+
 
 vectorstore = st.session_state["vectorstore"]
 # -------------------------------------------------------------------

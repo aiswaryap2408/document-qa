@@ -23,7 +23,23 @@ def landing_page():
     if st.session_state.get("authenticated", False):
         return True
 
+    # 2. Check Vectorstore Persistence (New feature)
+    if "vectorstore" in st.session_state:
+        vs = st.session_state["vectorstore"]
+        if vs.document_names:
+            # Auto-login with first doc
+            first_doc = vs.document_names[0]
+            st.session_state["authenticated"] = True
+            st.session_state["user_doc_id"] = first_doc
+            st.rerun()
+
     st.title("📂 RAG Chatbot - Document Upload")
+
+    # Optional API Key Input
+    api_key_input = None
+    with st.expander("🔑 Settings (Optional)"):
+        api_key_input = st.text_input("OpenAI API Key", type="password", help="Override system default key.")
+    
     st.write("Upload a document (Text, Markdown, or HTML) to start chatting with it.")
 
     # 2. File Uploader
@@ -73,11 +89,13 @@ def landing_page():
                     # 3. Generate Embeddings (Batched)
                     # We need an API Key for this. Using system env or failing.
                     # Ideally, we should check for API KEY here.
-                    api_key = os.getenv("OPENAI_API_KEY")
+                    # 3. Generate Embeddings (Batched)
+                    # Priority: User Input > Env Var
+                    api_key = api_key_input if api_key_input else os.getenv("OPENAI_API_KEY")
+                    
                     if not api_key:
-                        # Fallback: Ask user for key if not in env? 
-                        # For now assuming env is set as per previous config.
-                        pass
+                        st.error("No API Key found. Please set OPENAI_API_KEY in .env or enter it in Settings above.")
+                        return False
 
                     client = OpenAI(api_key=api_key)
                     
@@ -112,8 +130,10 @@ def landing_page():
                     progress_bar.empty()
                     
                     # 4. Store in Vectorstore
-                    # Reset vectorstore for new session
-                    st.session_state["vectorstore"] = InMemoryVectorStore()
+                    # Use existing session vectorstore instead of overwriting
+                    if "vectorstore" not in st.session_state:
+                        st.session_state["vectorstore"] = InMemoryVectorStore()
+                    
                     st.session_state["vectorstore"].add_document(doc_id=filename, file_name=filename, chunk_list=chunks)
                     
                     # 5. Set Session State

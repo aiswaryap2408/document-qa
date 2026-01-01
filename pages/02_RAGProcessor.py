@@ -17,7 +17,8 @@ if "vectorstore" not in st.session_state:
     st.session_state["vectorstore"] = InMemoryVectorStore()
 
 vectorstore = st.session_state["vectorstore"]
-rag = RAGEngine(vectorstore)
+api_key = os.getenv("OPENAI_API_KEY")
+rag = RAGEngine(vectorstore, api_key=api_key)
 
 
 # ----------------------------------------------------------

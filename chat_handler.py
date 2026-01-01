@@ -217,3 +217,28 @@ def build_gemini_prompt(system_prompt, chunks, history, question):
     return prompt
 
 
+
+def stream_simple_openai(system_prompt, conversation_history, question, model="gpt-4.1-mini", api_key=None):
+    """
+    Stream response from OpenAI without RAG context constraints.
+    """
+    client = get_openai_client(api_key)
+
+    messages = [{"role": "system", "content": system_prompt}]
+
+    for msg in conversation_history:
+        messages.append({"role": msg["role"], "content": msg["content"]})
+
+    messages.append({"role": "user", "content": question})
+
+    stream = client.chat.completions.create(
+        model=model,
+        messages=messages,
+        stream=True
+    )
+
+    for chunk in stream:
+        if chunk.choices and chunk.choices[0].delta:
+            delta = chunk.choices[0].delta
+            if hasattr(delta, "content") and delta.content:
+                yield delta.content
