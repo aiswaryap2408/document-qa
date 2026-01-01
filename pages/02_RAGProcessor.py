@@ -4,11 +4,11 @@ from chunking import extract_hierarchy, extract_hierarchy_from_markdown, chunk_h
 from vectorstore import InMemoryVectorStore
 from rag_engine import RAGEngine
 from openai import OpenAI
-from streamlit_auth import require_auth, add_logout_button
+from streamlit_auth import landing_page, add_logout_button
 
 st.set_page_config(page_title="RAG Document Processor", layout="wide")
 
-require_auth()
+landing_page()
 add_logout_button()
 # ----------------------------------------------------------
 # Load Vectorstore

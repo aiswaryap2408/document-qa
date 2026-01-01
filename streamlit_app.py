@@ -85,12 +85,9 @@ except Exception:
 # -------------------------------------------------------------------
 st.set_page_config(page_title="RAG Guruji Chatbot", layout="wide")
 
-# -------------------------------------------------------------------
-# Authentication Check
-# -------------------------------------------------------------------
-from streamlit_auth import require_auth, add_logout_button
+from streamlit_auth import landing_page, add_logout_button
 
-require_auth()
+landing_page()
 add_logout_button()
 
 st.title("RAG Chatbot")
@@ -107,19 +104,24 @@ if "chat_history" not in st.session_state:
     st.session_state["chat_history"] = []
 
 vectorstore = st.session_state["vectorstore"]
-engine = RAGEngine(vectorstore)
-
-# -------------------------------------------------------------------
-# Hide Sidebar if Not Authenticated (CSS)
-# -------------------------------------------------------------------
-
-
-
 # -------------------------------------------------------------------
 # Sidebar Configuration
 # -------------------------------------------------------------------
+api_key_to_use = OPENAI_API_KEY
+
 if st.session_state.get("authenticated"):
     st.sidebar.header("⚙️ Settings")
+
+    # API Key Input
+    # Default is system key (hidden). User can override.
+    user_api_key = st.sidebar.text_input(
+        "OpenAI API Key", 
+        type="password", 
+        help="Leave empty to use system default. Changes apply to this session only."
+    )
+
+    if user_api_key:
+        api_key_to_use = user_api_key
 
     provider = st.sidebar.selectbox("Model Provider", ["OpenAI", "Google Gemini"])
 
@@ -140,23 +142,19 @@ if st.session_state.get("authenticated"):
     st.sidebar.subheader("📚 RAG Documents")
 
     # For single-user app, show all documents
-    # For single-user app, show all documents
     docs_available = vectorstore.document_names
 
     # Check if we have a specific user document locked in session
     user_doc_id = st.session_state.get("user_doc_id")
 
     if user_doc_id:
-        # If the specific doc is not loaded yet (race condition or first load), 
-        # it might be because vectorstore loaded before the new file was written?
-        # Actually, the app reruns after auth, so it should be loaded.
         if user_doc_id in docs_available:
             selected_docs = [user_doc_id]
-            st.sidebar.info(f"Using your horoscope report: {user_doc_id}")
+            st.sidebar.info(f"Using document: {user_doc_id}")
         else:
             # Fallback if something went wrong saving the file
             selected_docs = []
-            st.sidebar.warning("Your horoscope report was not found. Please contact support.")
+            st.sidebar.warning("Document not found. Please upload again.")
     else:
         # Admin/Dev fallback: Allow selecting any doc
         selected_docs = st.sidebar.multiselect(
@@ -190,9 +188,6 @@ if st.session_state.get("authenticated"):
     # Show stats
     if selected_docs:
         # Count chunks for selected docs
-        # We need to access the internal chunks list. 
-        # vectorstore.chunks is a list of (chunk_dict, score)
-        # chunk_dict has "doc_id"
         count = sum(1 for c, _ in vectorstore.chunks if c.get("doc_id") in selected_docs)
         st.sidebar.caption(f"Searching **{count}** chunks across **{len(selected_docs)}** document(s).")
     else:
@@ -206,6 +201,9 @@ else:
     selected_docs = []
 
 
+engine = RAGEngine(vectorstore, api_key=api_key_to_use)
+
+
 # -------------------------------------------------------------------
 # System Prompt
 # -------------------------------------------------------------------
@@ -214,12 +212,10 @@ if os.path.exists(PROMPT_FILE):
     system_prompt = open(PROMPT_FILE, "r", encoding="utf-8").read()
 else:
     system_prompt = """
-You are Astrology Guruji.
-You always speak politely and give deep astrological insights.
-If a question matches document context, use ONLY that.
-If outside documents, answer using astrology (dashas, planets, life stages).
-If the question is logically invalid (dowry, male pregnancy), decline respectfully.
-"""
+    You are a helpful AI assistant.
+    Answer questions based ONLY on the provided context.
+    If the answer is not found, say "I cannot find the answer in the document."
+    """
 
 
 # -------------------------------------------------------------------
@@ -268,7 +264,8 @@ if user_input:
                     clean_chunks,
                     st.session_state["chat_history"][:-1],
                     user_input,
-                    model=openai_model
+                    model=openai_model,
+                    api_key=api_key_to_use
                 )
             else:
                 stream = stream_gemini(

@@ -3,9 +3,9 @@ import numpy as np
 
 class RAGEngine:
 
-    def __init__(self, vectorstore):
+    def __init__(self, vectorstore, api_key=None):
         self.vectorstore = vectorstore
-        self.client = OpenAI()
+        self.client = OpenAI(api_key=api_key) if api_key else OpenAI()
 
     # ---------------------------------------------------------
     # Compute embedding for user queries
