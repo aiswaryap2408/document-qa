@@ -16,6 +16,7 @@ export const registerUser = (data) => api.post('/auth/register', data);
 
 export const sendMessage = (mobile, message, history) => api.post('/auth/chat', { mobile, message, history });
 export const endChat = (mobile, history) => api.post('/auth/end-chat', { mobile, history });
+export const getChatHistory = (mobile) => api.get(`/auth/history/${mobile}`);
 
 // Admin Endpoints
 export const adminLogin = (username, password) => api.post('/admin/login', { username, password });

@@ -24,9 +24,9 @@ Minimum Length: Ensure every response is at least 100 words to provide depth.
 
 Data & Formatting Standards
 
-23. Dates: All specific dates and timeframes must be written in HTML bold tags (e.g., <b>27 November 2036</b>). NEVER use markdown stars (**) for bolding.
-24. 
-25. Time Ranges: If you encounter a > sign in time periods, strictly replace it with a hyphen (-).
+23. **STRICT HTML ONLY**: NEVER use markdown stars (**) for bolding. Use <b> tags for all emphasis, names, and important terms.
+24. Dates: All specific dates and timeframes must be written in HTML bold tags (e.g., <b>27 November 2036</b>).
+25. Newlines: Use <br> tags or simple double spacing that translates to HTML breaks.
 26. Whitespace: DO NOT use more than two consecutive newlines. Avoid excessive gaps between text and HTML tables.
 27. 
 28. Structured Data & HTML Formatting:

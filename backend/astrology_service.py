@@ -35,37 +35,100 @@ def generate_astrology_report(name, gender, dob, tob, pob, mobile, email, chart_
         
         # print(f"DEBUG: Generated XML Payload: {xml}")
 
-        # 3. Call API
+        # 3. Call API with retries
         url = "https://api.ccrdev.clickastro.com/chat/api.php"
-        # We will try sending raw XML body
-        # Try form data with key 'xml' (common convention)
         headers = {
-            "User-Agent": "Mozilla/5.0", # Avoid bot blocking
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+            "Accept": "application/json, text/javascript, */*; q=0.01",
+            "Accept-Language": "en-US,en;q=0.9",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Origin": "https://api.ccrdev.clickastro.com",
+            "Referer": "https://api.ccrdev.clickastro.com/chat/",
+            "X-Requested-With": "XMLHttpRequest"
         }
         payload = {'xml': xml} 
         
-        response = requests.post(
-            url,
-            data=payload,
-            headers=headers,
-            timeout=30
-        )
+        max_retries = 3
+        last_error = None
         
-        # 4. Handle Response
-        if response.status_code == 200:
+        for attempt in range(max_retries):
             try:
-                json_response = response.json()
+                print(f"DEBUG: [BACKGROUND] Calling ClickAstro API (Attempt {attempt+1}/{max_retries})...")
+                response = requests.post(
+                    url,
+                    data=payload,
+                    headers=headers,
+                    timeout=60 # Increased timeout
+                )
                 
-                # Check for mainHtml and decode it
-                if "mainHtml" in json_response:
-                    return unquote_plus(json_response["mainHtml"])
-                
-                return json.dumps(json_response, indent=2)
-            except Exception as e:
-                # Not JSON?
-                raise ValueError(f"API returned non-JSON response. Raw output: {response.text}")
-        else:
-            raise requests.exceptions.RequestException(f"API Error: {response.status_code} - {response.text}")
-
+                # 4. Handle Response
+                if response.status_code == 200:
+                    try:
+                        json_response = response.json()
+                        
+                        # Check for mainHtml and decode it
+                        if "mainHtml" in json_response:
+                            return unquote_plus(json_response["mainHtml"])
+                        
+                        return json.dumps(json_response, indent=2)
+                    except Exception as e:
+                        # Not JSON?
+                        raise ValueError(f"API returned non-JSON response. Raw output: {response.text}")
+                else:
+                    last_error = f"API Error: {response.status_code} - {response.text}"
+                    print(f"DEBUG: [BACKGROUND] ClickAstro API Attempt {attempt+1} failed: {last_error}")
+            except (requests.exceptions.RequestException, ValueError) as e:
+                last_error = str(e)
+                print(f"DEBUG: [BACKGROUND] ClickAstro API Attempt {attempt+1} failed: {last_error}")
+            
+            # Wait before retry (except for last attempt)
+            if attempt < max_retries - 1:
+                time.sleep(2 * (attempt + 1)) # Simple backoff
+        
     except Exception as e:
         raise RuntimeError(f"Failed to generate report: {e}")
+
+
+def send_sms_otp(mobile: str, otp: str):
+    """
+    Send OTP via sapteleservices.in SMS API.
+    Based on USER provided PHP logic.
+    """
+    try:
+        import os
+        url = "http://sapteleservices.in/SMS_API/sendsms.php"
+        username = os.getenv("SMS_USERNAME", "clickastro")
+        password = os.getenv("SMS_PASSWORD", "7f4f17")
+        sender_id = os.getenv("SMS_SENDER_ID", "FNDAST")
+        tmpl_id = os.getenv("SMS_TEMPLATE_ID", "1207164457444465264")
+        
+        # Message must exactly match the template registered with the DLT
+        # Template: {otp}is your one-time password for FindAstro. It is valid for 10 minutes. Do not share your OTP with anyone. \r\n\r\n7UmkJ0YKruC
+        message = f"{otp}is your one-time password for FindAstro. It is valid for 10 minutes. Do not share your OTP with anyone. \r\n\r\n7UmkJ0YKruC"
+        
+        params = {
+            "username": username,
+            "password": password,
+            "mobile": mobile,
+            "sendername": sender_id,
+            "message": message,
+            "routetype": 1, # Transactional
+            "tid": tmpl_id,
+        }
+        import urllib.parse
+        query_string = urllib.parse.urlencode(params, quote_via=urllib.parse.quote_plus)
+        full_url = f"{url}?{query_string}"
+        
+        print(f"DEBUG: Requesting SMS URL: {full_url}")
+        response = requests.get(full_url, timeout=5)
+        
+        if response.status_code == 200:
+            print(f"DEBUG: SMS API Success Response: {response.text}")
+            return True
+        else:
+            print(f"ERROR: SMS API Failure Response ({response.status_code}): {response.text}")
+            return False
+            
+    except Exception as e:
+        print(f"ERROR in send_sms_otp: {str(e)}")
+        return False

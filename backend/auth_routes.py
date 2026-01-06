@@ -1,11 +1,12 @@
 from fastapi import APIRouter, HTTPException, BackgroundTasks
 from backend.models import MobileRequest, OTPRequest, UserRegistration, LoginResponse
 from backend.db import get_db_collection
-from backend.astrology_service import generate_astrology_report
+from backend.astrology_service import generate_astrology_report, send_sms_otp
 from backend.rag_service import get_rag_engine
 from rag_modules.chunking import extract_hierarchy, chunk_hierarchy_for_rag
 import time
 import os
+import random
 from pydantic import BaseModel
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
@@ -15,20 +16,23 @@ async def send_otp(request: MobileRequest):
     try:
         print(f"DEBUG: Received send-otp request for mobile: {request.mobile}")
         otp_col = get_db_collection("otps")
-        
+
         # 1. Clean up expired records for this mobile
-        # This prevents stale records from triggering the "retry" logic (9876) erroneously.
-        # Expiration: 5 minutes = 300 seconds
         expiration_time = time.time() - 300
         delete_res = otp_col.delete_many({"mobile": request.mobile, "created_at": {"$lt": expiration_time}})
         if delete_res.deleted_count > 0:
             print(f"DEBUG: Deleted {delete_res.deleted_count} expired OTP record(s) for {request.mobile}")
 
         # 2. Check if a valid (non-expired) request already exists
-        existing = otp_col.find_one({"mobile": request.mobile})
+        existing_record = otp_col.find_one({"mobile": request.mobile})
         
-        # Determine OTP: 1234 for new, 9876 for retry
-        otp_value = "1234" if not existing else "9876"
+        # 3. Generate Random 4-digit Numeric OTP
+        otp_value = str(random.randint(1000, 9999))
+        
+        # 4. Send via SMS API (Non-blocking)
+        print(f"DEBUG: Sending SMS OTP via threadpool...")
+        from starlette.concurrency import run_in_threadpool
+        sms_sent = await run_in_threadpool(send_sms_otp, request.mobile, otp_value)
         
         # Update or create OTP record
         otp_col.update_one(
@@ -37,14 +41,15 @@ async def send_otp(request: MobileRequest):
                 "$set": {
                     "otp": otp_value,
                     "created_at": time.time(),
-                    "is_retry": True if existing else False
+                    "sms_sent": sms_sent,
+                    "is_retry": True if existing_record else False
                 }
             },
             upsert=True
         )
+        print(f"DEBUG: OTP {otp_value} generated and sent={sms_sent} for {request.mobile}")
         
-        print(f"DEBUG: OTP {otp_value} generated for {request.mobile}")
-        return {"message": f"OTP sent to {request.mobile}", "status": "success", "otp": otp_value}
+        return {"message": f"OTP sent to {request.mobile}", "status": "success"}
     except Exception as e:
         print(f"ERROR in send_otp: {e}")
         import traceback
@@ -105,27 +110,140 @@ async def verify_otp(request: OTPRequest):
         traceback.print_exc()
         raise HTTPException(status_code=500, detail=str(e))
 
-@router.post("/register")
-async def register_user(reg: UserRegistration):
+async def process_user_registration_background(reg: UserRegistration):
+    """
+    Background task to handle heavy processing after registration.
+    This runs asynchronously while the user goes through onboarding.
+    """
     try:
-        print(f"DEBUG: Registering user {reg.name} with mobile {reg.mobile}")
+        print(f"DEBUG: [BACKGROUND] Starting processing for {reg.mobile}")
         
         # 1. Generate Report
-        print("DEBUG: Calling generate_astrology_report...")
+        print("DEBUG: [BACKGROUND] Calling generate_astrology_report...")
         report_text = generate_astrology_report(
             reg.name, reg.gender, reg.dob, reg.tob, reg.pob, reg.mobile, reg.email, reg.chart_style
         )
-        print("DEBUG: Report generated successfully.")
+        print("DEBUG: [BACKGROUND] Report generated successfully.")
         
-        # 2. Save Report to File (Optional for RAG later)
+        # 2. Save Report to File
         os.makedirs("reports", exist_ok=True)
         with open(f"reports/{reg.mobile}.txt", "w", encoding="utf-8") as f:
             f.write(report_text)
-        print(f"DEBUG: Report saved to reports/{reg.mobile}.txt")
+        print(f"DEBUG: [BACKGROUND] Report saved to reports/{reg.mobile}.txt")
 
-        # 3. Save to DB (Metadata only)
+        # 3. Save Report Text to dedicated collection
+        reports_col = get_db_collection("reports")
+        reports_col.update_one(
+            {"mobile": reg.mobile},
+            {"$set": {"mobile": reg.mobile, "report_text": report_text, "created_at": time.time()}},
+            upsert=True
+        )
+        print("DEBUG: [BACKGROUND] Astrology report saved to reports collection.")
+
+        # 4. RAG Processing
+        print("DEBUG: [BACKGROUND] Starting RAG indexing...")
+        engine, vectorstore = get_rag_engine()
+        hierarchy = extract_hierarchy(report_text)
+        
+        # Use original chunking function (no doc_id parameter)
+        chunks = chunk_hierarchy_for_rag(hierarchy)
+        
+        # Manually inject doc_id and chunk_index
+        for i, c in enumerate(chunks):
+            c["doc_id"] = reg.mobile
+            c["chunk_index"] = i
+            
+        # Generate embeddings
+        chunks = engine.embed_chunks(chunks) 
+        vectorstore.add_chunks(chunks)
+        print(f"DEBUG: [BACKGROUND] Successfully indexed {len(chunks)} chunks for {reg.mobile}")
+        
+        # 5. Save Document Mapping to DB
+        docs_col = get_db_collection("documents")
+        docs_col.insert_one({
+            "doc_id": reg.mobile,
+            "mobile": reg.mobile,
+            "file_path": f"processed_docs/{reg.mobile}.json",
+            "timestamp": time.time(),
+            "type": "astrology_report",
+            "status": "ready"
+        })
+        print("DEBUG: [BACKGROUND] Document mapping saved to MongoDB.")
+        
+        # 6. Update User Status to Ready
         users_col = get_db_collection("users")
-        user_doc = {
+        users_col.update_one(
+            {"mobile": reg.mobile},
+            {"$set": {"status": "ready"}}
+        )
+        print(f"DEBUG: [BACKGROUND] User {reg.mobile} status updated to 'ready'.")
+        
+    except Exception as e:
+        print(f"ERROR: [BACKGROUND] Processing failed for {reg.mobile}: {e}")
+        import traceback
+        traceback.print_exc()
+        
+        # Update user status to failed
+        try:
+            users_col = get_db_collection("users")
+            users_col.update_one(
+                {"mobile": reg.mobile},
+                {"$set": {"status": "failed", "error": str(e)}}
+            )
+        except Exception as db_err:
+            print(f"ERROR: [BACKGROUND] Failed to update user status: {db_err}")
+
+@router.post("/register")
+async def register_user(reg: UserRegistration, background_tasks: BackgroundTasks):
+    try:
+        print(f"DEBUG: Registering user {reg.name} with mobile {reg.mobile}")
+        
+        # 1. Save User to DB immediately with "processing" status
+        users_col = get_db_collection("users")
+        
+        # Check if user already exists
+        existing_user = users_col.find_one({"mobile": reg.mobile})
+        if existing_user:
+            print(f"DEBUG: User {reg.mobile} already exists, updating...")
+            users_col.update_one(
+                {"mobile": reg.mobile},
+                {"$set": {
+                    "name": reg.name,
+                    "email": reg.email,
+                    "gender": reg.gender,
+                    "chart_style": reg.chart_style,
+                    "dob": reg.dob,
+                    "tob": reg.tob,
+                    "pob": reg.pob,
+                    "status": "processing",
+                    "updated_at": time.time()
+                }}
+            )
+        else:
+            user_doc = {
+                "mobile": reg.mobile,
+                "name": reg.name,
+                "email": reg.email,
+                "gender": reg.gender,
+                "chart_style": reg.chart_style,
+                "dob": reg.dob,
+                "tob": reg.tob,
+                "pob": reg.pob,
+                "processed_doc_id": reg.mobile,
+                "status": "processing",
+                "wallet_balance": 100,
+                "created_at": time.time()
+            }
+            users_col.insert_one(user_doc)
+        
+        print("DEBUG: User profile saved to users collection with status 'processing'.")
+        
+        # 2. Queue background processing
+        background_tasks.add_task(process_user_registration_background, reg)
+        print("DEBUG: Background processing task queued.")
+        
+        # 3. Return immediately (user goes to onboarding)
+        user_response = {
             "mobile": reg.mobile,
             "name": reg.name,
             "email": reg.email,
@@ -134,79 +252,46 @@ async def register_user(reg: UserRegistration):
             "dob": reg.dob,
             "tob": reg.tob,
             "pob": reg.pob,
-            "processed_doc_id": reg.mobile,
-            "status": "processing",
-            "created_at": time.time()
+            "status": "processing"
         }
-        users_col.insert_one(user_doc)
-        print("DEBUG: User profile saved to users collection.")
-
-        # 4. Save Report Text to dedicated collection
-        reports_col = get_db_collection("reports")
-        reports_col.update_one(
-            {"mobile": reg.mobile},
-            {"$set": {"mobile": reg.mobile, "report_text": report_text, "created_at": time.time()}},
-            upsert=True
-        )
-        print("DEBUG: Astrology report saved to reports collection.")
-
-        # 5. RAG Processing
-        try:
-            print("DEBUG: Starting RAG indexing...")
-            engine, vectorstore = get_rag_engine()
-            hierarchy = extract_hierarchy(report_text)
-            
-            # Use original chunking function (no doc_id parameter)
-            chunks = chunk_hierarchy_for_rag(hierarchy)
-            
-            # Manually inject doc_id and chunk_index to keep chunking logic untouched
-            for i, c in enumerate(chunks):
-                c["doc_id"] = reg.mobile
-                c["chunk_index"] = i
-                
-            # Generate embeddings
-            chunks = engine.embed_chunks(chunks) 
-            vectorstore.add_chunks(chunks)
-            print(f"DEBUG: Successfully indexed {len(chunks)} chunks for {reg.mobile}")
-            
-            # 5. Save Document Mapping to DB
-            try:
-                docs_col = get_db_collection("documents")
-                docs_col.insert_one({
-                    "doc_id": reg.mobile,
-                    "mobile": reg.mobile,
-                    "file_path": f"processed_docs/{reg.mobile}.json",
-                    "timestamp": time.time(),
-                    "type": "astrology_report",
-                    "status": "ready"
-                })
-                print("DEBUG: Document mapping saved to MongoDB.")
-                
-                # Update User Status to Ready
-                users_col.update_one(
-                    {"mobile": reg.mobile},
-                    {"$set": {"status": "ready"}}
-                )
-                print("DEBUG: User status updated to 'ready'.")
-            except Exception as db_err:
-                print(f"ERROR saving document mapping: {db_err}")
-                
-        except Exception as rag_err:
-            print(f"ERROR in RAG processing: {rag_err}")
-            # We don't want to fail registration if RAG fails, 
-            # but for debugging we should know.
-            # Actually, the user might want this to be fatal or not.
-            # Let's keep it non-fatal for now to see if the report at least saves.
         
-        # Return success
-        user_doc.pop("_id", None)
         return {
             "access_token": "mock-jwt-token-new", 
             "token_type": "bearer",
-            "user_profile": user_doc
+            "user_profile": user_response
         }
 
     except Exception as e:
+        print(f"ERROR in register_user: {e}")
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.get("/user-status/{mobile}")
+async def get_user_status(mobile: str):
+    """
+    Check the status of user registration processing.
+    Returns: {"status": "processing" | "ready" | "failed", "user_profile": {...}}
+    """
+    try:
+        users_col = get_db_collection("users")
+        user = users_col.find_one({"mobile": mobile})
+        
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+        
+        user.pop("_id", None)
+        
+        return {
+            "status": user.get("status", "unknown"),
+            "user_profile": user,
+            "wallet_balance": user.get("wallet_balance", 0),
+            "error": user.get("error", None)
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"ERROR in get_user_status: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 class ChatMessage(BaseModel):
@@ -218,120 +303,161 @@ class ChatMessage(BaseModel):
 async def chat(request: ChatMessage):
     try:
         if not os.getenv("OPENAI_API_KEY"):
-            print("ERROR: OPENAI_API_KEY is missing from environment!")
             raise HTTPException(status_code=500, detail="OpenAI API key not configured on server.")
 
         print(f"DEBUG: Chat request received for mobile: {request.mobile}")
 
-        # --- Maya Receptionist Check ---
+        # ----------------------------------------------------
+        # 1. Fetch User Details
+        # ----------------------------------------------------
+        users_col = get_db_collection("users")
+        user = users_col.find_one({"mobile": request.mobile})
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+
+        # ----------------------------------------------------
+        # 2. Maya Classification & Gatekeeping
+        # ----------------------------------------------------
         from rag_modules.maya_receptionist import check_with_maya
-        print("DEBUG: Checking with Maya Receptionist...")
-        maya_decision = check_with_maya(request.message, request.history)
-        print(f"DEBUG: Maya decision: {maya_decision}")
+        maya_res = check_with_maya(request.message, request.history, user_details=user)
+        category = maya_res.get("category", "PROCEED")
+        pass_to_guruji = maya_res.get("pass_to_guruji", True)
+        maya_message = maya_res.get("response_message", "")
+        
+        # Note: 'amount' logic is currently zeroed as the new prompt removed costs.
+        # We can re-integrate specifics if needed later.
+        cost = maya_res.get("amount", 0) 
 
-        if maya_decision.get("action") == "BLOCK":
+        current_balance = user.get("wallet_balance", 100)
+        
+        # If pass_to_guruji is False, Maya handles it directly
+        if not pass_to_guruji:
+            # Store conversation history
+            try:
+                conv_col = get_db_collection("conversation_history")
+                # Store user message
+                conv_col.insert_one({
+                    "mobile": request.mobile,
+                    "role": "user",
+                    "message": request.message,
+                    "timestamp": time.time()
+                })
+                # Store Maya's response
+                conv_col.insert_one({
+                    "mobile": request.mobile,
+                    "role": "maya",
+                    "message": maya_message,
+                    "category": category,
+                    "timestamp": time.time()
+                })
+            except Exception as e:
+                print(f"Error storing Maya conversation: {e}")
+            
             return {
-                "content": maya_decision.get("message", "Please upgrade to continue."),
-                "context": [],
-                "metrics": {"rag_score": 0, "modelling_score": 0, "maya_blocked": True}
+                "answer": maya_message if maya_message else "I'm sorry, I cannot process this request. Please ask an astrology question.",
+                "amount": 0,
+                "flag": category,
+                "assistant": "maya",
+                "wallet_balance": current_balance,
+                "maya_json": maya_res  # Include Maya's raw JSON response
             }
-        # -------------------------------
 
+        # Wallet check for passed queries (if any cost)
+        if cost > 0 and current_balance < cost:
+            return {
+                "answer": "You have insufficient coins for this detailed analysis. Please top up your wallet. 🙏",
+                "amount": 0,
+                "flag": "INSUFFICIENT_FUNDS",
+                "assistant": "maya",
+                "wallet_balance": current_balance,
+                "maya_json": maya_res  # Include Maya's raw JSON response
+            }
+
+        # Deduct coins if applicable
+        if cost > 0:
+            users_col.update_one(
+                {"mobile": request.mobile},
+                {"$inc": {"wallet_balance": -cost}}
+            )
+            # Record Transaction
+            try:
+                trans_col = get_db_collection("transactions")
+                trans_col.insert_one({
+                    "mobile": request.mobile,
+                    "amount": cost,
+                    "query": request.message,
+                    "category": category,
+                    "timestamp": time.time()
+                })
+            except: pass
+            current_balance -= cost
+
+
+        # ----------------------------------------------------
+        # 2. Guruji RAG Logic
+        # ----------------------------------------------------
         engine, vectorstore = get_rag_engine()
-        print(f"DEBUG: Vectorstore doc_ids: {vectorstore.document_names}")
-        
         selected_docs = [request.mobile]
-        print(f"DEBUG: Retrieving chunks for docs: {selected_docs}")
         
-        # Query Augmentation: If input is short (< 15 chars), include last bot question if available
+        print(f"DEBUG: Vectorstore has {len(vectorstore.document_names)} docs. Searching for: {selected_docs}")
+        
+        # Query Augmentation
         search_query = request.message
         if len(request.message) < 15 and request.history:
-            # Find last assistant message
             last_assistant = next((m["content"] for m in reversed(request.history) if m["role"] == "assistant"), "")
             if last_assistant:
-                # Clean up the assistant message (remove previous "What's Next?" if present)
-                base_context = last_assistant.split("🤔 What's Next?")[0].strip()
-                search_query = f"{base_context} {request.message}"
-                print(f"DEBUG: Augmenting short query to: {search_query}")
+                # Robustly strip assistant labels and follow-up questions
+                clean_last = last_assistant.split("🤔")[0]
+                if "Guruji</b>:" in clean_last:
+                    clean_last = clean_last.split("Guruji</b>:")[-1]
+                elif "Maya</b>:" in clean_last:
+                    clean_last = clean_last.split("Maya</b>:")[-1]
+                
+                search_query = f"{clean_last.strip()} {request.message}"
+                print(f"DEBUG: Augmented query: {search_query}")
         
         filtered_chunks = engine.retrieve(search_query, top_k=5, doc_ids=selected_docs)
-        print(f"DEBUG: Found {len(filtered_chunks)} chunks for query: {search_query}")
+        print(f"DEBUG: Initial retrieval found {len(filtered_chunks)} chunks.")
         
-        clean_chunks = [
-            {
-                "text": chunk["text"],
-                "heading": chunk["heading"],
-                "doc_id": chunk["doc_id"]
-            }
-            for (chunk, score) in filtered_chunks
-        ]
-        
-        if not clean_chunks:
-            print("DEBUG: No chunks found. Attempting to reload report from DB/Disk...")
-            
-            # 1. Try DB first (Normalized source)
+        # Reload if empty
+        if not filtered_chunks:
+            print(f"DEBUG: No chunks found in memory for {request.mobile}. Attempting DB reload...")
             reports_col = get_db_collection("reports")
             report_record = reports_col.find_one({"mobile": request.mobile})
             report_text = report_record.get("report_text") if report_record else None
-            
-            # 2. Try Disk if DB fails
-            if not report_text:
-                report_path = f"reports/{request.mobile}.txt"
-                if os.path.exists(report_path):
-                    with open(report_path, "r", encoding="utf-8") as f:
-                        report_text = f.read()
-            
             if report_text:
-                from backend.rag_service import get_rag_engine as get_rag
                 from rag_modules.chunking import extract_hierarchy, chunk_hierarchy_for_rag
-                _, vec = get_rag()
                 hierarchy = extract_hierarchy(report_text)
                 chunks = chunk_hierarchy_for_rag(hierarchy)
-                
-                # Manually inject doc_id
-                for c in chunks:
-                    c["doc_id"] = request.mobile
-                
-                vec.add_chunks(chunks)
-                print(f"DEBUG: Reloaded {len(chunks)} chunks for {request.mobile}.")
-                
-                # Re-retrieve
-                filtered_chunks = engine.retrieve(request.message, top_k=5, doc_ids=selected_docs)
-                clean_chunks = [{"text": c["text"], "heading": c["heading"], "doc_id": c["doc_id"]} for (c, s) in filtered_chunks]
-            else:
-                print(f"DEBUG: No report found in DB or Disk for {request.mobile}")
+                for c in chunks: c["doc_id"] = request.mobile
+                chunks = engine.embed_chunks(chunks)
+                vectorstore.add_chunks(chunks)
+                filtered_chunks = engine.retrieve(search_query, top_k=5, doc_ids=selected_docs)
+                print(f"DEBUG: Reloaded and found {len(filtered_chunks)} chunks.")
 
-        from rag_modules.chat_handler import generate_with_openai
+        clean_chunks = [{"text": c["text"], "heading": c["heading"], "doc_id": c["doc_id"]} for (c, s) in filtered_chunks]
         
-        system_prompt = "You are Astrology Guruji. Answer using only context if possible."
+        # Calculate Metrics
+        scores = [score for (chunk, score) in filtered_chunks]
+        max_score = max(scores) if scores else 0
+        avg_score = sum(scores) / len(scores) if scores else 0
+        print(f"DEBUG: Max Score: {max_score:.4f}, Avg Score: {avg_score:.4f}")
+
+        # Generate OpenAI Response
+        from rag_modules.chat_handler import generate_with_openai
+        system_prompt = "You are Astrology Guruji. Answer using only HTML tags (<b>, <ul>, <li>, <table>) for formatting. DO NOT use markdown stars (**). Answer using only context if possible. Speak with wisdom and compassion."
         if os.path.exists("system_prompt.txt"):
             with open("system_prompt.txt", "r", encoding="utf-8") as f:
                 system_prompt = f.read()
 
-        print("DEBUG: Calling OpenAI...")
         response = generate_with_openai(
             system_prompt=system_prompt,
             context_chunks=clean_chunks,
             conversation_history=request.history,
             question=request.message
         )
-        print("DEBUG: OpenAI response received.")
         
-        # --- Maya Handover (First Query Only) ---
-        # If there are no previous USER messages in history, this is the first interaction.
-        previous_user_msgs = [m for m in request.history if m['role'] == 'user']
-        if len(previous_user_msgs) == 0:
-            print("DEBUG: First query detection. Prepending Maya handover message.")
-            maya_preamble = "**Maya**: I have received your query. forwarding it to Guruji... 🧘‍♂️\n\n"
-            response = maya_preamble + response
-        # ----------------------------------------
-
-        # Calculate Metrics
-        scores = [score for (chunk, score) in filtered_chunks]
-        avg_score = sum(scores) / len(scores) if scores else 0
-        max_score = max(scores) if scores else 0
-
-        # Save to Chat History
+        # Save to Chat History (legacy format)
         try:
             chats_col = get_db_collection("chats")
             chats_col.insert_one({
@@ -339,21 +465,57 @@ async def chat(request: ChatMessage):
                 "user_message": request.message,
                 "bot_response": response,
                 "timestamp": time.time(),
+                "assistant": "guruji",
+                "cost": cost,
                 "metrics": {
                     "rag_score": round(max_score * 100, 1),
                     "modelling_score": round(avg_score * 100, 1)
                 }
             })
-        except Exception as db_err:
-            print(f"DEBUG: Failed to save chat to DB: {db_err}")
+        except: pass
         
+        # Save to Conversation History (new format with roles)
+        try:
+            conv_col = get_db_collection("conversation_history")
+            # Store user message
+            conv_col.insert_one({
+                "mobile": request.mobile,
+                "role": "user",
+                "message": request.message,
+                "timestamp": time.time()
+            })
+            # Store Guruji's response
+            conv_col.insert_one({
+                "mobile": request.mobile,
+                "role": "guruji",
+                "message": response,
+                "cost": cost,
+                "category": category,
+                "metrics": {
+                    "rag_score": round(max_score * 100, 1),
+                    "modelling_score": round(avg_score * 100, 1)
+                },
+                "timestamp": time.time()
+            })
+        except Exception as e:
+            print(f"Error storing Guruji conversation: {e}")
+        
+        # Return structured JSON
+        # Convert double newlines to breaks
+        final_answer = response.strip().replace("\n\n", "<br>").replace("\n", " ")
+
         return {
-            "content": response,
+            "answer": final_answer,
+            "amount": cost,
+            "flag": category,
+            "assistant": "guruji",
+            "wallet_balance": current_balance,
             "context": clean_chunks,
             "metrics": {
                 "rag_score": round(max_score * 100, 1),
                 "modelling_score": round(avg_score * 100, 1)
-            }
+            },
+            "maya_json": maya_res  # Include Maya's raw JSON response
         }
         
     except Exception as e:
@@ -407,6 +569,42 @@ async def end_chat(request: EndChatRequest):
         
     except Exception as e:
         print(f"ERROR in end-chat: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.get("/history/{mobile}")
+async def get_history(mobile: str):
+    """
+    Retrieve conversation history for a user.
+    """
+    try:
+        conv_col = get_db_collection("conversation_history")
+        # Find all messages for this mobile, sorted by timestamp
+        cursor = conv_col.find({"mobile": mobile}).sort("timestamp", 1)
+        
+        history = []
+        for doc in cursor:
+            role = doc.get("role")
+            msg_obj = {
+                "role": "user" if role == "user" else "assistant",
+                "content": doc.get("message"),
+                "timestamp": doc.get("timestamp")
+            }
+            
+            # Add assistant specific fields
+            if role == "maya":
+                msg_obj["assistant"] = "maya"
+                msg_obj["category"] = doc.get("category")
+            elif role == "guruji":
+                msg_obj["assistant"] = "guruji"
+                msg_obj["metrics"] = doc.get("metrics")
+                msg_obj["cost"] = doc.get("cost")
+                
+            history.append(msg_obj)
+            
+        return {"history": history}
+        
+    except Exception as e:
+        print(f"ERROR in get_history: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 

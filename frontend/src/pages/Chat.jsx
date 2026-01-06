@@ -1,24 +1,103 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { sendMessage, endChat } from '../api';
+import { sendMessage, endChat, getChatHistory } from '../api';
+import axios from 'axios';
 
 const Chat = () => {
     const navigate = useNavigate();
     const [messages, setMessages] = useState([
-        { role: 'assistant', content: 'Namaste! I am Maya, the receptionist. How can I help you reach Guruji today? 🙏' }
+        { role: 'assistant', content: 'Namaste! I am Maya, the receptionist. How can I help you reach Guruji today! 🙏', assistant: 'maya' }
     ]);
     const [input, setInput] = useState('');
     const [loading, setLoading] = useState(false);
     const [summary, setSummary] = useState(null);
+    const [userStatus, setUserStatus] = useState('checking'); // 'checking', 'processing', 'ready', 'failed'
+    const [walletBalance, setWalletBalance] = useState(100);
     const messagesEndRef = useRef(null);
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }
 
+    // Load Chat History
+    useEffect(() => {
+        const loadHistory = async () => {
+            const mobile = localStorage.getItem('mobile');
+            if (mobile) {
+                try {
+                    const res = await getChatHistory(mobile);
+                    if (res.data.history && res.data.history.length > 0) {
+                        // Keep the greeting, append history
+                        // Note: If history is loaded, we might want to check if the last message was a greeting
+                        // But for now, simple append is safe as greeting isn't in DB.
+                        setMessages(prev => {
+                            // Avoid duplicates if strict mode causes double mount
+                            const newHistory = res.data.history;
+                            if (prev.length > 1) return prev; // Already loaded?
+                            return [...prev, ...newHistory];
+                        });
+                    }
+                } catch (err) {
+                    console.error("Failed to load chat history:", err);
+                }
+            }
+        };
+        loadHistory();
+    }, []);
+
     useEffect(() => {
         scrollToBottom();
     }, [messages]);
+
+    // Check user registration status on mount
+    useEffect(() => {
+        const checkUserStatus = async () => {
+            const mobile = localStorage.getItem('mobile');
+            if (!mobile) {
+                navigate('/');
+                return;
+            }
+
+            try {
+                const res = await axios.get(`http://localhost:8088/auth/user-status/${mobile}`);
+                const status = res.data.status;
+
+                console.log('User status:', status);
+                setUserStatus(status);
+                if (res.data.wallet_balance !== undefined) {
+                    setWalletBalance(res.data.wallet_balance);
+                }
+
+                // If still processing, poll every 2 seconds
+                if (status === 'processing') {
+                    const pollInterval = setInterval(async () => {
+                        try {
+                            const pollRes = await axios.get(`http://localhost:8088/auth/user-status/${mobile}`);
+                            const newStatus = pollRes.data.status;
+                            console.log('Polling status:', newStatus);
+                            setUserStatus(newStatus);
+                            if (pollRes.data.wallet_balance !== undefined) {
+                                setWalletBalance(pollRes.data.wallet_balance);
+                            }
+
+                            if (newStatus === 'ready' || newStatus === 'failed') {
+                                clearInterval(pollInterval);
+                            }
+                        } catch (err) {
+                            console.error('Status polling error:', err);
+                        }
+                    }, 2000);
+
+                    return () => clearInterval(pollInterval);
+                }
+            } catch (err) {
+                console.error('Status check error:', err);
+                setUserStatus('ready'); // Fallback to ready if check fails
+            }
+        };
+
+        checkUserStatus();
+    }, [navigate]);
 
     const handleLogout = () => {
         localStorage.removeItem('token');
@@ -68,16 +147,27 @@ const Chat = () => {
             const history = messages.slice(1);
 
             const res = await sendMessage(mobile, input, history);
-            const { content, metrics, context } = res.data;
+            const { answer, metrics, context, assistant, wallet_balance, amount, maya_json } = res.data;
+
+            if (wallet_balance !== undefined) {
+                setWalletBalance(wallet_balance);
+            }
+
             setMessages(prev => [...prev, {
                 role: 'assistant',
-                content,
+                content: answer,
+                assistant: assistant || 'guruji',
                 metrics,
                 context,
-                showContext: false
+                amount,
+                showContext: false,
+                rawResponse: res.data, // Store the full JSON response
+                mayaJson: maya_json // Store Maya's triage JSON separately
             }]);
         } catch (err) {
             console.error("Chat Error:", err);
+            // Remove handover notification on error
+            setMessages(prev => prev.filter(m => !m.isHandover));
             setMessages(prev => [...prev, { role: 'assistant', content: 'Sorry, I encountered an error connecting to the stars.' }]);
         } finally {
             setLoading(false);
@@ -90,29 +180,56 @@ const Chat = () => {
         ));
     };
 
+    const toggleJsonResponse = (index) => {
+        setMessages(prev => prev.map((msg, i) =>
+            i === index ? { ...msg, showJsonResponse: !msg.showJsonResponse } : msg
+        ));
+    };
+
+    const toggleMayaJson = (index) => {
+        setMessages(prev => prev.map((msg, i) =>
+            i === index ? { ...msg, showMayaJson: !msg.showMayaJson } : msg
+        ));
+    };
+
     return (
-        <div className="flex flex-col h-screen bg-gray-50 relative">
-            {/* Header */}
-            <header className="bg-white border-b px-6 py-4 flex justify-between items-center shadow-sm">
-                <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 bg-indigo-600 rounded-full flex items-center justify-center">
-                        <span className="text-white text-xs font-bold">AG</span>
+        <div className="flex flex-col flex-1 relative overflow-hidden">
+            {/* Status Banner */}
+            {userStatus === 'processing' && (
+                <div className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-6 py-3 text-center text-sm font-medium">
+                    <div className="flex items-center justify-center gap-2">
+                        <div className="flex gap-1">
+                            <span className="w-1.5 h-1.5 bg-white rounded-full animate-bounce"></span>
+                            <span className="w-1.5 h-1.5 bg-white rounded-full animate-bounce [animation-delay:0.2s]"></span>
+                            <span className="w-1.5 h-1.5 bg-white rounded-full animate-bounce [animation-delay:0.4s]"></span>
+                        </div>
+                        <span>🔮 Preparing your cosmic profile... Almost ready!</span>
                     </div>
-                    <h1 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600">
+                </div>
+            )}
+            {userStatus === 'failed' && (
+                <div className="bg-red-500 text-white px-6 py-3 text-center text-sm font-medium">
+                    ⚠️ Registration processing failed. Please contact support or try registering again.
+                </div>
+            )}
+
+            {/* Header */}
+            <header className="bg-white border-b px-3 sm:px-6 py-3 flex justify-between items-center shadow-sm">
+                <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 bg-indigo-600 rounded-full flex items-center justify-center flex-shrink-0">
+                        <span className="text-white text-[10px] font-bold">AG</span>
+                    </div>
+                    <h1 className="text-base sm:text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600 truncate">
                         Astrology Guruji
                     </h1>
                 </div>
-                <div className="flex gap-4">
-                    <button
-                        onClick={handleEndChat}
-                        disabled={loading || summary}
-                        className="text-sm font-medium text-amber-600 hover:text-amber-700 transition-colors flex items-center gap-1 disabled:opacity-50"
-                    >
-                        End Chat
-                    </button>
+                <div className="flex items-center gap-2 sm:gap-4">
+                    <div className="bg-amber-50 border border-amber-200 px-2 sm:px-3 py-1 rounded-full flex items-center gap-1 sm:gap-2 shadow-sm">
+                        <span className="text-amber-600 font-bold text-xs">🪙 {walletBalance}</span>
+                    </div>
                     <button
                         onClick={handleLogout}
-                        className="text-sm font-medium text-gray-400 hover:text-red-500 transition-colors flex items-center gap-1"
+                        className="text-xs sm:text-sm font-medium text-gray-400 hover:text-red-500 transition-colors"
                     >
                         Logout
                     </button>
@@ -122,44 +239,119 @@ const Chat = () => {
             {/* Chat Area */}
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
                 {messages.map((msg, i) => (
-                    <div key={i} className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'}`}>
-                        <div className={`max-w-[85%] px-4 py-2 rounded-2xl shadow-sm chat-bubble ${msg.role === 'user'
-                            ? 'bg-indigo-600 text-white rounded-br-none'
-                            : 'bg-white text-gray-800 border border-gray-100 rounded-bl-none'
-                            }`}>
-                            <div
-                                className="text-sm leading-relaxed"
-                                dangerouslySetInnerHTML={{ __html: msg.content }}
-                            />
+                    <div key={i} className={`flex flex-col ${msg.role === 'user' ? 'items-end' : msg.role === 'system' ? 'items-center' : 'items-start'} mb-2`}>
+                        {/* Regular User/Assistant Messages */}
+                        <div className={`flex w-full ${msg.role === 'user' ? 'justify-end' : 'justify-start'} items-start gap-2`}>
+                            {msg.role === 'assistant' && (
+                                <div className={`w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center overflow-hidden border ${msg.assistant === 'maya' ? 'bg-purple-100 border-purple-200' : 'bg-indigo-100 border-indigo-200'}`}>
+                                    {msg.assistant === 'maya' ? (
+                                        <span className="text-sm text-purple-600 font-bold">M</span>
+                                    ) : (
+                                        <img src="/svg/guruji_illustrated.svg" alt="G" className="w-6 h-6 object-contain" />
+                                    )}
+                                </div>
+                            )}
 
-                            {msg.metrics && (
-                                <div className="mt-2 pt-2 border-t border-gray-100 flex justify-between items-center gap-4">
-                                    <div className="flex gap-3 text-[10px] font-medium text-gray-400 capitalize">
-                                        <span>RAG Context: {msg.metrics.rag_score}%</span>
-                                        <span>Modelling: {msg.metrics.modelling_score}%</span>
+                            <div className={`max-w-[85%] px-4 py-3 rounded-2xl shadow-sm chat-bubble ${msg.role === 'user'
+                                ? 'bg-indigo-600 text-white rounded-br-none'
+                                : msg.assistant === 'maya'
+                                    ? 'bg-purple-50 text-purple-900 border border-purple-100 rounded-bl-none'
+                                    : 'bg-white text-gray-800 border border-gray-100 rounded-bl-none'
+                                }`}>
+                                {/* Assistant Identity Tag */}
+                                {msg.role === 'assistant' && (
+                                    <div className={`text-[10px] font-bold uppercase mb-1 tracking-wider ${msg.assistant === 'maya' ? 'text-purple-500' : 'text-indigo-500'}`}>
+                                        {msg.assistant === 'maya' ? 'Receptionist Maya' : 'Guruji'}
                                     </div>
-                                    <button
-                                        onClick={() => toggleContext(i)}
-                                        className="text-[10px] text-indigo-500 hover:underline font-bold"
-                                    >
-                                        {msg.showContext ? 'Hide Source' : 'View Source'}
-                                    </button>
+                                )}
+
+                                <div
+                                    className="text-sm leading-normal"
+                                    dangerouslySetInnerHTML={{ __html: msg.content }}
+                                />
+
+                                {msg.amount > 0 && (
+                                    <div className="mt-2 text-[10px] font-bold text-amber-600 flex items-center gap-1">
+                                        <span>✨ Premium Analysis</span>
+                                        <span className="bg-amber-100 px-1.5 py-0.5 rounded text-amber-700">-{msg.amount} coins</span>
+                                    </div>
+                                )}
+
+                                {msg.metrics && (
+                                    <div className="mt-2 pt-2 border-t border-gray-100 flex justify-between items-center gap-4">
+                                        <div className="flex gap-3 text-[10px] font-medium text-gray-400 capitalize">
+                                            <span>RAG: {msg.metrics.rag_score}%</span>
+                                            <span>AI: {msg.metrics.modelling_score}%</span>
+                                        </div>
+                                        <div className="flex gap-2">
+                                            <button
+                                                onClick={() => toggleContext(i)}
+                                                className="text-[10px] text-indigo-500 hover:underline font-bold"
+                                            >
+                                                {msg.showContext ? 'Hide Source' : 'View Source'}
+                                            </button>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* Maya JSON Response Toggle */}
+                                {msg.role === 'assistant' && msg.mayaJson && (
+                                    <div className="mt-2 pt-2 border-t border-gray-100">
+                                        <button
+                                            onClick={() => toggleMayaJson(i)}
+                                            className="text-[10px] text-pink-500 hover:underline font-bold"
+                                        >
+                                            {msg.showMayaJson ? '🔽 Hide Maya JSON' : '🔼 Show Maya JSON'}
+                                        </button>
+                                    </div>
+                                )}
+
+                                {/* JSON Response Toggle */}
+                                {msg.role === 'assistant' && msg.rawResponse && (
+                                    <div className="mt-2 pt-2 border-t border-gray-100">
+                                        <button
+                                            onClick={() => toggleJsonResponse(i)}
+                                            className="text-[10px] text-purple-500 hover:underline font-bold"
+                                        >
+                                            {msg.showJsonResponse ? '🔽 Hide Full JSON' : '🔼 Show Full JSON'}
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+
+                            {msg.showContext && msg.context && (
+                                <div className="mt-2 p-3 bg-indigo-50 rounded-xl border border-indigo-100 max-w-[90%] animate-in fade-in slide-in-from-top-2">
+                                    <h4 className="text-[10px] font-bold text-indigo-700 uppercase mb-2">Retrieved Context Chunks</h4>
+                                    <div className="space-y-2">
+                                        {msg.context.map((chunk, j) => (
+                                            <div key={j} className="text-[10px] text-gray-600 bg-white p-2 rounded border border-indigo-50 italic">
+                                                "{chunk.text.substring(0, 150)}..."
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Maya JSON Response Display */}
+                            {msg.showMayaJson && msg.mayaJson && (
+                                <div className="mt-2 p-3 bg-pink-50 rounded-xl border border-pink-200 max-w-[90%] animate-in fade-in slide-in-from-top-2">
+                                    <h4 className="text-[10px] font-bold text-pink-700 uppercase mb-2">🧘‍♀️ Maya's Triage Decision</h4>
+                                    <pre className="text-[9px] text-gray-700 bg-white p-3 rounded border border-pink-100 overflow-x-auto">
+                                        {JSON.stringify(msg.mayaJson, null, 2)}
+                                    </pre>
+                                </div>
+                            )}
+
+                            {/* JSON Response Display */}
+                            {msg.showJsonResponse && msg.rawResponse && (
+                                <div className="mt-2 p-3 bg-purple-50 rounded-xl border border-purple-200 max-w-[90%] animate-in fade-in slide-in-from-top-2">
+                                    <h4 className="text-[10px] font-bold text-purple-700 uppercase mb-2">📋 Raw JSON Response</h4>
+                                    <pre className="text-[9px] text-gray-700 bg-white p-3 rounded border border-purple-100 overflow-x-auto">
+                                        {JSON.stringify(msg.rawResponse, null, 2)}
+                                    </pre>
                                 </div>
                             )}
                         </div>
-
-                        {msg.showContext && msg.context && (
-                            <div className="mt-2 p-3 bg-indigo-50 rounded-xl border border-indigo-100 max-w-[90%] animate-in fade-in slide-in-from-top-2">
-                                <h4 className="text-[10px] font-bold text-indigo-700 uppercase mb-2">Retrieved Context Chunks</h4>
-                                <div className="space-y-2">
-                                    {msg.context.map((chunk, j) => (
-                                        <div key={j} className="text-[10px] text-gray-600 bg-white p-2 rounded border border-indigo-50 italic">
-                                            "{chunk.text.substring(0, 150)}..."
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
                     </div>
                 ))}
                 {loading && (
@@ -177,19 +369,19 @@ const Chat = () => {
             </div>
 
             {/* Input Area */}
-            <div className="p-4 bg-white border-t">
+            < div className="p-4 bg-white border-t" >
                 <form onSubmit={handleSend} className="max-w-4xl mx-auto flex gap-2">
                     <input
                         type="text"
-                        placeholder="Ask about your destiny..."
+                        placeholder={userStatus === 'ready' ? "Ask about your destiny..." : "Please wait while we prepare your profile..."}
                         className="flex-1 px-4 py-2 border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
-                        disabled={loading || summary}
+                        disabled={loading || summary || userStatus !== 'ready'}
                     />
                     <button
                         type="submit"
-                        disabled={loading || !input.trim() || summary}
+                        disabled={loading || !input.trim() || summary || userStatus !== 'ready'}
                         className="w-10 h-10 bg-indigo-600 text-white rounded-full flex items-center justify-center hover:bg-indigo-700 disabled:opacity-50 transition-colors shadow-md"
                     >
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

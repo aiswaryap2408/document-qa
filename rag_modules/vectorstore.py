@@ -47,6 +47,8 @@ class InMemoryVectorStore:
 
                 # Add each chunk with score=0 (default)
                 for c in doc_json["chunks"]:
+                    if "embedding" not in c or not c["embedding"]:
+                        continue
                     # Ensure doc_id is in chunk
                     if "doc_id" not in c:
                         c["doc_id"] = doc_id
@@ -200,6 +202,7 @@ class InMemoryVectorStore:
             
         # Construct result
         results = []
+        print(f"DEBUG [VectorStore]: Found {len(active_chunks)} active chunks for {doc_ids}. Top scores: {scores[top_relative_indices][:3]}")
         for rel_idx in top_relative_indices:
             # Map back to chunk
             chunk = active_chunks[rel_idx][0]

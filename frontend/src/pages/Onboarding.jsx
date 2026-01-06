@@ -1,10 +1,12 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Box, Typography, Button, MobileStepper } from '@mui/material';
+import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
+import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 
 const Onboarding = () => {
     const navigate = useNavigate();
-    const [currentSlide, setCurrentSlide] = useState(0);
+    const [activeStep, setActiveStep] = useState(0);
 
     const slides = [
         {
@@ -25,11 +27,15 @@ const Onboarding = () => {
     ];
 
     const handleNext = () => {
-        if (currentSlide < slides.length - 1) {
-            setCurrentSlide(currentSlide + 1);
+        if (activeStep < slides.length - 1) {
+            setActiveStep((prevActiveStep) => prevActiveStep + 1);
         } else {
             finishOnboarding();
         }
+    };
+
+    const handleBack = () => {
+        setActiveStep((prevActiveStep) => prevActiveStep - 1);
     };
 
     const finishOnboarding = () => {
@@ -37,50 +43,99 @@ const Onboarding = () => {
     };
 
     return (
-        <div className="onboarding-container" style={{
-            display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-            height: '100vh', textAlign: 'center', padding: '20px', background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)', color: 'white'
+        <Box sx={{
+            flex: 1,
+            display: 'flex',
+            flexDirection: 'column',
+            bgcolor: '#1a1a2e',
+            color: 'white',
+            position: 'relative',
+            p: 3
         }}>
-            <div style={{ position: 'absolute', top: '20px', right: '20px', cursor: 'pointer', opacity: 0.7 }} onClick={finishOnboarding}>
+            <Box
+                onClick={finishOnboarding}
+                sx={{
+                    position: 'absolute',
+                    top: 20,
+                    right: 20,
+                    cursor: 'pointer',
+                    opacity: 0.7,
+                    zIndex: 10
+                }}
+            >
                 Skip
-            </div>
+            </Box>
 
-            <div className="slide-content" style={{ maxWidth: '400px', animation: 'fadeIn 0.5s ease' }}>
-                <div style={{ fontSize: '80px', marginBottom: '20px' }}>
-                    {slides[currentSlide].icon}
-                </div>
-                <h1 style={{ marginBottom: '15px', fontSize: '2.5rem', fontWeight: 'bold' }}>
-                    {slides[currentSlide].title}
-                </h1>
-                <p style={{ fontSize: '1.2rem', lineHeight: '1.6', opacity: 0.9, marginBottom: '40px' }}>
-                    {slides[currentSlide].description}
-                </p>
+            <Box sx={{
+                flex: 1,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                textAlign: 'center'
+            }}>
+                <Typography sx={{ fontSize: { xs: 60, sm: 80 }, mb: 2 }}>
+                    {slides[activeStep].icon}
+                </Typography>
+                <Typography variant="h4" sx={{
+                    fontWeight: 'bold',
+                    mb: 2,
+                    fontSize: { xs: '1.75rem', sm: '2.5rem' }
+                }}>
+                    {slides[activeStep].title}
+                </Typography>
+                <Typography sx={{
+                    fontSize: { xs: '1rem', sm: '1.2rem' },
+                    lineHeight: 1.6,
+                    opacity: 0.9,
+                    mb: 4,
+                    maxWidth: 400
+                }}>
+                    {slides[activeStep].description}
+                </Typography>
+            </Box>
 
-                <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', marginBottom: '30px' }}>
-                    {slides.map((_, idx) => (
-                        <div
-                            key={idx}
-                            style={{
-                                width: '10px', height: '10px', borderRadius: '50%',
-                                background: idx === currentSlide ? 'white' : 'rgba(255,255,255,0.3)',
-                                transition: 'background 0.3s'
-                            }}
-                        />
-                    ))}
-                </div>
-
-                <button
-                    onClick={handleNext}
-                    style={{
-                        padding: '15px 40px', fontSize: '1.1rem', borderRadius: '30px', border: 'none',
-                        background: 'linear-gradient(90deg, #ff8c00, #ff0080)', color: 'white', cursor: 'pointer',
-                        boxShadow: '0 4px 15px rgba(255, 100, 0, 0.4)', fontWeight: 'bold'
-                    }}
-                >
-                    {currentSlide === slides.length - 1 ? "Start Chatting" : "Next"}
-                </button>
-            </div>
-        </div>
+            <MobileStepper
+                variant="dots"
+                steps={slides.length}
+                position="static"
+                activeStep={activeStep}
+                sx={{
+                    bgcolor: 'transparent',
+                    flexGrow: 1,
+                    '& .MuiMobileStepper-dot': { bgcolor: 'rgba(255,255,255,0.3)' },
+                    '& .MuiMobileStepper-dotActive': { bgcolor: 'white' }
+                }}
+                nextButton={
+                    <Button
+                        size="small"
+                        onClick={handleNext}
+                        sx={{
+                            color: 'white',
+                            fontWeight: 'bold',
+                            bgcolor: 'primary.main',
+                            px: 3,
+                            borderRadius: 4,
+                            '&:hover': { bgcolor: 'primary.dark' }
+                        }}
+                    >
+                        {activeStep === slides.length - 1 ? 'Start' : 'Next'}
+                        {activeStep !== slides.length - 1 && <KeyboardArrowRight />}
+                    </Button>
+                }
+                backButton={
+                    <Button
+                        size="small"
+                        onClick={handleBack}
+                        disabled={activeStep === 0}
+                        sx={{ color: 'white', opacity: activeStep === 0 ? 0 : 1 }}
+                    >
+                        <KeyboardArrowLeft />
+                        Back
+                    </Button>
+                }
+            />
+        </Box>
     );
 };
 

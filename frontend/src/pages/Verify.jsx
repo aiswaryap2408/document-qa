@@ -1,6 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { sendOtp, verifyOtp, setAuthToken } from '../api';
+import { Box, Typography } from '@mui/material';
+import Header from '../components/header';
+import PrimaryButton from '../components/PrimaryButton';
+import GurujiImage from '../components/gurujiImg';
 
 const Verify = () => {
     const navigate = useNavigate();
@@ -35,7 +39,7 @@ const Verify = () => {
         setInfo('');
         try {
             const res = await sendOtp(mobile);
-            setInfo(`OTP Resent! (Use ${res.data.otp || '9876'})`);
+            setInfo(`OTP Resent!`);
         } catch (err) {
             const msg = err.response?.data?.detail || err.message || 'Failed to resend OTP.';
             setError(`Resend failed: ${msg}`);
@@ -60,25 +64,33 @@ const Verify = () => {
 
     const handleKeyDown = (index, e) => {
         // Handle backspace
-        if (e.key === 'Backspace' && !otp[index] && index > 0) {
-            inputRefs.current[index - 1]?.focus();
+        if (e.key === 'Backspace') {
+            if (!otp[index] && index > 0) {
+                inputRefs.current[index - 1]?.focus();
+                const newOtp = [...otp];
+                newOtp[index - 1] = '';
+                setOtp(newOtp);
+            } else if (otp[index]) {
+                const newOtp = [...otp];
+                newOtp[index] = '';
+                setOtp(newOtp);
+            }
         }
     };
 
     const handlePaste = (e) => {
         e.preventDefault();
-        const pastedData = e.clipboardData.getData('text').slice(0, 4);
-        if (/^\d+$/.test(pastedData)) {
+        const pastedData = e.clipboardData.getData('text').replace(/\D/g, "").slice(0, 4);
+        if (pastedData) {
             const newOtp = pastedData.split('').concat(['', '', '', '']).slice(0, 4);
             setOtp(newOtp);
-            // Focus the next empty box or last box
             const nextIndex = Math.min(pastedData.length, 3);
             inputRefs.current[nextIndex]?.focus();
         }
     };
 
     const handleOtpSubmit = async (e) => {
-        e.preventDefault();
+        if (e) e.preventDefault();
         const otpString = otp.join('');
         if (otpString.length !== 4) {
             setError('Please enter all 4 digits');
@@ -111,79 +123,114 @@ const Verify = () => {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-xl shadow-lg border border-gray-100">
-                <div>
-                    <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900 bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-purple-600">
-                        Verify OTP
-                    </h2>
-                </div>
+        <>
+            <Header />
+
+            <Box mt={2} textAlign="center">
+                <Typography fontSize={16} mt={1} mb={2}>
+                    Welcome to{" "}
+                    <Typography component="span" fontWeight={600} color="#dc5d35">
+                        Findastro
+                    </Typography>
+                    !
+                </Typography>
+
+                <GurujiImage />
+            </Box>
+
+            {/* OTP Section */}
+            <Box
+                sx={{
+                    mt: 4,
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    width: "100%",
+                    px: 2,
+                    mb: 10,
+                }}
+            >
+                <Typography
+                    sx={{
+                        mb: 1,
+                        color: "#dc5d35",
+                        fontWeight: 600,
+                        fontSize: "1rem",
+                    }}
+                >
+                    Enter OTP
+                </Typography>
 
                 {error && (
-                    <div className="bg-red-50 text-red-500 p-3 rounded-md text-sm text-center">
+                    <Typography color="error" variant="body2" sx={{ mb: 2 }}>
                         {error}
-                    </div>
+                    </Typography>
                 )}
 
                 {info && (
-                    <div className="bg-green-50 text-green-600 p-3 rounded-md text-sm text-center">
+                    <Typography color="success.main" variant="body2" sx={{ mb: 2 }}>
                         {info}
-                    </div>
+                    </Typography>
                 )}
 
-                <form className="mt-8 space-y-6" onSubmit={handleOtpSubmit}>
-                    <div className="text-center text-sm text-gray-500">
-                        Enter OTP sent to {mobile}
-                    </div>
-                    <div className="flex justify-center gap-3">
-                        {otp.map((digit, index) => (
-                            <input
-                                key={index}
-                                ref={(el) => (inputRefs.current[index] = el)}
-                                type="text"
-                                inputMode="numeric"
-                                maxLength={1}
-                                value={digit}
-                                onChange={(e) => handleOtpChange(index, e.target.value)}
-                                onKeyDown={(e) => handleKeyDown(index, e)}
-                                onPaste={handlePaste}
-                                className="w-14 h-14 text-center text-2xl font-bold border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
-                                required
-                            />
-                        ))}
-                    </div>
-                    <button
-                        type="submit"
-                        disabled={loading || resending}
-                        className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-200"
-                    >
-                        {loading ? (
-                            <>
-                                <span className="spinner"></span>
-                                Verifying...
-                            </>
-                        ) : 'Verify'}
-                    </button>
+                {/* OTP Inputs */}
+                <Box sx={{ display: "flex", gap: { xs: 1.5, sm: 3 }, mb: 2 }}>
+                    {otp.map((value, index) => (
+                        <input
+                            key={index}
+                            ref={(el) => (inputRefs.current[index] = el)}
+                            value={value}
+                            onChange={(e) => handleOtpChange(index, e.target.value)}
+                            onKeyDown={(e) => handleKeyDown(index, e)}
+                            onPaste={handlePaste}
+                            maxLength={1}
+                            inputMode="numeric"
+                            autoComplete="one-time-code"
+                            style={{
+                                width: 'min(65px, 18vw)',
+                                height: 'min(75px, 20vw)',
+                                textAlign: "center",
+                                fontSize: 'min(24px, 6vw)',
+                                borderRadius: 8,
+                                border: "none",
+                                outline: "none",
+                                boxShadow: "0 -6px 12px rgba(0, 0, 0, 0.15)",
+                                backgroundColor: "#fff",
+                            }}
+                        />
+                    ))}
+                </Box>
 
-                    <div className="flex justify-center mt-4 text-sm">
-                        <span className="text-gray-500 mr-2">Didn't receive code?</span>
-                        <button
-                            type="button"
-                            onClick={handleResendOtp}
-                            disabled={loading || resending}
-                            className="text-indigo-600 font-bold hover:underline disabled:opacity-50"
-                        >
-                            {resending ? (
-                                <>
-                                    <span className="spinner spinner-indigo"></span>
-                                    Resending...
-                                </>
-                            ) : 'Resend OTP'}
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
+                {/* Resend */}
+                <Box
+                    sx={{
+                        width: "100%",
+                        display: "flex",
+                        justifyContent: "flex-end",
+                        mb: 1,
+                    }}
+                >
+                    <Typography
+                        sx={{
+                            color: "#dc5d35",
+                            fontWeight: 600,
+                            cursor: "pointer",
+                            mr: { xs: 0, sm: 5 },
+                            fontSize: 14,
+                        }}
+                        onClick={handleResendOtp}
+                    >
+                        {resending ? 'Resending...' : 'Resend OTP'}
+                    </Typography>
+                </Box>
+
+                <PrimaryButton
+                    label={loading ? "Verifying..." : "Continue"}
+                    onClick={handleOtpSubmit}
+                    disabled={loading || resending}
+                />
+            </Box>
+        </>
     );
 };
 

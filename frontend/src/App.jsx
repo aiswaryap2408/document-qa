@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import Login from './pages/Login';
 import Verify from './pages/Verify';
 import Register from './pages/Register';
+import RegisterSuccess from './pages/RegisterSuccess';
 import Onboarding from './pages/Onboarding';
 import Chat from './pages/Chat';
 
@@ -27,43 +28,55 @@ const AdminProtectedRoute = ({ children }) => {
   return children;
 };
 
+import Layout from './components/Layout';
+
 function App() {
   return (
-    <Router>
-      <Routes>
-        {/* User Routes */}
-        <Route path="/" element={<Login />} />
-        <Route path="/verify" element={<Verify />} />
-        <Route path="/register" element={<Register />} />
-        <Route
-          path="/onboarding"
-          element={
-            <ProtectedRoute>
-              <Onboarding />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/chat"
-          element={
-            <ProtectedRoute>
-              <Chat />
-            </ProtectedRoute>
-          }
-        />
+    <Layout>
+      <Router>
+        <Routes>
+          {/* User Routes */}
+          <Route path="/" element={<Login />} />
+          <Route path="/verify" element={<Verify />} />
+          <Route path="/register" element={<Register />} />
+          <Route
+            path="/register-success"
+            element={
+              <ProtectedRoute>
+                <RegisterSuccess />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/onboarding"
+            element={
+              <ProtectedRoute>
+                <Onboarding />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/chat"
+            element={
+              <ProtectedRoute>
+                <Chat />
+              </ProtectedRoute>
+            }
+          />
 
-        {/* Admin Routes */}
-        <Route path="/admin/login" element={<AdminLogin />} />
-        <Route
-          path="/admin"
-          element={
-            <AdminProtectedRoute>
-              <AdminDashboard />
-            </AdminProtectedRoute>
-          }
-        />
-      </Routes>
-    </Router>
+          {/* Admin Routes */}
+          <Route path="/admin/login" element={<AdminLogin />} />
+          <Route
+            path="/admin"
+            element={
+              <AdminProtectedRoute>
+                <AdminDashboard />
+              </AdminProtectedRoute>
+            }
+          />
+        </Routes>
+      </Router>
+    </Layout>
   );
 }
 

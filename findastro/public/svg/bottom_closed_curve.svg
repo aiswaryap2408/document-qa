@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="378" height="66" viewBox="0 0 378 66">
+  <defs>
+    <filter id="Path_24" x="0" y="0" width="378" height="66" filterUnits="userSpaceOnUse">
+      <feOffset dy="-2" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feFlood flood-opacity="0.161"/>
+      <feComposite operator="in" in2="blur"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+  </defs>
+  <g transform="matrix(1, 0, 0, 1, 0, 0)" filter="url(#Path_24)">
+    <path id="Path_24-2" data-name="Path 24" d="M0,148H120c32,0,32,29,60,29s28-29,60-29H360v48H0Z" transform="translate(9 -137)" fill="#2f3148" fill-rule="evenodd"/>
+  </g>
+  <path id="Icon_ionic-md-star" data-name="Icon ionic-md-star" d="M6.233,8.223l1.506.908-.4-1.713L8.67,6.266l-1.752-.15L6.233,4.5,5.549,6.115,3.8,6.266,5.126,7.418l-.4,1.713Z" transform="translate(260.203 20.5)" fill="#fff"/>
+  <path id="Icon_ionic-md-star-2" data-name="Icon ionic-md-star" d="M6.233,8.223l1.506.908-.4-1.713L8.67,6.266l-1.752-.15L6.233,4.5,5.549,6.115,3.8,6.266,5.126,7.418l-.4,1.713Z" transform="translate(310.203 40.5)" fill="#fff"/>
+  <path id="Icon_ionic-md-star-3" data-name="Icon ionic-md-star" d="M6.233,8.223l1.506.908-.4-1.713L8.67,6.266l-1.752-.15L6.233,4.5,5.549,6.115,3.8,6.266,5.126,7.418l-.4,1.713Z" transform="translate(30.203 30.5)" fill="#fff"/>
+  <path id="Icon_ionic-md-star-4" data-name="Icon ionic-md-star" d="M6.233,8.223l1.506.908-.4-1.713L8.67,6.266l-1.752-.15L6.233,4.5,5.549,6.115,3.8,6.266,5.126,7.418l-.4,1.713Z" transform="translate(50.203 40.5)" fill="#fff"/>
+  <path id="Icon_ionic-md-star-5" data-name="Icon ionic-md-star" d="M6.233,8.223l1.506.908-.4-1.713L8.67,6.266l-1.752-.15L6.233,4.5,5.549,6.115,3.8,6.266,5.126,7.418l-.4,1.713Z" transform="translate(100.203 31.5)" fill="#fff"/>
+</svg>

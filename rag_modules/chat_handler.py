@@ -17,11 +17,14 @@ def convert_markdown_to_html(text: str) -> str:
         return text
     return text.strip()
 
-def apply_token_budget(chunks, max_chars=20000):
+def apply_token_budget(chunks, max_chars=100000):
     """
     Returns a subset of chunks that fits within the max_chars budget.
-    20,000 chars is approx 5000 tokens. leaving 3000 for system+history+output.
+    100,000 chars is approx 25k tokens. 
     """
+    if not chunks:
+        return []
+
     current_chars = 0
     selected_chunks = []
     
@@ -29,12 +32,14 @@ def apply_token_budget(chunks, max_chars=20000):
         # Crude estimate: 
         text_len = len(chunk['text']) + len(chunk['heading']) + 50 # overhead
         
-        if current_chars + text_len > max_chars:
+        # If the first chunk itself is larger than max_chars, still include it 
+        # (GPT-4o can handle up to 128k tokens, so a single 30k char chunk is fine)
+        if not selected_chunks or (current_chars + text_len <= max_chars):
+            selected_chunks.append(chunk)
+            current_chars += text_len
+        else:
             break
             
-        selected_chunks.append(chunk)
-        current_chars += text_len
-        
     return selected_chunks
 
 def get_openai_client(api_key: str = None):
@@ -49,8 +54,10 @@ def generate_with_openai(system_prompt, context_chunks, conversation_history, qu
 
     client = get_openai_client(api_key)
 
-    # Build context text
-    context = "\n\n".join([f"[chunk {i+1}] {c['text']}" for i, c in enumerate(context_chunks)])
+    # Build context text (apply budget)
+    budgeted_chunks = apply_token_budget(context_chunks)
+    context = "\n\n".join([f"[chunk {i+1}] {c['text']}" for i, c in enumerate(budgeted_chunks)])
+    print(f"DEBUG [ChatHandler]: Sending context with {len(context)} chars ({len(budgeted_chunks)} chunks).")
 
     # Build conversation messages
     messages = [
@@ -90,7 +97,8 @@ def generate_with_gemini(system_prompt, context_chunks, conversation_history, qu
     gem_api_key = api_key or os.getenv("GEMINI_API_KEY")
     genai.configure(api_key=gem_api_key)
 
-    context = "\n\n".join([f"[chunk {i+1}] {c['text']}" for i, c in enumerate(context_chunks)])
+    budgeted_chunks = apply_token_budget(context_chunks)
+    context = "\n\n".join([f"[chunk {i+1}] {c['text']}" for i, c in enumerate(budgeted_chunks)])
 
     # Build conversation transcript
     chat_history = ""

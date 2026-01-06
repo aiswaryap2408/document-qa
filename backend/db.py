@@ -25,5 +25,6 @@ def get_db_collection(collection_name="users"):
         else:
             _client = MongoClient(uri, tlsCAFile=certifi.where())
     
-    db = _client["auth_db"]
+    db_name = os.getenv("MONGODB_DB_NAME", "auth_db")
+    db = _client[db_name]
     return db[collection_name]
