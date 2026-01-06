@@ -1,14 +1,17 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import Login from './pages/Login';
 import Verify from './pages/Verify';
 import Register from './pages/Register';
 import RegisterSuccess from './pages/RegisterSuccess';
 import Onboarding from './pages/Onboarding';
 import Chat from './pages/Chat';
+import UserProfile from './pages/UserProfile';
+import ChatHistory from './pages/ChatHistory';
 
 import AdminLogin from './pages/admin/AdminLogin';
 import AdminDashboard from './pages/admin/AdminDashboard';
+import ScrollToTop from './components/ScrollToTop';
 
 // User Protected Route Component
 const ProtectedRoute = ({ children }) => {
@@ -30,12 +33,21 @@ const AdminProtectedRoute = ({ children }) => {
 
 import Layout from './components/Layout';
 
-function App() {
+const MobileLayout = () => {
   return (
     <Layout>
-      <Router>
-        <Routes>
-          {/* User Routes */}
+      <Outlet />
+    </Layout>
+  );
+};
+
+function App() {
+  return (
+    <Router>
+      <ScrollToTop />
+      <Routes>
+        {/* User Routes (Wrapped in Mobile Layout) */}
+        <Route element={<MobileLayout />}>
           <Route path="/" element={<Login />} />
           <Route path="/verify" element={<Verify />} />
           <Route path="/register" element={<Register />} />
@@ -63,20 +75,36 @@ function App() {
               </ProtectedRoute>
             }
           />
-
-          {/* Admin Routes */}
-          <Route path="/admin/login" element={<AdminLogin />} />
           <Route
-            path="/admin"
+            path="/profile"
             element={
-              <AdminProtectedRoute>
-                <AdminDashboard />
-              </AdminProtectedRoute>
+              <ProtectedRoute>
+                <UserProfile />
+              </ProtectedRoute>
             }
           />
-        </Routes>
-      </Router>
-    </Layout>
+          <Route
+            path="/history"
+            element={
+              <ProtectedRoute>
+                <ChatHistory />
+              </ProtectedRoute>
+            }
+          />
+        </Route>
+
+        {/* Admin Routes (Full Screen, No Mobile Layout) */}
+        <Route path="/admin/login" element={<AdminLogin />} />
+        <Route
+          path="/admin"
+          element={
+            <AdminProtectedRoute>
+              <AdminDashboard />
+            </AdminProtectedRoute>
+          }
+        />
+      </Routes>
+    </Router>
   );
 }
 

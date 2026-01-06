@@ -3,8 +3,16 @@ import { useNavigate } from 'react-router-dom';
 import { sendMessage, endChat, getChatHistory } from '../api';
 import axios from 'axios';
 
+import { Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
+import MenuIcon from '@mui/icons-material/Menu';
+import HomeIcon from '@mui/icons-material/Home';
+import PersonIcon from '@mui/icons-material/Person';
+import HistoryIcon from '@mui/icons-material/History';
+import LogoutIcon from '@mui/icons-material/Logout';
+
 const Chat = () => {
     const navigate = useNavigate();
+    const [drawerOpen, setDrawerOpen] = useState(false);
     const [messages, setMessages] = useState([
         { role: 'assistant', content: 'Namaste! I am Maya, the receptionist. How can I help you reach Guruji today! 🙏', assistant: 'maya' }
     ]);
@@ -216,6 +224,9 @@ const Chat = () => {
             {/* Header */}
             <header className="bg-white border-b px-3 sm:px-6 py-3 flex justify-between items-center shadow-sm">
                 <div className="flex items-center gap-2">
+                    <button onClick={() => setDrawerOpen(true)} className="text-gray-600 hover:text-indigo-600 mr-1">
+                        <MenuIcon />
+                    </button>
                     <div className="w-8 h-8 bg-indigo-600 rounded-full flex items-center justify-center flex-shrink-0">
                         <span className="text-white text-[10px] font-bold">AG</span>
                     </div>
@@ -235,6 +246,66 @@ const Chat = () => {
                     </button>
                 </div>
             </header>
+
+            {/* Navigation Drawer */}
+            <Drawer
+                anchor="left"
+                open={drawerOpen}
+                onClose={() => setDrawerOpen(false)}
+                PaperProps={{
+                    sx: { width: { xs: '75vw', sm: 300 } }
+                }}
+            >
+                <div
+                    style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}
+                    role="presentation"
+                    onClick={() => setDrawerOpen(false)}
+                    onKeyDown={() => setDrawerOpen(false)}
+                >
+                    {/* Drawer Header */}
+                    <div className="p-6 bg-gradient-to-br from-indigo-50 to-white border-b border-indigo-100">
+                        <div className="flex items-center gap-3 mb-1">
+                            <div className="w-10 h-10 bg-indigo-600 rounded-full flex items-center justify-center flex-shrink-0 text-white font-bold">
+                                AG
+                            </div>
+                            <div>
+                                <div className="font-bold text-gray-800 text-lg">Astrology Guruji</div>
+                                <div className="text-xs text-gray-500">Your Cosmic Guide</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <List sx={{ pt: 2 }}>
+                        <ListItem disablePadding onClick={() => navigate('/chat')}>
+                            <ListItemButton sx={{ py: 2 }}>
+                                <ListItemIcon sx={{ minWidth: 40, color: '#4F46E5' }}><HomeIcon /></ListItemIcon>
+                                <ListItemText primary="Home" primaryTypographyProps={{ fontWeight: 500 }} />
+                            </ListItemButton>
+                        </ListItem>
+
+                        <ListItem disablePadding onClick={() => navigate('/profile')}>
+                            <ListItemButton sx={{ py: 2 }}>
+                                <ListItemIcon sx={{ minWidth: 40, color: '#4F46E5' }}><PersonIcon /></ListItemIcon>
+                                <ListItemText primary="Profile" primaryTypographyProps={{ fontWeight: 500 }} />
+                            </ListItemButton>
+                        </ListItem>
+
+                        <ListItem disablePadding onClick={() => navigate('/history')}>
+                            <ListItemButton sx={{ py: 2 }}>
+                                <ListItemIcon sx={{ minWidth: 40, color: '#4F46E5' }}><HistoryIcon /></ListItemIcon>
+                                <ListItemText primary="History" primaryTypographyProps={{ fontWeight: 500 }} />
+                            </ListItemButton>
+                        </ListItem>
+
+                        <ListItem disablePadding onClick={handleLogout}>
+                            <ListItemButton sx={{ py: 2 }}>
+                                <ListItemIcon sx={{ minWidth: 40, color: '#9CA3AF' }}><LogoutIcon /></ListItemIcon>
+                                <ListItemText primary="Logout" primaryTypographyProps={{ fontWeight: 500, color: '#6B7280' }} />
+                            </ListItemButton>
+                        </ListItem>
+                    </List>
+                </div>
+            </Drawer>
 
             {/* Chat Area */}
             <div className="flex-1 overflow-y-auto p-4 space-y-4">

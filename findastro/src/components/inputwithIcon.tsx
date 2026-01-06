@@ -1,5 +1,5 @@
 import React from "react";
-import { TextField, ToggleButton, Box } from "@mui/material";
+import { TextField, ToggleButton, Box, styled } from "@mui/material";
 
 type InputFieldProps = {
   icon: React.ReactNode;
@@ -32,32 +32,34 @@ const InputField = ({
       "& fieldset": {
         border: "none",
       },
+       "& .MuiInputBase-input": {
+        padding: "12px 12px", 
+      },
     }}
     helperText={helperText}
   />
 );
 
-const GenderButton = ({
-  children,
-  selected,
-  ...props
-}: any) => (
-  <ToggleButton
-    {...props}
-    sx={{
-      flex: 1,
-      border: "none",
-      borderRadius: 0,
-      py: 1.5,
-      fontWeight: 500,
-      bgcolor: selected ? "#FF8A3D" : "transparent",
-      color: selected ? "#fff" : "#111",
-      "&:hover": {
-        bgcolor: selected ? "#FF7A28" : "#FFF0E6",
-      },
-    }}
-  >
-    {children}
-  </ToggleButton>
-);
+const GenderButton = styled(ToggleButton)(({ theme }) => ({
+  flex: 1,
+  borderRadius: 0,
+  textTransform: "capitalize",
+  padding: "10px 0",
+ border: "none",
+  color: "#111",
+  backgroundColor: "#fff",
+
+  "&.Mui-selected": {
+    backgroundColor: "#FF8A3D",
+    color: "#fff",
+
+    "&:hover": {
+      backgroundColor: "#FF7A28",
+    },
+  },
+
+  "&:hover": {
+    backgroundColor: "#FFF0E6",
+  },
+}));
 export { InputField, GenderButton };

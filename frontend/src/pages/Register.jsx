@@ -92,6 +92,15 @@ const Register = () => {
         setLoading(true);
         setError('');
 
+        // Validation
+        const { name, email, dob, tob, pob, chart_style, gender } = details;
+        if (!name.trim() || !email.trim() || !dob.trim() || !tob.trim() || !pob.trim() || !chart_style.trim() || !gender.trim()) {
+            setError('All fields are required. Please fill in all details.');
+            setLoading(false);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            return;
+        }
+
         try {
             const payload = { ...details, mobile };
             const res = await registerUser(payload);
@@ -108,7 +117,12 @@ const Register = () => {
         } catch (err) {
             console.error("Registration Error:", err);
             const msg = err.response?.data?.detail || err.message;
-            setError(`Registration failed: ${msg}`);
+            // Handle Pydantic validation errors which might come as an array
+            if (Array.isArray(msg)) {
+                setError(`Registration failed: ${msg[0].msg}`);
+            } else {
+                setError(`Registration failed: ${msg}`);
+            }
             setLoading(false);
         }
     };

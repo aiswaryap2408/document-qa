@@ -1,4 +1,4 @@
-from pydantic import BaseModel, field_validator
+from pydantic import BaseModel, field_validator, Field
 import re
 from typing import Optional
 
@@ -24,14 +24,14 @@ class OTPRequest(BaseModel):
         return v
 
 class UserRegistration(BaseModel):
-    name: str
-    gender: str
-    dob: str # YYYY-MM-DD
-    tob: str # HH:MM or HH:MM:SS
-    pob: str
+    name: str = Field(..., min_length=1)
+    gender: str = Field(..., min_length=1)
+    dob: str = Field(..., min_length=1) # YYYY-MM-DD
+    tob: str = Field(..., min_length=1) # HH:MM or HH:MM:SS
+    pob: str = Field(..., min_length=1)
     mobile: str
-    email: str
-    chart_style: str
+    email: str = Field(..., min_length=1)
+    chart_style: str = Field(..., min_length=1)
 
     @field_validator('mobile')
     @classmethod

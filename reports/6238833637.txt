@@ -1,188 +1,181 @@
 
 <h1>Personal Data</h1>
-<p>Name : <strong>Aiswarya</strong></p>
-<p>Sex : <strong>Female</strong></p>
-<p>Date of Birth : <strong> 24 August1993 Tuesday</strong></p>
+<p>Name : <strong>Tester2</strong></p>
+<p>Sex : <strong>Male</strong></p>
+<p>Date of Birth : <strong> 1 January2000 Saturday</strong></p>
 <p>Time of Birth (Hr.Min.Sec) : <strong>12:00:00 PM Standard Time</strong></p>
 <p>Time Zone  : <strong>05:30 East of Greenwich</strong></p>
 <p>Place of Birth : <strong>Kochi</strong></p>
 <p>Longitude & Latitude : <strong> 76.40 East 9.13 North</strong></p>
-<p>AyanamsaChitra Paksha : <strong> 23 Deg46Min23Sec</strong></p>
+<p>AyanamsaChitra Paksha : <strong> 23 Deg51Min11Sec</strong></p>
 
 <h1>Panchanga predictions </h1>
 
-<h2>Your basic nature, Personality & Self-Awareness</h2>
-<p>Predictions based on your Weekday (Tuesday)</p>
+<h2>Your basic nature, Personality & Self-Awareness,Expenses & Losses,Money & Wealth</h2>
+<p>Predictions based on your Weekday (Saturday)</p>
 <p>rAsterixDescAstroDay</p>
-<p>Birth on a Tuesday indicates that you show your anger without hesitation. Aiswarya, you may enjoy adventurous sports. You do not mind changing your words or decisions. You have the energy to go after your goals and achieve results.</p>
+<p>Tester2, birth on a Saturday indicates that you may prefer to stay inactive until circumstances force you step forward. You enjoy delay tactics. You have to control your tendency to gossip. You cannot afford to spend as lavishly as you would like to. You tend to be emotional and sensitive in nature.</p>
 
-<h2>Your ethical principles and values, Personality & Self-Awareness,Property & Assets,Foreign,Love & Romance,Money & Wealth,Status & Public Life,Health & Sickness,Remedies</h2>
-<p>Predictions based on your Birth Star (Anuradha)</p>
-<p>As a young girl you have a fascination for everything new and fanciful. Aiswarya, you are lucky with vehicles and enjoy travel. You will probably move far away from your place of birth. Men appreciate many of your qualities. They are fascinated by your nature and by your quick wit. You should try and engage in some kind of routine. Although you may not amass much money, you will be socially well-renowned. You will be exposed to a variety of environments and situations. You should have a system and order in everything. You unnecessarily brood over trivial situations. You may have a serious face and manner. Very simple things can upset you. Try to maintain a cheerful outlook and take care of your health since you will be prone to infections. You have the ability to concentrate your efforts on setting and achieving your goals, regardless of the final outcome. If you bear a grudge, you will wait for the opportunity to take revenge. Your relationships with men are not long-lasting. Your patience is minimal.</p>
+<h2>Your ethical principles and values, Personality & Self-Awareness,Career,Problems & Obstacles,Status & Public Life,Intellect,Home Life,Health & Sickness</h2>
+<p>Predictions based on your Birth Star (Swati)</p>
+<p>You are a man of special skills and many talents, Tester2. Your success is a manifestation of your own efforts. You do not tolerate any type of opposition or criticism. You tend to treat your critics with undue unkindness. It is rather difficult for you to work under anybody. It is also hard for you to respect the achievements of others. Thus, you create more enemies than friends. Scandals and blames also will be on the increase. However, you do take care of those who love you. Your masculine qualities, like strong determination and mental power are a source of help in many areas. You have to make special efforts to make a successful family life. Stomach problems are possible.</p>
 
-<h2>Moral values, Personality & Self-Awareness</h2>
-<p>Predictions based on your Thidhi (Lunar Day) : Ashtami</p>
-<p>Aiswarya, since you are born in ASHTAMI THIDHI, you value your freedom and independence. If you feel that your independence is curtailed, you will become aggressive and rebellious. You are normally calm and gracious. You enjoy sex and are proud of your physique.</p>
+<h2>Moral values, Personality & Self-Awareness,Education,Intellect,Money & Wealth</h2>
+<p>Predictions based on your Thidhi (Lunar Day) : Ekadasi</p>
+<p>Tester2, since you are born in EKADASI THIDHI, your character and conduct attract others even when you are very young. You have the ability to learn everything about the subjects you are interested in. You will be quite rich.</p>
 
-<h2>Your habits, Personality & Self-Awareness,Family & Relatives,Problems & Obstacles</h2>
-<p>Predictions based on your Karanam : Bhadra(Vishti)</p>
-<p>Since you are born in Bhadra (Vishti) Karana, you tend to be quick tempered. Aiswarya, your strict approach to some life situations may make you look heartless in the eyes of your friends and relatives. You are always ready to shoulder responsibilities.</p>
+<h2>Your habits, Career,Status & Public Life,Personality & Self-Awareness</h2>
+<p>Predictions based on your Karanam : Bava</p>
+<p>Birth in Bhava Karana ensures success in adventurous activities and combat situations. Tester2, you can acquire fame in your chosen field. You try to find contentment and peace at any position rather than complain about minor issues.</p>
 
-<h2>Your interests, Personality & Self-Awareness,Intellect,Health & Sickness</h2>
-<p>Predictions based on your Nithya Yoga : Mahendra</p>
-<p>The greatest satisfaction for people born with MAHENDRA NITHYAYOGA, like Aiswarya, comes in helping others. They are knowledgeable and informed about their chosen field. They are normally gentle and goodnatured but can lose their tempers if provoked. They tend to complain about physical ailments or discomfort.</p>
+<h2>Your interests, Personality & Self-Awareness,Status & Public Life,Longevity</h2>
+<p>Predictions based on your Nithya Yoga : Sukarma</p>
+<p>People born with SUKARMA NITHYAYOGA, like Tester2, are destined to enjoy good and noble actions. They are considerate to others, and impress those who know them by their commendable deeds. They are polite and well spoken. They are charitable. They enjoy life, and that enjoyment permits them to live long and fulfiling lives.</p>
 
 
 
 <h1>Bhava Predictions</h1>
 
-<h2>Personality & Self-Awareness,Intellect,Health & Sickness,Problems & Obstacles,Family & Relatives,Money & Wealth,Property & Assets,Business,Career,Expenses & Losses,Love & Romance,Marriage & Spouse,Children & Progeny,Remedies,Status & Public Life</h2>
+<h2>Personality & Self-Awareness,Money & Wealth,Career,Business,Problems & Obstacles,Health & Sickness,Expenses & Losses,Education,Intellect,Status & Public Life</h2>
 <p>Predictions based on your 1st Bhava</p>
 
 <p>The first house of the horoscope represents the personality characteristics, physical structure, status and fame of the person.</p>
 <p>
-Aiswarya, based on the position of Lagna the following characteristics may be present in your personality. You are: sarcastic; impulsive; intelligent; strong-willed; secretive; quarrelsome; sickly in childhood; sharp; quick-witted; inconstant; excitable; a good conversationalist. You do not take advice well. You will probably argue with your parents over money or land. The second half of your life will be luckier than the first. You may have special marks on your palms or feet. You are a good correspondent. You do well in competitions. You enjoy luxury. If your musical talent is cultivated, you can become truly proficient. You also have a talent for art, dance, or singing. You may have digestive trouble, so watch your diet.
+Tester2, based on the position of Lagna the following characteristics may be present in your personality. You are: stubborn; religious; wealthy; hard working; well informed; quick to judge; ambitious; traditional; superstitious; dependant; truthful. Physically you: have an impressive appearance; are handsome. You have many friends. You are envied by others. You tend to be involved with or make your money from water-related products. You may deal with medicine, tea, liquor, etc. where water is the primary ingredient. You like the pomp and grandeur of tradition. You like observances and memorials, either patriotic or religious. You may not get all you want in life. Though you are basically a dependant individual, you can be independant when the need arises.
 
 
-Aiswarya, since your Lagna lies in the first Drekkana of its house, you will face financial uncertainties and problems early in life. Consequently, you work with determination. In time, you will amass considerable wealth. Generally, you will have more than one source of income. Your preferred areas may be business, journalism, and industry. You should be prepared to face powerful enemies and extensive litigation. You have a fascination for speculation, but don't spend a lot of money since you'll probably not do well. Stocks, shares and industry will seem particularly attractive to you. The important years in your life are 14, 22, 23, 29, 30, 40, 41 and 45.
+Tester2, since your Lagna lies in the second Drekkana of its house, you will be quite healthy. You'll make your own money. You will probably have two occupations. You'll make money quite easily. You'll always want more money, however, and you'll never be totally satisfied. This'll help you get ahead, but it is not really good for your constitution. Save early because you might have more financial uncertainities late in life. The important years in your life are 20,29,32,43,47,55 and 61.
 
 
-Since the ascendant lord is in the 11th you are gradually drawn to beauty and harmony in music, art, and romance. You enjoy the company of all types of people. You have a free spirit, and this may make you more prone to marital infidelity if you are not careful. There may be delays, difficulties, or even separation or divorce in your married life. You will be financially secure. If you have an older brother, he may be partly responsible for your business prosperity.
+Since the lord of the ascendant is in the 2nd house, you will possess a multitude of excellent qualities. You will be studious and religious. You will be a gifted conversationalist. And you will have the ability to ascertain or intuit the future. You will have piercing eyes. Most importantly, you will be a happy individual.</p>
 
 
-Since the Moon occupies the first house, you will be strong, and have beautiful eyes. Your outlook will be spiritualistic.
-
-
-As Rahu is in the first house, you will be strong but appear weak. If you have children, they will probably be born late in your life.
-
-
-The aspect of Saturn on the first house, seen in your horoscope, is not a good indication and it is essential that you take all efforts to keep away from unclean environment and doubtful company of friends.</p>
-
-
-<h2>Money & Wealth,Personality & Self-Awareness,Status & Public Life,Health & Sickness,Family & Relatives,Career,Business,Property & Assets</h2>
+<h2>Personality & Self-Awareness,Money & Wealth,Family & Relatives,Children & Progeny,Love & Romance,Problems & Obstacles,Status & Public Life,Education,Intellect,Property & Assets</h2>
 <p>Predictions based on your 2nd Bhava</p>
 
 <p>Land and properties, wealth, family, speech, food and skills are some of the important topics highlighted by the second house in a horoscope.</p>
 <p>
-Aiswarya, as the 2nd lord is in the 11th, you will earn wealth by diverse means and be industrious, ethical and famous. But you will come to realize that enthusiasm is not a replacement for experience. Your health will be better in adulthood than in childhood. Your changing sense of self may be confusing to friends and relatives. You will probably do well in banking, or in the hotel or motel business.
+Tester2, as the 2nd lord is in the 12th, you are likely to be adventurous. You will probably not have a lot of money, but you'll be interested in wealth. You may have worries or problems due to your oldest brother, or oldest child. You yearn for love and consideration. Your greatest difficulties will be due to misplaced trust. You see much to criticize around you. Your income may be through religious trusts or organizations. In all probability you will become deeply involved with the government.
 
 
-Since Mars and the second lord are positioned together, you can stand out in fields connected with law and justice.</p>
+Since Jupiter is positioned in the 2nd house, you will be a scholar and you will not lack money. You will be charitable at heart, and have a pleasant face. You enjoy eating well.
 
 
-<h2>Intellect,Money & Wealth,Marriage & Spouse,Personality & Self-Awareness,Family & Relatives</h2>
+Since Saturn is positioned in your 2nd house, you may be accused of being thoughtless or deceitful. You may experience monetary problems now and then.</p>
+
+
+<h2>Family & Relatives,Money & Wealth,Marriage & Spouse,Status & Public Life,Personality & Self-Awareness,Problems & Obstacles,Intellect</h2>
 <p>Predictions based on your 3rd Bhava</p>
 
 <p>Third house in the horoscope mainly refers to siblings, courage and  cleverness .</p>
 <p>
-Aiswarya, since the 3rd lord is in the 4th, you will be intelligent and wealthy. Your spouse, who is unconventional in many ways, will probably be extraordinarily intelligent. However, you will not be dictated to, or manipulated by anyone, including your spouse. You may have step-brothers.</p>
+Tester2, since the 3rd lord is in the 9th, you cannot expect much from your parents. Most of your good fortune will come from your spouse. You may be concerned, or interested in your father's attitudes and his reputation. You will probably feel and react strongly to all kinds of situations. Your brother may inherit family money. You will, in turn, benefit from him. Chances of developing a misunderstanding with your father seems likely.</p>
 
-<h2>Career,Status & Public Life,Education,Personality & Self-Awareness,Family & Relatives,Intellect,Love & Romance,Health & Sickness,Problems & Obstacles,Property & Assets,Home Life</h2>
+<h2>Career,Personality & Self-Awareness,Status & Public Life,Problems & Obstacles,Intellect,Education,Remedies,Property & Assets,Family & Relatives,Home Life</h2>
 <p>Predictions based on your 4th Bhava</p>
 
 <p>The fourth house of your horoscope refers to property, education, mother, vehicles, and general happiness.</p>
 <p>
-Aiswarya, as the 4th lord is in the 4th, even as a little girl you will revel in assuming authority. As an adult, you will be an able administrator. You will acquire expertise and a commanding educational background. You will be able to skillfully manipulate ideas, things and individuals. All the while, you will retain your personal dignity and honor. Even your mother, who knows you best, will be amazed at your will and intelligence. You will learn that love is not a game to be won, an election to be fought, or even a prize to be got, but a gift to be given. You may become religiously inclined, and you will respect the values and traditions of your family and community.
+Tester2, in your horoscope, the lord of 4th house is occupying the 10th. Even as a boy, you will be interested in chemicals and related matters. You will succeed in what you set out to do. As an adult, your personality will be felt by all around you. You will be successful if you enter politics. However, you have to safeguard your reputation if you do decide to enter the political arena.
 
 
-As Saturn is the lord of the 4th house, you will demonstrate leadership capabilities, even as a young girl. You will be known for your leadership qualities. If you receive proper guidance, you can become a successful executive or able administrator. You will do well in any field where leadership is a prerequisite.
+As Mercury is the lord of the 4th house, you will achieve the reputation of being an intellectual quite early in life. If you receive proper guidance in childhood, you will be able to prove your abilities in any field where great mental concentration is required.
 
 
-Since Saturn is seen occupying the fourth, you may appear unhealthy. You will feel that you have lacked adequate love or attention from your mother. You are generally lethargic, and like to be left alone. You may have problems with some relatives. You may have problems with cars or houses. Your family life can be made more pleasant through your effort.
+Apart from the above, you should be happy to note that there is a beneficial influence of Jupiter on the fourth lord and this reduces any bad effects predicted otherwise.</p>
 
-
-Since the Moon is afflicted in your chart, you should be attentive to your mother's health and happiness.</p>
-
-<h2>Education,Status & Public Life,Career,Children & Progeny,Intellect</h2>
+<h2>Children & Progeny,Health & Sickness,Personality & Self-Awareness,Problems & Obstacles,Home Life,Family & Relatives,Marriage & Spouse,Property & Assets,Expenses & Losses,Intellect</h2>
 <p>Predictions based on your 5th Bhava</p>
 
 <p>The fifth house of the horoscope mainly gives indications regarding children, mind and intelligence.</p>
 <p>
-Aiswarya, since the 5th lord is in the 11th, you will be learned, dear to people, and may be an author. Apart from the above, you will have ample opportunities to develop and demonstrate your skills in various fields, including academic circles. To the very best of your ability, you will build a more secure future for your children. An intellectual and emotional involvement with you is sure to be an educational experience for your children during their development. Eventually you will feel proud of your children.
+Rahu is placed in the 5th house. You may worry about your children. Your stomach will be sensitive. As you are analytical and logical in speaking, others may think you hard-hearted.
 
 
-Positioning of benefic planets in the fifth house from Lagna, Moon or Jupiter or benefic planets aspecting these houses is considered to favour well for having children. Such positive indications are seen in this horoscope.</p>
+Tester2, since the 5th lord is in the 8th, you may have children late in life, or not at all. You may be troubled by chest ailments. On the domestic front, occasional flare-ups occur when you spend too much time with either your parents or your children. When it comes to arguments, you start the altercation and then leave your spouse to fix the situation you created. You have to quit being dictatorial if you want your children to listen to you. You may not be able to hold on to inherited property.</p>
 
-<h2>Money & Wealth,Problems & Obstacles,Marriage & Spouse,Expenses & Losses,Children & Progeny,Family & Relatives,Health & Sickness</h2>
+<h2>Foreign,Family & Relatives,Personality & Self-Awareness,Property & Assets,Problems & Obstacles,Health & Sickness</h2>
 <p>Predictions based on your 6th Bhava</p>
 
 <p>The sixth house gives indications regarding diseases, enemies, obstacles and other generally negative topics.</p>
 <p>
-Aiswarya, since the 6th lord is in the 11th, you will be adventurous enough to acquire wealth from or through enemies. But your spouse spends faster than you both earn it. You must learn to adapt yourself to the financial laxity of your partner. The will have happiness and unhappiness from or because of your children. Your brother will probably be connected with law or law-enforcement.
+Tester2, since the 6th lord is in the 10th, you will be better off far from home or in foreign countries. Conflicts will occur between you and your father. You will be a gifted conversationalist and be effective in communicating with others. There may be fights, disagreement or lawsuits over family land or property. You are competent and you will prevail over those who question your integrity. You will be self-assured. When the need arises, your enemies will realise that you can be unscrupulous.</p>
 
-
-Sixth lord is positioned together with Mars.  You will end to fear about robberies and financial losses.</p>
-
-<h2>Personality & Self-Awareness,Status & Public Life,Marriage & Spouse,Problems & Obstacles,Remedies,Foreign,Love & Romance,Career,Home Life,Health & Sickness</h2>
+<h2>Career,Business,Foreign,Family & Relatives,Home Life,Problems & Obstacles,Marriage & Spouse,Love & Romance,Remedies</h2>
 <p>Predictions based on your 7th Bhava</p>
 
 <p>The various aspects of your married life are influenced by the 7th. house.</p>
 <p>
-Aiswarya, your 7th lord is in the 9th house. You will be a shy and diffident as a young girl. However, you will undergo a personality change as you approach adolescence. You will become dignified and self-possessed, and you will command respect and consideration from others. Your husband will be a man of worldly experience and wisdom. You will consider yourself lucky. Your husband may have old girlfriends or lovers who upset you and make you jealous. Express your concerns to him. You, or your husband, will be involved with a foreign concern, or a foreign country in some way. You are a romantic and you may find the practical realities of marriage difficult. However, your strength lies in your self-confidence.
+Tester2, your 7th lord is in the 10th. You may have to work far from home or travel frequently on business. This involves separations from your family. It may create uneasiness at home; and you have to appreciate her views and concerns. You will also have to convince her that she is most important in your heart. Be flexible in minor matters concerning your in-laws. If you are unreasonable you will ruin your relationship and thereby forgo any assistance you may get from them, especially your father-in-law. Your wife will be interested in travel.
 
 
-The 7th lord and Venus are weak. You will enjoy romance, and relationships with men, but you find yourself unable to commit to a serious relationship. You like keeping your options open and are unwilling to give up your perceived freedom. Unless you seriously decide that multiple relationships do not make for a happy life, you will not get married. If you do make a commitment, it may be under very special and unimaginable circumstances. You find it hard to reconcile your career and domestic life.
+Tester2, a person from the east could make an ideal partner for you.
 
 
-Aiswarya, a person from the north could make an ideal partner for you.
+Since Jupiter influences the Sun, your wife will probably be religious. She will give you good advice.
 
 
-Ketu is in your 7th house. Your marriage may be delayed as it will take time to find a husband who meets your specifications. You will pay special attention to the health and care of your husband. He will be emotionally dependant on you. You may not find him demonstrative enough, either physically or emotionally. This should not be interpreted as a lack of interest in you.
+Since Jupiter influences the Moon, your married life will be smooth and happy.
 
 
-Apart from the above, you should be happy to note that there is a beneficial influence of Jupiter on the seventh house and this reduces any bad effects predicted otherwise.</p>
+Apart from the above, you should be happy to note that there is a beneficial influence of Jupiter on the seventh lord and this reduces any bad effects predicted otherwise.</p>
 
-<h2>Family & Relatives,Personality & Self-Awareness,Problems & Obstacles,Career,Status & Public Life,Longevity,Health & Sickness</h2>
+<h2>Personality & Self-Awareness,Problems & Obstacles,Marriage & Spouse,Children & Progeny,Family & Relatives,Career,Money & Wealth,Health & Sickness,Longevity</h2>
 <p>Predictions based on your 8th Bhava</p>
 
 <p>The eighth house gives indications regarding longevity, medical treatment and other difficulties.</p>
 <p>
-Aiswarya, since the 8th lord is in the 10th, you enjoy spending time with your parents, even if you do not have a whole lot of time. You will cherish the moments you spent and reflect on them with great joy. It is difficult for you to remain with them as long as you would like. You cope well in crisis situations, but you tend to get anxious or worried if you feel crisis looming. Despite the impediments and obstacles you face, you will rise steadily in your career. Be careful and conniving if you must, because an assistant or a person under your control may turn against you or try and grab power from you. However, keep your accounts carefully and honestly, because they may be audited or examined by the government or law-enforcement. Your boss may suddenly leave the work place, and this could lead to your rise.</p>
+Tester2, since the 8th lord is in the 9th, you find it difficult to give yourself completely to any faith, ideal or person. Consequently, you also cannot expect complete loyalty from others. You will have to remember that your spouse wants to know where you are and what you are doing, most of the time, if not, all the time. You have the appealing quality of seeming to remain eternally youthful. It may be good to remember that too much independence early in life can create confusion. Provide guidelines for your children. You may have conflicts with your father. During difficult times, you may find that your friends desert you and bosses criticize you unduly.
 
-<h2>Marriage & Spouse,Status & Public Life,Personality & Self-Awareness,Children & Progeny,Money & Wealth,Problems & Obstacles</h2>
+
+Your 8th house is occupied by Moon. Although your personal finances may not be to your liking, there will be substantial gain on account of your life partner. Get your eyes tested regularly. Be careful around water. You may be prone to asthma.</p>
+
+<h2>Property & Assets,Family & Relatives,Money & Wealth,Career,Problems & Obstacles,Foreign,Personality & Self-Awareness</h2>
 <p>Predictions based on your 9th Bhava</p>
 <p>
-Aiswarya, as the 9th lord is in the ascendant, you will be considered a fortunate woman, and you and your husband will both rise in life after you are married. You will receive public recognition and honour. Wherever you go, people in authority will give you acceptance and encouragement without any hesitation. Naturally you will be a self-made woman. The good-will gained by you will be enjoyed by your husband, children and even by subsequent generations. You know how to delegate responsibility and live life to the fullest. You seek new ideas and new interests. You enjoy a good heart to heart conversation.
+Tester2, in your horoscope, the lord of the 9th house is in the 12th. So you are not likely to inherit property from your parents or relatives. Your family may have had financial difficulties in your youth. You have to work hard to establish your credentials in the working world. You may have to travel far from home. You have the potential to become a deeply religious individual.
 
 
-Venus in the ninth is good. You will be fortunate and happy in life.
+Venus in the ninth is good. You will be fortunate and happy in life.</p>
 
-
-It is seen that the lord of 9th is very weak which reduces the good effects.</p>
-
-<h2>Career,Personality & Self-Awareness,Problems & Obstacles,Family & Relatives,Business,Status & Public Life,Money & Wealth,Property & Assets,Intellect,Children & Progeny,Education,Personality & Self-AwarenessCareer,Foreign</h2>
+<h2>Money & Wealth,Status & Public Life,Personality & Self-Awareness,Family & Relatives,Career,Intellect,Property & Assets,Children & Progeny,Business,Education,Problems & Obstacles,Foreign,Personality & Self-AwarenessCareer</h2>
 <p>Predictions based on your 10th Bhava</p>
 
 <p>Verse from Phaladeepika says that the tenth house indicates Vyapara (commerce), Aspada (rank or position), Karma (acts, occupation, profession), Jaya (success), Kirti (fame), Kratu (sacrifice), Jeevana (livelihood, profession), Vyoma (sky), Achara (conduct), Guna (good qualities), Pravritti (inclination), Gamana (going), Ajna (command)</p>
 <p>According to Sarvartha Chintamani, from the tenth house, the astrologer should judge occupation, command, authority, fame, rain, life in foreign lands, performance of sacrifice, esteem, respect, means of livelihood, profession, the knees and the servants.
 An analysis of the tenth house, lord of tenth house, planets in tenth house, position of Sun and Moon are analysed below to get an insight into the professions astrologically indicated for you.</p>
 <p>
-Aiswarya, in your horoscope, the lord of the tenth house is placed in the tenth house itself. Verse from Brihat Parasara Hora indicates that you develop expertise in whatever you do. You face problems with courage and remain cheerful even in adverse situations. You believe in speaking the truth. You are always concerned with the well being of your elders.
+Tester2, in your horoscope, the lord of the tenth house is placed in the second house.
+Verse from Brihat Parasara Hora indicates that you will be wealthy and respected by those in authority. You are generous. You will gain happiness through your father.
 
 
-The tenth house is Leo. It is the fifth sign of the zodiac and it stands for amusements. It denotes actresses and artists, places of amusements, racecourse, dance halls and play grounds. The sign of Leo also indicates government jobs, mint, medicine, stock exchange, mining of precious metals, forests, palatial buildings, castles etc.
-You can choose a career keeping the above guidelines in view. In modern times, areas such as entertainment parks, night clubs, discotheques, carnivals, exhibitions and trade fairs, heritage hotels and tourism could also suit you astrologically.
+The tenth house is sagittarius. This sign is ruled by jupiter. Banks, schools, courts, temples, book sellers, treasury, church, temples, explorers, priests, trusties, lawyers, scholars, consultancy and similar professions are indicated.
 
 
 The Sun is seen in the 10th house in your horoscope.
 According to Saravali, since Sun is placed in the tenth house, you will be intelligent, enjoy luxuries and own vehicles. You will be strong, wealthy and courageous. You will enjoy the company of relatives and sons.
-This position is often associated with social eminence, political power or professional competence. No doubt, you will rise in life and hold a post of honour and responsibility. You will gain from your father. You will show interest in diverse topics.
+This position is often associated with social eminence, political power or professional competence. No doubt, you will rise in life and hold a post of honour and responsibility.
+You will gain from your father. You will show interest in diverse topics.
 
 
-As Sun is in Leo, your preference will be to run your own business or be the boss whatever may be the situation.
+As the Sun is in Sagittarius, you do not like to be tied down to anything in particular. You could find yourself drifting from one job to another.
+
+
+Sun and Mercury in Sagittarius makes you a lover of horses, dogs and other animals and you could shine as jockey or a trainer.
 
 
 Mercury is in the tenth house and this normally emphasize the use of intellectual faculties in the professional life. You respond to the challenges in professional work or social leadership with a keen sense of planning and a thorough analysis of problems. Mercury also rules over humour and vivid imagination. You could try your hand at commercial art, advertising, cartoon sketching or journalism.
-As Mercury is placed in the tenth house in your chart, you will be intelligent, will take up a lofty profession. You will show courage. You will receive awards, certificates of merit, honours and decorations (ornaments, dress etc.) You can do well in running trading companies, commission agencies and commercial establishments.  Mercury produces literary and scientific tendencies. It gives you a taste for science, accounts, mathematics and law.
+As Mercury is placed in the tenth house in your chart, you will be intelligent, will take up a lofty profession. You will show courage. You will receive awards, certificates of merit, honours and decorations (ornaments, dress etc.) You can do well in running trading companies, commission agencies and commercial establishments.
+Mercury produces literary and scientific tendencies. It gives you a taste for science, accounts, mathematics and law.
 
 
-Mercury is in Leo. Ideal planetary position to build a successful career in Government. You have the patience, tenacity and also a tinge of arrogance to function as an officer in a government or public utility company. Although you have the breadth of vision, you often find yourself constrained by the maze of rules and regulations and end up doing the routine.
+Mercury is in Sagittarius. Ever ready to forgive, you are popular among your friends. You speak your mind freely, but people know that there is no malice intended. You like to lead a free and interesting life. Your career may be associated with the publishing industry, electronic media, cinema or advertising and marketing. You like to move around and see places.
 
 
 Apart from the above analysis based on the planetary positions in the horoscope, some general guidance can be derived from the birth star itself. Occupations suggested for your birth star are related to the following.
 
 
-Medicine, surgery, law, mining, instrumental music, mechanical engineering, foundry, skins and hides, woollen articles, oil extraction, dentistry, technical trades, petroleum.
+Automobile, transport, tourism, music, cinema, decoration, tube light, fan, fridge, hot water equipment, hot air blower, radiation, women's apparel, fancy goods, garments, plastics, mica, rubber, leather, catering and bakery.
 
 
 Some indications can be derived from the combination of planets in the tenth house. The characteristics of the planets combine to give special effects.
@@ -191,34 +184,31 @@ Some indications can be derived from the combination of planets in the tenth hou
 According to Varahamihira in Brihat Jathaka, the combination of Sun and Mercury makes you intelligent, expert and happy. Career options for you are in engineering, accountancy and law.
 
 
-Moon is debilitated in your horoscope. You have to choose your career carefully.</p>
+Jupiter aspects the tenth house. This strengthens the career prospects.</p>
 
-<h2>Business,Money & Wealth,Family & Relatives,Status & Public Life,Career,Problems & Obstacles,Personality & Self-Awareness,Children & Progeny</h2>
+<h2>Family & Relatives,Partnerships,Business,Money & Wealth,Personality & Self-Awareness,Intellect</h2>
 <p>Predictions based on your 11th Bhava</p>
 
 <p>The eleventh house mainly gives indications regarding income and sources of income.</p>
 <p>
-Aiswarya, as the 11th lord is in the 10th, you will do well in business and make a good profit. You can expect assistance from your older brother. You will win awards or prizes for your original contributions to your subject or field of study.
+Tester2, as the 11th lord is in the 2nd, you will have a harmonious relationship with your older siblings. Partnership and business with friends normally brings you good profit. You are charitable, in addition to being religious.
 
 
-Since Mars occupies the 11th house, you should be careful before trusting your friends totally. You are cheerful and rich. Your father may give you cause for some kind of worry.
+Since Ketu occupies your 11th house, you are considered intellectual or virtuous.</p>
 
-
-Since Jupiter occupies the 11th house, your friends will be faithful and stand by you in times of need. You will be intrepid, affluent and well-known. The size of your family will be limited.
-
-
-Eleventh lord is in a Kendra position. Therefore, you will be able to enjoy wealth.</p>
-
-<h2>Problems & Obstacles,Foreign,Personality & Self-Awareness,Family & Relatives,Home Life,Money & Wealth,Expenses & Losses</h2>
+<h2>Money & Wealth,Expenses & Losses,Health & Sickness,Home Life,Personality & Self-Awareness,Marriage & Spouse</h2>
 <p>Predictions based on your 12th Bhava</p>
 
 <p>The twelfth house gives indications regarding expenditure and losses.</p>
 <p>
-Aiswarya, since the 12th lord is in the 9th, it is hard for you to maintain a good relationship with most people. You will move abroad and generally do well there. Though honest, generous, and large- hearted, you may not have much interest in spiritual matters. Your family life may not be all that pleasant. You are keenly interested in methods of making and retaining wealth.</p>
+Tester2, since the 12th lord is in the 2nd, you will unwisely invite financial trouble. You have erratic eating habits. Your eye-sight will be poor. There will be lack of harmony at home. You are tactful when it comes to awkward situations. You will find happiness in religion.
+
+
+As Mars is in the 12th house, you appear tyrannical and tend to seek immediate gratification. You will, however, be industrious and charitable. You may remain single for a long time.</p>
 
 <h1>Favourable periods for Career</h1>
 <p>Considering the lagna lord, tenth lord, benefic planets in lagna and tenth house, aspect of Jupiter on lagna and tenth house and other factors the following dasa/apahara periods are found favourable for career.</p> 
-Analysis for age 32 to age 44.
+Analysis for age 25 to age 53.
 <table>
     <tr>
         <td>Dasa</td>
@@ -228,25 +218,25 @@ Analysis for age 32 to age 44.
         <td>Analysis</td>
     </tr>
 <tr>
-    <td>Ketu</td>
+    <td>Sani</td>
     <td>Guru</td>
-    <td>04-07-2030</td>
-    <td>10-06-2031</td>
+    <td>27-11-2036</td>
+    <td>10-06-2039</td>
     <td>Favourable</td>
 </tr>
 
 <tr>
-    <td>Shukra</td>
-    <td>Surya</td>
-    <td>15-11-2036</td>
-    <td>15-11-2037</td>
+    <td>Budha</td>
+    <td>Guru</td>
+    <td>25-06-2051</td>
+    <td>30-09-2053</td>
     <td>Favourable</td>
 </tr>
 </table>
   
 <h1>Favourable periods for House Construction</h1>
 <p>Considering the fourth lord,  benefic planets with aspect on fourth house or fourth lord and other factors, the following dasa/apahara periods are found favourable for construction of house.</p>      
-<p>Analysis for age 30 to age 37.</p>
+<p>Analysis for age 23 to age 39.</p>
 <table>
 	<tr>
 	    <td>Dasa</td>
@@ -256,18 +246,18 @@ Analysis for age 32 to age 44.
 	    <td>Analysis</td>
 	</tr>
 	<tr>
-    <td>Budha</td>
     <td>Sani</td>
-    <td>06-11-2023</td>
-    <td>16-07-2026</td>
+    <td>Budha</td>
+    <td>13-06-2023</td>
+    <td>20-02-2026</td>
     <td>Favourable</td>
 </tr>
 
 <tr>
-    <td>Ketu</td>
+    <td>Sani</td>
     <td>Guru</td>
-    <td>04-07-2030</td>
-    <td>10-06-2031</td>
+    <td>27-11-2036</td>
+    <td>10-06-2039</td>
     <td>Favourable</td>
 </tr>
 </table>
@@ -275,7 +265,7 @@ Analysis for age 32 to age 44.
   
 <h1>Favourable periods for Marriage</h1>
 <p>Considering the seventh lord, planets in seventh house, Venus, Rahu, Moon and aspect of Jupiter and other factors the following dasa/apahara periods are found favourable for marriage.</p>  
-Analysis for age 32 to age 35.
+Analysis for age 23 to age 30.
 <table>
     <tr>
         <td>Dasa</td>
@@ -285,18 +275,18 @@ Analysis for age 32 to age 35.
         <td>Analysis</td>
     </tr>
     <tr>
-    <td>Ketu</td>
-    <td>Shukra</td>
-    <td><code>13-12-2026</code></td>
-    <td><code>12-02-2028</code></td>
+    <td>Sani</td>
+    <td>Budha</td>
+    <td><code>13-06-2023</code></td>
+    <td><code>20-02-2026</code></td>
     <td>Favourable</td>
 </tr>
 
 <tr>
-    <td>Ketu</td>
-    <td>Chandra</td>
-    <td><code>19-06-2028</code></td>
-    <td><code>18-01-2029</code></td>
+    <td>Sani</td>
+    <td>Shukra</td>
+    <td><code>01-04-2027</code></td>
+    <td><code>01-06-2030</code></td>
     <td>Favourable</td>
 </tr>
 </table>
@@ -308,21 +298,21 @@ Analysis for age 32 to age 35.
         <td>Analysis</td>
     </tr>
     <tr>
+    <td><code>05-12-2025</code></td>
     <td><code>02-06-2026</code></td>
-    <td><code>31-10-2026</code></td>
-    <td>Excellent</td>
+    <td>Favourable</td>
 </tr>
 
 <tr>
-    <td><code>26-01-2027</code></td>
-    <td><code>26-06-2027</code></td>
-    <td>Excellent</td>
+    <td><code>01-11-2026</code></td>
+    <td><code>25-01-2027</code></td>
+    <td>Favourable</td>
 </tr>
 </table>
   
 <h1>Favourable periods for Business</h1>
 <p>Considering the second, ninth, tenth and eleventh lords,  aspect of Jupiter on lagna and eleventh house and other factors, the following dasa/apahara periods are found favourable for business activities.</p>  
-<p>Analysis for age 30 to age 34.</p>
+<p>Analysis for age 23 to age 27.</p>
 <table>
     <tr>
         <td>Dasa</td>
@@ -332,18 +322,18 @@ Analysis for age 32 to age 35.
         <td>Analysis</td>
     </tr>
     <tr>
-    <td>Budha</td>
     <td>Sani</td>
-    <td>06-11-2023</td>
-    <td>16-07-2026</td>
+    <td>Budha</td>
+    <td>13-06-2023</td>
+    <td>20-02-2026</td>
     <td>Favourable</td>
 </tr>
 
 <tr>
+    <td>Sani</td>
     <td>Ketu</td>
-    <td>Shukra</td>
-    <td>13-12-2026</td>
-    <td>12-02-2028</td>
+    <td>20-02-2026</td>
+    <td>01-04-2027</td>
     <td>Favourable</td>
 </tr>
 </table>
@@ -351,162 +341,143 @@ Analysis for age 32 to age 35.
 <h1>Dasa/Apahara predictions</h1>
 
 <h3>Family & Relatives,Children & Progeny</h3>
-<p>In Indian Astrology, the Dasa system divides your life into periods and sub-periods which are influenced by various planets. The general trend of fortunes and misfortunes that can be expected are given below. The intensity of experiences may vary depending on the natal and transit positions of the planets. This needs further in-depth analysis. The effects which are not applicable to a child should be considered as applicable to the parents. Predictions are given starting from current dasa onwards. Details of apahara (bhukti) are given for a maximum of 40 years only. The starting and ending of each apahara is also shown. (The initial five years are skipped for infants). Strength of planets is judged by their positions in Saptavarga.</p>
+<p>"In Indian Astrology, the Dasa system divides your life into periods and sub-periods which are influenced by various planets. The general trend of fortunes and misfortunes that may be expected are given below. The intensity of experiences may vary depending on the natal and transit position of the planets. This needs further in-depth analysis. The effects which are not applicable to a child should be considered as applicable to the parents. Predictions are given starting from current dasa onwards. Details of apahara (bhukti) are given for a maximum of 40 years only. The starting and ending of each apahara is also shown. (The initial five years are skipped for infants.) Strength of planets is judged by their positions in Saptavarga.</p>
 
 <h2>Timeline summary of Dasa / Apahara</h2>
-<ul><li><span class="bold">Sani</span> dasa for <span class="bold">15y  10m 22d</span> : <strong> <span class="bold">24 Aug 1993</span> to <span class="bold">16 Jul 2009</span></strong></li>
+<ul><li><span class="bold">Rahu</span> dasa for <span class="bold">4y  5m 8d</span> : <strong> <span class="bold">01 Jan 2000</span> to <span class="bold">09 Jun 2004</span></strong></li>
 
-<li><span class="bold">Budha</span> dasa for <span class="bold">17y  0m 0d</span> : <strong> <span class="bold">16 Jul 2009</span> to <span class="bold">16 Jul 2026</span></strong></li>
+<li><span class="bold">Guru</span> dasa for <span class="bold">16y  0m 0d</span> : <strong> <span class="bold">09 Jun 2004</span> to <span class="bold">09 Jun 2020</span></strong></li>
 
-<li><span class="bold">Ketu</span> dasa for <span class="bold">7y  0m 0d</span> : <strong> <span class="bold">16 Jul 2026</span> to <span class="bold">16 Jul 2033</span></strong></li>
+<li><span class="bold">Sani</span> dasa for <span class="bold">19y  0m 1d</span> : <strong> <span class="bold">09 Jun 2020</span> to <span class="bold">10 Jun 2039</span></strong></li>
 
-<li><span class="bold">Shukra</span> dasa for <span class="bold">20y  0m 0d</span> : <strong> <span class="bold">16 Jul 2033</span> to <span class="bold">16 Jul 2053</span></strong></li>
+<li><span class="bold">Budha</span> dasa for <span class="bold">16y  11m 30d</span> : <strong> <span class="bold">10 Jun 2039</span> to <span class="bold">09 Jun 2056</span></strong></li>
 
-<li><span class="bold">Surya</span> dasa for <span class="bold">6y  0m 1d</span> : <strong> <span class="bold">16 Jul 2053</span> to <span class="bold">17 Jul 2059</span></strong></li>
+<li><span class="bold">Ketu</span> dasa for <span class="bold">7y  0m 1d</span> : <strong> <span class="bold">09 Jun 2056</span> to <span class="bold">10 Jun 2063</span></strong></li>
 
-<li><span class="bold">Chandra</span> dasa for <span class="bold">9y  11m 29d</span> : <strong> <span class="bold">17 Jul 2059</span> to <span class="bold">16 Jul 2069</span></strong></li>
+<li><span class="bold">Shukra</span> dasa for <span class="bold">20y  0m 0d</span> : <strong> <span class="bold">10 Jun 2063</span> to <span class="bold">10 Jun 2083</span></strong></li>
 
-<li><span class="bold">Kuja</span> dasa for <span class="bold">7y  0m 0d</span> : <strong> <span class="bold">16 Jul 2069</span> to <span class="bold">16 Jul 2076</span></strong></li>
+<li><span class="bold">Surya</span> dasa for <span class="bold">6y  0m 0d</span> : <strong> <span class="bold">10 Jun 2083</span> to <span class="bold">10 Jun 2089</span></strong></li>
 
-<li><span class="bold">Rahu</span> dasa for <span class="bold">7y  1m 8d</span> : <strong> <span class="bold">16 Jul 2076</span> to <span class="bold">24 Aug 2083</span></strong></li></ul>
+<li><span class="bold">Chandra</span> dasa for <span class="bold">0y  6m 22d</span> : <strong> <span class="bold">10 Jun 2089</span> to <span class="bold">01 Jan 2090</span></strong></li></ul>
 
 
-<p><h1>Budha dasa</h1>
-<p>Aiswarya, this dasa ruled by Mercury, known as the messenger of the gods, will generate unusual desire for higher knowledge, and a longing for change. You will feel unsettled and will be prone to wandering with friends without definite objectives. However you will meet with success if intellectual activities are taken up seriously. You will probably travel far from home. Important men will be helpful at this time. If you are married, you will enjoy the companionship of your husband and your joint ventures and opportunities will flourish. However, you have to be careful about your health.</p>
+<p><h1>Sani dasa</h1>
+<p>Tester2, the planet Saturn presides over sorrow, disabilities, disease, distress, and pain. You should expect your share of ups and downs, pleasures and displeasures during this period of Saturn. However, people in powerful positions or in government may be favourably inclined toward you at this time. Your assistants and subordinates will be happy to serve you. This may also be a period of pleasant surprises. You may be susceptible to rheumatic conditions.</p>
+
+<p>It is to be noted that Saturn is poorly placed.</p>
+
+<p>You may have to face problems due to litigation, or diseases due to malnutrition. There may be quarrels and disputes with the elderly. There may be sorrow within your family. You tend to see impediments and obstacles in your path to progress.</p>
+<p><h2>Budha apahara - 13 Jun 2023 to 20 Feb 2026 in Sani dasa - 09 Jun 2020 to 10 Jun 2039</h2>
+<p>Mercury is logic, wisdom, media, technology, intelligence, siblings and studies in astrology. This may be a good time for you. You may start a new course. You will get a good position at work. You will get more responsibilities. There can be help from unexpected sources.  Mercury signifies travels in astrology. You may get to travel a lot during this dasa. Altogether you will, be happier during this dasa.</p>
+
+<h2>Ketu apahara - 20 Feb 2026 to 01 Apr 2027 in Sani dasa - 09 Jun 2020 to 10 Jun 2039</h2>
+<p>Both the planets indicate some kind of detachments in astrology. You may like to be away from all the responsibilities. This may bring some loses. Please take care of your belongings. Otherwise, you may lose them. Saturn is obstacles ad delays. There can be a delay for all events during this dasa. You may try to travel during this dasa. You may feel that someone is restricting your freedom.</p>
+
+<h2>Shukra apahara - 01 Apr 2027 to 01 Jun 2030 in Sani dasa - 09 Jun 2020 to 10 Jun 2039</h2>
+<p>Venus and Saturn are friends in astrology. You may get new friends during this dasa. There can be more wealth. It can come through your partner. You may get some kind of material comforts also. You may start thinking about house construction. Venus is culture and arts also. During this dasa, you may try to improve your   talents. You may take part in some art events.</p>
+
+<h2>Surya apahara - 01 Jun 2030 to 14 May 2031 in Sani dasa - 09 Jun 2020 to 10 Jun 2039</h2>
+<p>The Sun and Saturn are opposite energies in astrology. Sun is power, ego and self ?esteem. You may see some kind of hurdles in your life. The same situations will be in the life of your associates. You may become more jealous and greedy. The pessimist outlook which you carry now won't do any good for you. Please be more active otherwise, you can be more depressed. Please don't allow others to take control of your life. Then it can make you unhappy.</p>
+
+<h2>Chandra apahara - 14 May 2031 to 12 Dec 2032 in Sani dasa - 09 Jun 2020 to 10 Jun 2039</h2>
+<p>Moon and Saturn are two opposite energies.  One is soft and the other is harsh. You may feel that you are emotionally drained. You will get a fear about unconventional things which are beyond our control. Your lack of judgment may bring separation from others. Your emotional instability may add your woes. You may try to defend yourself. That will be mostly baseless. You must think before your speak.</p>
+
+<h2>Kuja apahara - 12 Dec 2032 to 21 Jan 2034 in Sani dasa - 09 Jun 2020 to 10 Jun 2039</h2>
+<p>Mars is aggression and passion. Whereas Saturn is delays and obstacles. You may plan for a long trip. There are chances for some minor ailments. You may get some depressed thoughts because you are under the influence   of two opposite planets. The harshness of this dasa will get reduced during the end. Then you will be happier. Your financial status also will be good.</p>
+
+<h2>Rahu apahara - 21 Jan 2034 to 27 Nov 2036 in Sani dasa - 09 Jun 2020 to 10 Jun 2039</h2>
+<p>Rahu is almost like Mars. You may try to get things done fast, but there can be obstacles. This may bring some issues. You may be careless during this dasa. This may also cause some concerns. You are pulled by two opposite forces now. This can make you confused. You should train your mind to be peaceful and alert. Meditation and yoga will help you in this. You can even go for some sports.</p>
+
+<h2>Guru apahara - 27 Nov 2036 to 10 Jun 2039 in Sani dasa - 09 Jun 2020 to 10 Jun 2039</h2>
+<p>During this dasa, there will happy moments.  There will be so many people around you to help in personal life as well as professional life. There will be praises and approvals from many places that too unexpected. You will either participate or organize auspicious events like a wedding. You will be interested in learning. Jupiter is the great benefic in astrology. You may even go for a long trip. You will be more recognized. You will be interested in spiritual deeds.</p></p>
+
+<h1>Budha dasa</h1>
+<p>Tester2, during this Budha dasa there will be no shortage of help from those older than you. You will more acutely appreciate and enjoy the environment, animals, and birds. You will also have the companionship of both men and women. Your attention may be diverted to religion or philanthropy. However, this period may uncover some health problems. You will develop and appreciate intellectual and literary activities.</p>
 
 <p>It is seen that Mercury is strong in your chart.</p>
 
 <p>You will be more inclined to devote time and energy to studying, writing, reading, reviewing or interacting profitably with others. Your negotiating and mediating skills will be improved. Friends and relatives may prove useful. You may travel more in the northern direction and enjoy or gain from such travel. Association with people younger than you will be beneficial.</p>
-<p><h2>Sani apahara - 06 Nov 2023 to 16 Jul 2026 in Budha dasa - 16 Jul 2009 to 16 Jul 2026</h2>
-<p>Saturn is obstacles, delays, redundancy and structure. There can be more selfishness in you. You may think about taking rest of taking a break. Your lack of enthusiasm should not cause any problem for you. There can be redundant communications. You must take care of your communications. You may display your lack of zeal through that.</p></p>
+<p><h2>Budha apahara - 10 Jun 2039 to 06 Nov 2041 in Budha dasa - 10 Jun 2039 to 09 Jun 2056</h2>
+<p>During the sub-period of Mercury in the Mercury dasa, your intelligence will be sharp.  You may indulge in some creative projects. There will be opportunities to display your knowledge.  You will be taking up more responsibilities.  You will be surrounded by your admirers. Your advice will be accepted by your young generation in the family.  This will make you happier and contended.  Auspicious functions like marriage can take place in your family. You will be very active throughout this dasa. You may get more material comforts.</p>
+
+<h2>Ketu apahara - 06 Nov 2041 to 03 Nov 2042 in Budha dasa - 10 Jun 2039 to 09 Jun 2056</h2>
+<p>During the sub-period of Ketu in the Mercury, dasa can give you concerns about the current situation.  You may be emotional about family and others. This doesn't mean that entire period is going to be negative. Beneficial situations can occur at any time.  You must take due care of your health. Ketu signifies moksha and spirituality. This apahara may bring some events which can divert your attention towards spirituality. You may learn spiritual texts.</p>
+
+<h2>Shukra apahara - 03 Nov 2042 to 03 Sep 2045 in Budha dasa - 10 Jun 2039 to 09 Jun 2056</h2>
+<p>During the sub-period of Venus in the Mercury dasa you will find yourself stable and happy. Venus signifies luck, comfort and happiness. This time, you will become a respectable person in your society. Physical and mental health will be good. You will find happiness humanitarian deeds. You may renovate your home or office.  There can be auspicious events like marriage can happen in the family. Great chances of learning ancient texts are also seen during this apahara.  Minor health issues like headaches and fever are also indicated.</p>
+
+<h2>Surya apahara - 03 Sep 2045 to 10 Jul 2046 in Budha dasa - 10 Jun 2039 to 09 Jun 2056</h2>
+<p>The sub-period of Sun in the Mercury dasa you will see that your accomplishments are bringing you happiness. Sun signifies power and authority.  Your friends and relatives may be in distress and they will come to you for encouragement. You will be taking part in important family and social events. More social recognition is indicated. Chances to travel and acquiring a new property also are seen.  You will invest time in hobbies. You will spend time in learning sacred and philosophical texts. You will have a cordial relationship with your dear and near ones. You will be busy in charity-related projects.</p>
+
+<h2>Chandra apahara - 10 Jul 2046 to 10 Dec 2047 in Budha dasa - 10 Jun 2039 to 09 Jun 2056</h2>
+<p>The sub-period of Moon in the Mercury dasa can give you skin problems and you have to be extra cautious about this.  You will spend time with your pets. At the same time, you should take protection of infection from the pets as well as stray animals. Moon is peace, comfort, emotions and mother in astrology. You may have to take care of your mental peace during this apahara.   You may have to be very careful about your speech. Your attitude may upset your enemies. There can be some auspicious functions too at home.</p>
+
+<h2>Kuja apahara - 10 Dec 2047 to 06 Dec 2048 in Budha dasa - 10 Jun 2039 to 09 Jun 2056</h2>
+<p>The sub-period of Mars in the Mercury dasa can give you headaches, or minor injury to the head.  Mars is aggression in astrology. During this apahara, you have to be careful with fire, electricity and sharp objects. You may be very impatient. You have to adjust with family members. Otherwise, there can be the unwanted argument. There can be relocation related to residence. Take care of thieves during this time period.  There can be some dissatisfaction in the financial growth, but situations will improve by the end of this apahara.</p>
+
+<h2>Rahu apahara - 06 Dec 2048 to 25 Jun 2051 in Budha dasa - 10 Jun 2039 to 09 Jun 2056</h2>
+<p>During the sub-period of Rahu in the Mercury dasa, your opponents can give you unexpected troubles. You should be careful not to spend time with aggressive people. There are chances of unwanted arguments. You must avoid such situations.  You should be careful with electrical equipment and fire. You should avoid traveling through the darkness. You will be interested in learning.  You will be wise in handling money. Your financial status will be satisfactory.</p>
+
+<h2>Guru apahara - 25 Jun 2051 to 30 Sep 2053 in Budha dasa - 10 Jun 2039 to 09 Jun 2056</h2>
+<p>You will be happy in the sub-period of Jupiter in the Mercury dasa. Your physical health will be good and you will be always happy.  You will not hesitate to honor others. Other will be ready to help you. You will be part of auspicious events like marriage. More social recognition is also indicated. Jupiter is great benefic in astrology. You will be more interested in spiritual and philosophy related studies. You may even teach others. More social recognition is also indicated.</p>
+
+<h2>Sani apahara - 30 Sep 2053 to 09 Jun 2056 in Budha dasa - 10 Jun 2039 to 09 Jun 2056</h2>
+<p>During the sub-period of Saturn in the Mercury dasa, you will see changes in your perspectives. You can even become greedier and be looking for materialistic pleasures.  You may even feel like being lazy. Saturn is obstacles and delay in astrology. You may feel that life is moving very slow. You may have to put a lot of energy to get things done. Events may bring more interest in spirituality. You may study spiritual texts. You must guard your wealth.</p></p>
 
 <h1>Ketu dasa</h1>
-<p>Aiswarya, during the period of Ketu dasa adverse effects, suffering and related mental strain are to be expected. This is a period of special significance for women. You should try and maintain your calm, and focus your attentions on what you are doing. You may suffer from one of the following problems: enmity from rivals; loss of prestige or image; scandals; or dental problems. Consult a dentist early. Ironically, Ketu is also known to confer money, power, domestic happiness and other benefits. Therefore, this could also be a secure time for your family. Check the nature of Ketu in your chart for an added analysis of its potential effects.</p>
-<p><h2>Ketu apahara - 16 Jul 2026 to 13 Dec 2026 in Ketu dasa - 16 Jul 2026 to 16 Jul 2033</h2>
-<p>Ketu is the significator of moksha, spirituality, isolation and detachment in astrology. Whatever happens during this dasa may force you to embrace the deep shades of spirituality and philosophy. You will learn all the beautiful lessons of worldly relationships. This may not be an easy period, but you will start facing life with a vision. You may have to be very careful about your activities, because Ketu is a headless planet. This may tempt you think with your heart than brains. Such emotional thoughts may pull you to unwanted situations. If you act unwise, then there are strong chances for challenges. So, you have to be very practical.</p>
+<p>Tester2, during this dasa, you will have your share of suffering and problems. You may appear worried or tense. You should try and maintain your calm and focus your attentions on what you are doing. You may suffer from one of the following problems: enmity from rivals on account of women; loss of prestige or image; scandals; or dental problems. Consult a dentist early. However, Ketu may confer money, power, domestic happiness and other benefits. Check the nature of Ketu in your chart for an added analysis of its potential effects.</p>
 
-<h2>Shukra apahara - 13 Dec 2026 to 12 Feb 2028 in Ketu dasa - 16 Jul 2026 to 16 Jul 2033</h2>
-<p>Venus is spouse, marriage, partnership and love in astrology. You may try to argue with your partners. It can be life as well as business partners. Since Ketu is detachment and isolation in astrology, you may try to keep yourself away from them. You must be very sure about your feelings. You should do some reality check. You may have different views from your partner. You should think about the reality of your relationships. You must be careful while dealing with fire, electricity and sharp objects.</p>
+<p>You may experience wounds and fevers. You may also feel mentally vulnerable. You must be careful in preventing accidents. It is important to assess the people with whom you associate since their character will determine, in large part, your happiness.</p>
+<p><h2>Ketu apahara - 09 Jun 2056 to 06 Nov 2056 in Ketu dasa - 09 Jun 2056 to 10 Jun 2063</h2>
+<p>During the sub-period of Ketu in the Ketu dasa, you may feel a general discomfort. You must avoid the entire situation to be questioned and investigated.  There can be issues with IRS or other governmental agencies. You must control yourself despite the circumstances. You may have to be very careful when you deal with your relatives. You may even take some harsh decision to get them away. Ketu signifies Moksha. Almost all the events happening in this dasa will make you think more about spirituality and moksha. Don't make any hasty steps.</p>
 
-<h2>Surya apahara - 12 Feb 2028 to 19 Jun 2028 in Ketu dasa - 16 Jul 2026 to 16 Jul 2033</h2>
-<p>The Sun is the most royal planet. It signifies authority, government, father, rulers and ego in astrology. You may have to be very submissive during this dasa. You may have to try hard if you want some approval from those who control   you. They may try to restrict your freedom.  They may bring some new orders and you may not like it. Sun is the pure form of energy and wherever it comes in throws light into those situations. If you have done some wrong actions in the past, this dasa may the time to see the results. You may even have to be answerable for those actions. You may go abroad or a far place. This can make you more happy and pleasant.</p>
+<h2>Shukra apahara - 06 Nov 2056 to 06 Jan 2058 in Ketu dasa - 09 Jun 2056 to 10 Jun 2063</h2>
+<p>During the sub-period of Venus in the Ketu dasa, you will get tempted to argue with your spouse or business partners.  There can be heightened stage of the competition with your spouse. Be careful while handling fire or electricity. You have to make careful moves. This time, period may influence you to make some wrong moves. Such moves may cause displeasure in the society. You may have to protect your relationship with females. There can be silly arguments. You may have to keep your dignity and guard your integrity.</p>
 
-<h2>Chandra apahara - 19 Jun 2028 to 18 Jan 2029 in Ketu dasa - 16 Jul 2026 to 16 Jul 2033</h2>
-<p>Moon indicates the most delicate things in astrology. It signifies emotions, thoughts, mother love and comfort.  Both the planets will give happiness and concerns. This will be a balanced dasa because the Moon is a benefic in astrology. Some kind of mental detachment will be there. This can be generally from the relationships. Despite this you may take part in auspicious functions like marriage.  You yourself may get married during this dasa. The rate of income and expenditure both may rise. There can be some occasions where you have to spend a lot. At the same time many other doors will get open for earning more income.</p>
+<h2>Surya apahara - 06 Jan 2058 to 14 May 2058 in Ketu dasa - 09 Jun 2056 to 10 Jun 2063</h2>
+<p>During this dasa, you may be subjected to the questioning of those who in authority. You will get a feel that your movements are being restricted. There can be some situations where you reap results for what you sow in the past. Make sure that your health is well and you should take due care. There can be fruitful long distance journeys. Minor health issues are also indicated. You may have silly arguments with your dear and near ones. The long trips will bring happiness. Financial gains are also indicated.</p>
 
-<h2>Kuja apahara - 18 Jan 2029 to 16 Jun 2029 in Ketu dasa - 16 Jul 2026 to 16 Jul 2033</h2>
-<p>Mars and Ketu are indicating intense emotions. Mars is aggression and Ketu is detachment. This may lead to verbal spats with your dear and near. Ketu is a headless planet and it may tempt you to think without wisdom. You may try to take everything very emotionally and may reach incorrect conclusions. You must avoid such thoughts. Please think twice before you talk. You should be sure about the sincerity of the people whom you meet during this dasa.</p>
+<h2>Chandra apahara - 14 May 2058 to 13 Dec 2058 in Ketu dasa - 09 Jun 2056 to 10 Jun 2063</h2>
+<p>During the sub-period of Moon in the Ketu dasa, you will get a rise in income and expenses. The rate of Happiness and unhappiness will be equal. You will get a tendency to move away from your dear and near ones. There can be auspicious occasions like marriages can occur in the family.   You will get interested in learning. You have to be in peace with your children. You may argue with them.  Financial condition will be satisfactory. You may find more ways to make wealth.</p>
 
-<h2>Rahu apahara - 16 Jun 2029 to 04 Jul 2030 in Ketu dasa - 16 Jul 2026 to 16 Jul 2033</h2>
-<p>Rahu and Ketu are opposite energies. If Rahu is aggression then Ketu is detachment. You may feel like you are being pulled into opposite directions at the same time. Due to this stress, you may lack intuition or insight. You may have to be careful about the situation. You may act carelessly. You should try to follow the guidance of your elders. There is no point in getting worried. Instead of worrying, you should try to develop your faith and hope.</p>
+<h2>Kuja apahara - 13 Dec 2058 to 11 May 2059 in Ketu dasa - 09 Jun 2056 to 10 Jun 2063</h2>
+<p>During this dasa, there are chances for verbal spats. You must curb this tendency to fall into unwanted arguments inside and outside the home.   Beware of ungodly people who can because you worry. Both the planets show aggression and impatience. You ay have to rely more on God. Your enemies may encounter you. This may not be a very good phase. Towards the end of this dasa, situations will improve.</p>
 
-<h2>Guru apahara - 04 Jul 2030 to 10 Jun 2031 in Ketu dasa - 16 Jul 2026 to 16 Jul 2033</h2>
+<h2>Rahu apahara - 11 May 2059 to 28 May 2060 in Ketu dasa - 09 Jun 2056 to 10 Jun 2063</h2>
+<p>During the sub-period of Rahu in the Ketu dasa, you may have to think more about your health and peace. Mental worries will not do good instead you will be trying to do more prayer and meditation always. Both are opposite forces. You may feel that the universe is pulling you into opposite directions. There can be unnecessary arguments with your dear and near ones. You may get threatened by the situations. You will be interested in spiritual deeds.</p>
+
+<h2>Guru apahara - 28 May 2060 to 04 May 2061 in Ketu dasa - 09 Jun 2056 to 10 Jun 2063</h2>
 <p>During the sub-period of Jupiter in the Ketu dasa, you will be associated with well-known and successful people. Others also will come towards for your advice. You will be happy with the amount of respect and acceptance which you get. Being with children will make you happy and you will be highly beneficial to them. Jupiter is the great benefic in astrology. You may be associated with successful people. There will be more happiness.</p>
 
-<h2>Sani apahara - 10 Jun 2031 to 19 Jul 2032 in Ketu dasa - 16 Jul 2026 to 16 Jul 2033</h2>
+<h2>Sani apahara - 04 May 2061 to 13 Jun 2062 in Ketu dasa - 09 Jun 2056 to 10 Jun 2063</h2>
 <p>This dasa can give you more focus on health related matters. There can be long trips for multi purposes. You may get temporary setbacks. Even then you will be hopeful. You should not take up travels without second thoughts. There are chances for wasting money in travels. You may see few obstacles and delays. Minor health issues like body pain are indicated. There can be less financial growth as well.</p>
 
-<h2>Budha apahara - 19 Jul 2032 to 16 Jul 2033 in Ketu dasa - 16 Jul 2026 to 16 Jul 2033</h2>
+<h2>Budha apahara - 13 Jun 2062 to 10 Jun 2063 in Ketu dasa - 09 Jun 2056 to 10 Jun 2063</h2>
 <p>During the sub-period of Mercury in Ketu dasa, you will be happy with your friends who were with you for a long time. You will be more active and mind will be alert.  The financial situation will be very stable and you will be happy about it. You will be happy about your young generation's success. Some happiness from real estate deals is also indicated. You may make money through new financial methods. You may even study stuff related to spirituality and philosophy. The mind will be alert and full of joy. You will see that almost all sufferings in the past 7 years are ending.</p></p>
 
 <h1>Shukra dasa</h1>
-<p>Aiswarya, this dasa governed by Venus, the goddess of love and beauty is generally favourable for budding musicians, painters, poets, actors, artists and philosophers. This is a prosperous and comfortable period particularly for women. If married, you will be able to enjoy the benefits of your husband's work. You will have enough money to ensure comfortable and attractive surroundings. Men who deal in clothing or luxury items will profit by association with you. You will get numerous opportunities to travel for both business and pleasure. Other women may be jealous of your success.</p>
+<p>Tester2, in this period, you will be a man who enjoys the effects of past and present efforts. You will be comfortable, and you will prosper. Your family life will be happier. If married, you and your wife will be closer than ever before. You may feel the urge to display or explore your artistic talents. You will witness the progress of all your efforts. Success is ensured in most things you do now. Your financial transactions will prove beneficial. You will also have the opportunity to travel at this time. You may be envied by those your age. However, you may be separated for a time from the people you love. You may have some stress at this time.</p>
 
-<p>However, it is seen that Venus is weak in the Varga.</p>
+<p>Venus is well placed in the Varga and it will be able to give its good effects.</p>
 
-<p>You may be nervous or confused at this time. You may experience urinary infections, or other infections. Your position or standing may be adversely affected. Be careful about your friends or associates. You may lack much-needed cooperation.</p>
-<p><h2>Shukra apahara - 16 Jul 2033 to 15 Nov 2036 in Shukra dasa - 16 Jul 2033 to 16 Jul 2053</h2>
-<p>During the sub-period of Venus in Venus dasa,    auspicious events like marriages and child-birth in the family.  Good opportunities for purchasing land and house construction. You will find your creative skills are being used. You will be more popular in the society. Venus is the significator of luxury, luck, love, and comfort. This apahara will be a good time period for you. There can be more social recognition. You will enjoy your life with your family. You will spend more time for entertainment. You will be interested in learning spiritual texts.</p>
-
-<h2>Surya apahara - 15 Nov 2036 to 15 Nov 2037 in Shukra dasa - 16 Jul 2033 to 16 Jul 2053</h2>
-<p>The sub-period of Sun in the Venus dasa, can give you minor stomach ailments. Make sure that you are cautious about your food habits. You have to be very realistic this time otherwise, you may make unwise decisions and regret later. Your relatives may be a cause of concern. You may see who is really trustworthy or not.  You may get too much of restrictions and that may make you unhappy. You should try to bring more peace in the relationships. Minor health issues are also indicted. This will be a period of mixed results.</p>
-
-<h2>Chandra apahara - 15 Nov 2037 to 17 Jul 2039 in Shukra dasa - 16 Jul 2033 to 16 Jul 2053</h2>
-<p>During the sub-period of Moon in the Venus, dasa can give you issues related to bone. There are possibilities for fractures or any other trouble related to bone. You will like to travel and your family may not be happy with that.  You may display a tendency to rebut and you will be very resourceful. You should control your expenditures. There can be more material comforts too. Please try to be spiritual.  You may get benefits through females. Material comforts are also indicated.</p>
-
-<h2>Kuja apahara - 17 Jul 2039 to 15 Sep 2040 in Shukra dasa - 16 Jul 2033 to 16 Jul 2053</h2>
-<p>The sub-period of Mars in the Venus dasa can give you a tendency to suspect individuals and the situations.  Mars is the planet of war in astrology. You may display a very strict nature throughout this dasa.   This tendency can create unwanted issues. Make sure that you are not being prejudicial so that your attitude doesn't bring misunderstandings. There can be profits through the land. Some real estate deals are also indicated.  There can be minor health issues. Situations will improve towards the end of this dasa.</p>
-
-<h2>Rahu apahara - 15 Sep 2040 to 16 Sep 2043 in Shukra dasa - 16 Jul 2033 to 16 Jul 2053</h2>
-<p>During the sub-period of Rahu in the Venus dasa, people can try to manipulate you. Rahu is aggression in astrology and you may try to defend yourself in unconventional methods.   Make sure that you are not getting into unwanted talks or arguments with them.   You have to keep high reverence for the law. Otherwise, you may land in some trouble. There are strong chances for verbal spats.  This situation can cause concern for your close friends. You may have to guard your wealth. You have really put effort to be in peace with all people.</p>
-
-<h2>Guru apahara - 16 Sep 2043 to 17 May 2046 in Shukra dasa - 16 Jul 2033 to 16 Jul 2053</h2>
-<p>The sub-period of Jupiter in the Venus dasa can be a happy phase because you will be comfortable with all the essential things. You will be moderately successful and you will be interested in reading and learning. Jupiter is intellect and philosophy. You will get interested in learning philosophy related stuff. You may even go for pilgrimages. Your advice will get more praises.  More social recognition is indicated. You will get more visions. You may even teach spiritual lessons.</p>
-
-<h2>Sani apahara - 17 May 2046 to 16 Jul 2049 in Shukra dasa - 16 Jul 2033 to 16 Jul 2053</h2>
-<p>During this dasa, you will get a tendency to spend time in worthless efforts. You will be meeting with your elders.  Your children can come to you and you may be busy, to be with them. They may raise questions. This is a very good time to keep in touch with people from foreign lands. Some interest towards arts and entertainment is also indicated. This time, period will give you mixed results. You may do well financially. You may have to control the expenditures. You will get more material comforts.</p>
-
-<h2>Budha apahara - 16 Jul 2049 to 16 May 2052 in Shukra dasa - 16 Jul 2033 to 16 Jul 2053</h2>
-<p>During the sub-period of Mercury in the Venus dasa, your financial status will be stable. There can be profits from the land. You will be highly dignified.  Progress will be there and you will be a respectable personality in the society. You may even get a chance to start some new ventures. A change in financial status is indicated. You will be interested in arts and entertainment. You may go for some short trips also.</p>
-
-<h2>Ketu apahara - 16 May 2052 to 16 Jul 2053 in Shukra dasa - 16 Jul 2033 to 16 Jul 2053</h2>
-<p>The sub-period of Ketu in the Venus dasa can give you unwanted arguments.  You can even detach yourself from some of your close friends.  At the same time, everyone will accept your visions also. The only enemy at this time for you will be only you yourself. Make sure that you are surrounded by good people.   You may get tempted to do something wrong. You should control those temptations.  There will be a great amount of willpower to face all the situations. Your intellect will be sharp. You may even start learning ancient scriptures.</p></p>
+<p>You will acquire artistic objects. You will achieve success through cooperation. Love, romance, or spiritedness will be apparent. There will be marriages and happy events in the family. You will get ahead with help from the opposite sex.</p>
+<p><h2>Shukra apahara - 10 Jun 2063 to 10 Oct 2066 in Shukra dasa - 10 Jun 2063 to 10 Jun 2083</h2>
+<p>During the sub-period of Venus in Venus dasa,    auspicious events like marriages and child-birth in the family.  Good opportunities for purchasing land and house construction. You will find your creative skills are being used. You will be more popular in the society. Venus is the significator of luxury, luck, love, and comfort. This apahara will be a good time period for you. There can be more social recognition. You will enjoy your life with your family. You will spend more time for entertainment. You will be interested in learning spiritual texts.</p></p>
 
 <h1>Surya dasa</h1>
-<p>Aiswarya, when you enter Surya dasa you will appear to be a more self-confident and cheerful woman. However, you will feel the need to establish your superiority over others. You want to win profits by eliminating those who stand in your way. You may become more calculating. You will, however, be respected and well-liked. During your Surya dasa period, your family will do well. However, you may have to face trouble from animals or fire. Eyes, stomach and teeth may give you trouble. As a woman, you will be called on to fulfil the role of nurturer. You may be separated from parents, or other older people who are important to you. During Surya dasa, you may inadvertently cause problems for your friends, and for property.</p>
-<p><h2>Surya apahara - 16 Jul 2053 to 03 Nov 2053 in Surya dasa - 16 Jul 2053 to 17 Jul 2059</h2>
-<p>The sub-period of Sun in the Sun dasa you will see prosperity in whatever you do. Your financial status will be good.  You will get help from many people. However, you should be very careful with your relatives.   They can act against you. Try to spend less; otherwise, there can be an imbalance between income and expenditure. You may have to guard your wealth as well. Minor health issues are also indicated. There can be favors from the ruling classes.</p>
+<p>Tester2, during this dasa you will desire to establish your superiority over others. You want to win profits by eliminating those who stand in your way. You may become more calculating or cruel. You will, however, be respected and well-liked. During your Surya dasa period, your family will do well. However, you may have to face trouble from animals or fire. Stomach and teeth may give you trouble. As a man, you will be called on to fulfil the role of protector. You may be separated from parents, or other older people who are important to you. During surya dasa, you may inadvertently cause problems for your friends and properties.</p>
 
-<h2>Chandra apahara - 03 Nov 2053 to 04 May 2054 in Surya dasa - 16 Jul 2053 to 17 Jul 2059</h2>
-<p>The sub-period of Moon in the Sun dasa will be a calm period in your life. Even your opponents will not be able to destroy your peace. This attitude will help you to reap better results. There can be some auspicious functions in the family. You may invest in real estate. Moon signifies comfort and emotions in astrology. You may come in touch with scholars. There can be sound health. This is generally a good time period.</p>
+<p>Since the Sun is strongly positioned in your horoscope, Surya Dasa will generally be good for you.</p>
 
-<h2>Kuja apahara - 04 May 2054 to 09 Sep 2054 in Surya dasa - 16 Jul 2053 to 17 Jul 2059</h2>
-<p>During the sub-period of Mars in the Sun dasa, there will happiness from rulers. You can even be invited as a speaker at a social function. Financial status will be better. There can be aid from your siblings as well. Minor health issues like muscle cramps, headache are indicated. You may be very powerful. Some auspicious functions are also indicted. Mars is aggression and impatience. You may have to control your emotions. Otherwise, there can be some unwanted arguments with friends and relatives.</p>
-
-<h2>Rahu apahara - 09 Sep 2054 to 04 Aug 2055 in Surya dasa - 16 Jul 2053 to 17 Jul 2059</h2>
-<p>During the Sub-period of Rahu in Sun dasa, you can be more prejudicial.  You may have to be wiser with your financial decisions.  There can be some worries about your future.  You must give a good effort to be happy and confident. The health of your parental figures can be a cause of concern. Rah   signifies aggression in astrology. This may make you impatient. This impatience should not cause any drift in the relationships. You may have to be very understanding especially about the younger generations.</p>
-
-<h2>Guru apahara - 04 Aug 2055 to 22 May 2056 in Surya dasa - 16 Jul 2053 to 17 Jul 2059</h2>
-<p>During the sub-period of Jupiter in the Sun dasa, your health will be satisfactory.  You will be happy about your ability to recollect things.  You will be feeling that all the situations are favoring you. Jupiter is the great benefic in astrology. This apahara will be a good time period for you. There can be auspicious functions like marriage and child-birth at home. Social recognition is also indicated. You may try to gain knowledge in divine subjects. You may even share your knowledge.</p>
-
-<h2>Sani apahara - 22 May 2056 to 04 May 2057 in Surya dasa - 16 Jul 2053 to 17 Jul 2059</h2>
-<p>The sub-period of Saturn in the Sun dasa can give more need for emotional encouragement. You must be careful with all kind of equipment you use.  Profit from land or properties can decline.  There can be unexpected difficulties for your expectations.  Even though the situations are adverse that will not affect you.  You will see that most of the needs are fulfilled. At the same time, you must take due care of your eyes.  There can be some auspicious functions in the family. You will see progress towards the end of this apahara.</p>
-
-<h2>Budha apahara - 04 May 2057 to 11 Mar 2058 in Surya dasa - 16 Jul 2053 to 17 Jul 2059</h2>
-<p>During the sub-period of Mercury in the Sun dasa, you can get minor skin diseases. You must avoid sun exposure so that you can prevent the chances of skin diseases.  Laziness can overpower you.   You should not spoil your health by your laziness. Try to be active. There can be more honors from the society. There may be betterment in the finances. You may have to be very careful with your finances.</p>
-
-<h2>Ketu apahara - 11 Mar 2058 to 16 Jul 2058 in Surya dasa - 16 Jul 2053 to 17 Jul 2059</h2>
-<p>The sub-period of Ketu in the Sun dasa can give opportunities for long travels.  You should give more effort to keep cordial relation with your family. There are chances of getting unpleasant news. You will be dealing with obstacles and delays. Ketu signifies delays, detachment, and isolation. You may have to guard your wealth. You may have to be very understanding.  Otherwise, your impatience may cause tensions in relationships.</p>
-
-<h2>Shukra apahara - 16 Jul 2058 to 17 Jul 2059 in Surya dasa - 16 Jul 2053 to 17 Jul 2059</h2>
-<p>During the sub-period of Venus in the Sun dasa, you have to be extra cautious about your diet and hygiene. There are chances for minor ailments like headaches and eyestrain. But they will be for a short term and you will find your health getting improved. You may have to guard yourself against temptations. You may like to spend money for unwanted purposes. There can be many auspicious functions during this apahara.</p></p>
-
-<h1>Chandra dasa</h1>
-<p>Aiswarya, you are likely to become more spiritually inclined and take an interest in devotional matters. You will be serene and happy. You will attend to, and respect, the wisdom of those older than you. During this period you will meet and associate with more men. Your food habits will become more organized. However, you should pay more attention to your health, otherwise, you may feel weak, lose energy, and tend toward arthritis.</p>
-
-<p>The Moon is strong in your chart and it will give most of its good effects.</p>
-
-<p>You will be happy and cheerful, and have an active mind. You will appear more congenial than before. You will enjoy flowers, perfume, and other creature comforts. There will be a rise in status or income. You will do well with the opposite sex.</p>
-
-<p>However, it is seen that the Moon is associated with malefic planets.</p>
-
-<p>You may have trouble or health problems due to blood deficiencies, pressure, or due to enlargement of spleen, fever etc. It is possible that at this time you do not do as well as you would like in your career. You may have problems or quarrel with the opposite sex. There may be loss of energy and you may become lethargic. Your mother's health may be a cause for concern.</p>
-<p><h2>Chandra apahara - 17 Jul 2059 to 16 May 2060 in Chandra dasa - 17 Jul 2059 to 16 Jul 2069</h2>
-<p>During this period you will enjoy honors from your dear and near. You will be happy with the new generation in your family. Children will give you happiness and you will feel that you are blessed. You will get a chance to go for pilgrimage with your family members. Good health is assured if you are taking care of diet and medication. You will be happy in charity works and religious deeds. Health also will be   fine at this time. Any woman who enriches your life will get great returns. You may enjoy cultural programs.</p>
-
-<h2>Kuja apahara - 16 May 2060 to 15 Dec 2060 in Chandra dasa - 17 Jul 2059 to 16 Jul 2069</h2>
-<p>During the sub-period of Mars in Moon Dasa you will be inclined to spiritual activities. Mars signifies electricity and sharp objects. More care should be given while handling fire, electricity and sharp objects. You will be more energetic and happy in developing new hobbies. Chances of moving to different places are also there. There will be profits from land and agriculture. Others will come for advice and learning. There are chances of getting some unpleasant information at this time. You may have to guard your wealth. Please be patient with your relatives and friends as well.</p>
-
-<h2>Rahu apahara - 15 Dec 2060 to 16 Jun 2062 in Chandra dasa - 17 Jul 2059 to 16 Jul 2069</h2>
-<p>During the sub Dasa of Rahu, you will have to be more spiritual and spend time in reading religious texts. There can be situations where you have to immerse yourself into the spiritual realms. This phase will give you more time to delve into the philosophical learning.  Taking due care of health and mind will help you to keep yourself peaceful. This will be a good time for a pilgrimage. You may go for long trips with your family. You should try to adjust with the new generation in your family. Otherwise, there can be arguments.</p>
-
-<h2>Guru apahara - 16 Jun 2062 to 16 Oct 2063 in Chandra dasa - 17 Jul 2059 to 16 Jul 2069</h2>
-<p>In this time period, you will be highly benefited by your spiritual deeds. You will be busy in learning philosophical and religious texts. Your family members will bring happiness into your life.  There can be changes in the environment which you live. It can even be relocation. You may do some renovation at home.   There will be peace within you and this will bring harmony in your life. Your family will be there to help you. The new generation in your family will seek your guidance.</p>
-
-<h2>Sani apahara - 16 Oct 2063 to 16 May 2065 in Chandra dasa - 17 Jul 2059 to 16 Jul 2069</h2>
-<p>During this period, you will find the   reality in the relationships.  You should take due care of health and avoid unwanted travels.  Relationship with your mother can get strained. You may have to take care of your mother's health.  Saturn signifies delays and obstructions, and laziness. This may bring some difficulties, but towards the end of the dasa situations will improve. You may have to take of your health as well.</p>
-
-<h2>Budha apahara - 16 May 2065 to 16 Oct 2066 in Chandra dasa - 17 Jul 2059 to 16 Jul 2069</h2>
-<p>This will be a pleasant phase. Moon and Mercury are natural benefics. During this time period, you will be victorious in all ventures. You will be happy as without much effort you will find that you are getting happiness and prosperity. You will be satisfied with your financial growth. You may expect more love from your family. There will be more social recognition also. Some auspicious functions like marriage can also take place in your family. At the same time, you may have to be more careful about your health. There are chances for minor ailments like headaches.</p></p>
-
-<h1>Kuja dasa</h1>
-<p>Aiswarya, Mars is the god of war. This dasa ruled by Mars will tend to make you restless and combative. If married, you may provoke arguments with your husband at the slightest provocation. You are likely to lose your temper with others as well. You are advised to guard against sudden and impulsive action at this time. You can direct your forcefulness into productive channels. Others may be jealous of your progress. You may not get the attention or affection of those older than you, if you are not sufficiently diplomatic. You may appear anaemic or weak.</p>
+<p>During this period you will develop mentally and spiritually. You will feel stronger. You will travel a lot and will feel successful. You will surmount the obstacles in your path. Your father will rise in life or you may gain from your parents. There will be improvement in your status and position. You will show fortitude and physical strength.</p>
 <p></p>
 
-<h1>Rahu dasa</h1>
-<p>Aiswarya, Rahu is generally associated with Maya, illusion, temptation, glamour, delusion, and falsehood. It tempts a person to undesirable involvements and attachments. You may also be tempted to cherish false hopes. Your behavior may change or be erratic. You will be concerned with material comfort. You will find it easier at this time to discard tradition or values. Rahu is not necessarily bad for everyone; check the other indicators in your chart. Prudence and careful thinking will mitigate many of the problems of this dasa.</p>
+<h1>Chandra dasa</h1>
+<p>Tester2, you are likely to become a spiritually inclined man who takes an interest in devotional matters. You will attend to, and respect, the wisdom of those older than you. During this period you will meet and associate with more women. Your food habits will become more organized. However, you should pay more attention to your health, otherwise, you may feel weak, lose your energy and tend toward arthritis.</p>
 
-<p>You may feel mentally run-down or tired at this time. Asthma or skin problems are to be expected.You should guard against snake-bites. This is not a good Maha dasa for education. Be careful about your associates, because through them you could lose your money or your reputation.</p>
+<p>However, since the Moon is weak in your chart, it will not be able to give its full benefits and some bad effects are possible.</p>
+
+<p>You may have trouble or health problems due to blood deficiencies, pressure, or due to enlargement of spleen, fever etc. It is possible that at this time you do not do as well as you would like in your career. You may have problems or quarrel with the opposite sex. There may be loss of energy and you may become lethargic. Your mother's health may be a cause for concern.</p>
 <p></p></p>        
 
 <h1>Graha dosha and remedies</h1>   
@@ -515,26 +486,26 @@ Analysis for age 32 to age 35.
 <h2>Problems & Obstacles</h2>
 
 
-<p>Kuja dosha not present</p>
-<p>Rahu dosha present</p>
-<p>Ketu dosha present</p>   
+<p>Kuja dosha present</p>
+<p>Rahu dosha not present</p>
+<p>Ketu dosha not present</p>   
  
 
 <h2>Kuja dosha and remedies</h2>
-<h3>Status & Public Life,Remedies</h3>
+<h3>Personality & Self-Awareness,Home Life,Problems & Obstacles,Expenses & Losses,Family & Relatives,Marriage & Spouse,Remedies</h3>
 
 
 
 <p>Great importance is attached to the effect of KUJA in a horoscope. Kuja plays an important role in determining marriage compatibility. Often people say that there is Kuja dosham in a horoscope simply because Kuja is in the 7th. or 8th. house. However, authentic books on astrology gives several rules of exception by which Kuja dosha can be considered as nullified. A proper analysis on this basis is given below to see if there is Kuja dosham in your horoscope or not.</p>
-<p>In this horoscope, Kuja (Mars) is in the Eleventh house.</p>
-<p>With respect to lagna there is no Kuja dosha in this horoscope.</p>
+<p>In this horoscope, Kuja (Mars) is in the Twelfth house.</p>
+<p>This position gives some dosham.</p>
 <p></p>
-<p></p>
-<p></p>
-<strong><span class="gdres highlight">No Kuja Dosha</span> is seen in  Aiswarya's horoscope</strong>
+<p>Explanation</p>
+<p>Thoughtful and realistic nature will help you lead a happy family life. You are capable to come up against unfavorable situations with confident and determined efforts. Always have a clever planning and be reasonable with your expenses. You wouldn't be fortunate enough to enjoy what you really deserve. You can win against the allegations, believing in your integrity. More concern on the needs of your family members can make you a happier person. Avoid being stubborn and maintain a friendly ambience inside your home.</p>
+<strong><span class="gdres highlight red">Kuja Dosha is seen</span> in Tester2's horoscope</strong>
 <h3>Remedies to Kuja Dosha</h3>
-<p></p> 
-<p>Since there is no Kuja dosha in your horoscope, you do not need to take any remedies</p>
+<p>To alleviate the bad effects of Kuja in twelfth house, you can follow the below mentioned remedies.</p> 
+<p>Do the following to prevent problems on marriage and ill effects on family life. Offer Laksharchana to Lord Subrahmania and recite Subrahmania gayatri mantra. Place lemon rind lamps before Navagraha deities and offer archanas. Also recite Mangal dhyana sloka.</p>
 
 
 <h2>Rahu and Ketu dosha and remedies , Problems & Obstacles,Personality & Self-Awareness,Money & Wealth</h2>      
@@ -545,119 +516,164 @@ Analysis for age 32 to age 35.
 In general, Rahu carries the positive and beneficial tone of Jupiter and hence stands for growth and development and self help while Ketu expresses the restrictions and obstacles of Saturn and hence thought to restrict growth. In this way Rahu represents positive objectives and Ketu denotes the easy way out with little opportunity for growth.
 Thus Rahu signifies materialism and desires, whereas Ketu signifies spiritual tendencies and process of the refinement of materialization to spirit but obstacles in the material realm. Rahu is considered to be wile, deceitful and dishonest.</p>
 <h3>Rahu Dosha</h3>
-<h3>Home Life,Family & Relatives,Personality & Self-Awareness,Money & Wealth,Problems & Obstacles,Health & Sickness,Remedies</h3>
+<h3>Problems & Obstacles,Remedies</h3>
 
 
 
 
-<p>Prosperity and happiness of your family life solely depend on your efforts. You are not going to win anything for granted and you can credit your own personality and hard work for the happy life you have. You need to be careful in your choices regarding finance and relations. Being more concerned about personal pleasures at any point will not be good for your family life. Your thoughtful and realistic nature can help you tackle the challenges. You are capable to come up from adverse situations to achieve success and earn respect of your family members. You are less prone to diseases and can maintain a healthy life. Do not let the temptations and bad temper to affect your happy living. 
-If Rahu is weak you need to be careful with your choices, health and relations.</p>
 <p></p>
-<strong><span class="gdres highlight red">Rahu Dosha is seen</span> in Aiswarya's horoscope</strong>
+<p></p>
+<strong><span class="gdres highlight">No Rahu Dosha</span> is seen in  Tester2's horoscope</strong>
 <h3>Remedies To Rahu Dosha</h3>
-<p>To alleviate the bad effects of Rahu, you can follow the below mentioned remedies.
-Get a Sarpayanthra and wear it with devotion
-Offer black gram, as naivedya, to Rahu (positioned at south-west, facing east) where Navagraha deities are arranged as per Vaidika Prathishta system. Do this offering for 9 days.
-Take a few grams of black gram with its outer peel and keep it under your pillow before you sleep. You should feed crows with these black grams in the morning after swinging it around your head. Follow this for 9 consecutive days, and on the 10th day visit Siva or Devi temple in the morning and give possible offerings.
-In some temples banyan tree and neem tree are grown nearby, and Naga deities are placed close to their base. Do Prathakshina (Parikarma) around such deities and offer abhisheka of turmeric powder. 
-Offer Kuvala (Bael leaf) archanas to Lord Subrahmania. 
-Chant the following sloka daily to considerably reduce the ill effects of Rahu in your life.</p>
+<p>Since there is no Rahu dosha in your horoscope, you do not need to take any remedies</p>
 <table class="first-manthra-content">
-    <tr><td>Asmik Mandale Adhidevatha</td></tr>
-    <tr><td>Prathyadhidevatha Sahitham Rahugraham</td></tr>
-    <tr><td>Dhyaayaami Aavahayaami</td></tr>
+    <tr><td></td></tr>
+    <tr><td></td></tr>
+    <tr><td></td></tr>
 </table>
 <table class="second-manthra-content">
-    <tr><td>Sarva Bhootheswari Jwala Jwalamayi Suprada</td></tr>
-    <tr><td>Sarva Bhoothaadi Doshaya Doshaya</td></tr>
-    <tr><td>Rahur Graha Nipeedithaath Nakshathre</td></tr>
-    <tr><td>Rashou Jaatham Sarvaanaam Mam</td></tr>
-    <tr><td>Mokshaya Mokshaya Swaha.</td></tr>
+    <tr><td></td></tr>
+    <tr><td></td></tr>
+    <tr><td></td></tr>
+    <tr><td></td></tr>
+    <tr><td></td></tr>
 </table>
 <h3>Ketu Dosha</h3>
-<h3>Expenses & Losses,Personality & Self-Awareness,Problems & Obstacles,Family & Relatives,Status & Public Life,Health & Sickness,Remedies</h3>
+<h3>Problems & Obstacles,Remedies</h3>
 
 
 
 
-<p>You can maintain a smooth living through controlled expenses. Bold and cautious approach would improve your life standards and prevent you from losses. Do not let any anxiety to affect your thoughts and activities. You may occasionally get upset on family matters and put control on the expenses of family members. The lesser your concern on personal pleasures the happier your life becomes. Bad companies and influences may lead you to disgrace. Good eating habits and more care on your prostate area will improve your health.</p>
-<p>The benefic planet Jupiter aspects Ketu in your horoscope, which reduces the bad effects and increases the above mentioned benefits.</p>
-<strong><span class="gdres highlight red">Ketu Dosha is seen</span> in Aiswarya's horoscope</strong>
+<p></p>
+<p></p>
+<strong><span class="gdres highlight">No Ketu Dosha</span> is seen in Tester2's horoscope</strong>
 <h3>Remedies To Ketu Dosha</h3>
 
-<p>To alleviate the bad effects of Ketu, you can follow the below mentioned remedies.
-Take a few grams of horse gram in a white cloth bag and keep it under your pillow before you sleep. You should feed crows with these horse grams in the next morning. Follow this for 9 consecutive days, and visit Lord Ganesha temple on the final day evening. Perform Pradakshina (Parikarma) at the temple and give possible offerings.
-Get a Ketukavachayanthra and keep it with devotion.
-Worship the deities of Ketu - Lord Ganesh and Lord Hanuman. Visit those temples daily and give possible offerings. 
-Keeping a Sudarsana chakra at home with daily chanting of the following sloka considerably reduces the ill effects of Ketu</p>
+<p>Since there is no Ketu dosha in your horoscope, you do not need to take any remedies</p>
 <table class="first-manthra-content">
-    <tr><td>Asmik Mandale Adhidevatha</td></tr>
-    <tr><td>Prathyadhidevatha Sahitham</td></tr>
-    <tr><td>Kekeegraham  Dhyaayaami Aavahayaami.</td></tr>
+    <tr><td></td></tr>
+    <tr><td></td></tr>
+    <tr><td></td></tr>
 </table>              
 <table class="second-manthra-content">
-    <tr><td>Shreem Om Namo Bhagavathi Shree Shoolini</td></tr>
-    <tr><td>Sarva Bhootheswari Jwala Jwalamayi Suprada</td></tr>
-    <tr><td>Sarva Bhoothaadi Doshaya Doshaya</td></tr>
-    <tr><td>Kethur Graha Nipeedithaath Nakshathre</td></tr>
-    <tr><td>Rashou Jaatham Sarvaanaam Mam</td></tr>
-    <tr><td>Mokshaya Mokshaya Swaha.</td></tr>
+    <tr><td></td></tr>
+    <tr><td></td></tr>
+    <tr><td></td></tr>
+    <tr><td></td></tr>
+    <tr><td></td></tr>
+    <tr><td></td></tr>
 <table>
 
  
 <h1>Remedies based on your birth star</h1>
 
 
-<h2>Personality & Self-Awareness,Problems & Obstacles,Family & Relatives,Remedies</h2>
+<h2>Personality & Self-Awareness,Problems & Obstacles,Marriage & Spouse,Family & Relatives,Career,Status & Public Life,Money & Wealth,Remedies</h2>
 
-<p>Aiswarya, as you are born in Anuradha star, your star lord is Saturn. You are such a kind of  person who tries to bring your ideas into practice. Hence you may have to wait for sometime to gain emotional consistency in life. 
-On the basis of the birth star, the Dasa periods of some planets may be generally unfavorable to you. The birth star being Anuradha suggests that you may have adverse experiences during the dasa periods of Kethu, Sun and Mars.</p>
+<p>Tester2, as you are born in Swati star, your star lord is Rahu. You always act and think independently in life. Therefore, you may face difficulties in overcoming troubled times. 
+On the basis of the birth star, the Dasa periods of some planets may be generally unfavorable to you. The birth star being Swati suggests that you may have adverse experiences during the dasa periods of Saturn, Kethu and Sun.</p>
 
-<p>There will be a number of visible changes in your feelings, thoughts and actions during this period. Your mind may be disturbed for seemingly small matters. Very often, your kin may feel that you are becoming too adamant. Baseless sorrows must be nipped in bud. You may need to act decisively in many situations.</p>
+<p>There will be a number of visible changes in your thoughts and actions during this period. Materialistic desires may grow unlimitedly. Unexpected impediments may arise in marital matters. Don't make your relatives brand you as a hot-tempered person. The inclination towards unprofitable things will be more during this period. Don't let fantasies drive your actions.</p>
 
-<p>The lord of the birth sign Vrischika is Mars. Therefore situations may arise which demand sharpness and enthusiasm in character. Spare a thought to the effect of your independent nature on the life of others. Your ability to tackle opposition will receive acknowledgement only after considerable amount of time. 
-Avoid transactions and auspicious functions in the unfavourable stars of Moola, Uttarashada, Dhanishta,Mrigasira (Mithuna sign), Ardra and Punarvasu (Mithuna sign).</p>
+<p>The lord of the birth sign Tula is Venus. Therefore, you will get opportunities to present a distinct outlook on aesthetics and in the fields of arts and sports. Extra effort will be needed to elevate your mind to a higher emotional plane. Recognition of your virtue, even by those close to you, will take time. 
+Avoid transactions and auspicious functions in the unfavourable stars of Anuradha, Moola, Uttarashada,  Krittika (Mesha sign), Rohini and Mrigasira (Vrishabha sign).</p>
 
 <p>You must practice restraining your words and behaviour during the unfavourable Dasa periods, especially on the hostile stars. Try to stay away from unnecessary tussles. It is best not to interfere in others' matters during this period.</p>
 
 <p>Practicing customary remedial measures will help to mitigate the negative effects.</p>
-<h2>Remedies based on your star (Anuradha)</h2>
-<h3>Remedies,Problems & Obstacles</h3>
+<h2>Remedies based on your star (Swati)</h2>
+<h3>Problems & Obstacles,Remedies</h3>
 
-<p>Praying regularly to Lord Shiva and Lord Ayyappa, particularly during the hostile Dasa period, is considered to be beneficial. For better results, visit the temples on the birth star of Anuradha and on the associated stars of Uttarabhadra and Pushya. It is also considered very auspicious to observe fast with purity on Saturdays, which fall on Anuradha star.</p>
+<p>Praying regularly to Rahu and Serpent Lord, particularly during the hostile Dasa period, is considered to be beneficial. For better results, visit the temples of Serpent lord and pray to Rahu on the birth star of Swati and on the associated stars of Satabhisha and Ardra. It is also considered extremely auspicious to observe fast on Fridays, which fall on Swati star.</p>
 
-<p>Pray daily to the lord of the star, Saturn, to get good results. Besides, it is best to skip rice meal once on Saturdays.</p>+
+<p>Pray daily to the lord of the star, Rahu, to get good results. Planting the Neermaruthu tree at an appropriate place is also beneficial. Selecting and wearing white, black and light blue dresses is considered yet another way to appease Rahu and Venus.</p>+
 
-<p>Besides, measures to please the lord of the sign Mars will bear fruit. Selecting and wearing black, dark blue and red dresses will appease both the lord of the star and Rasi.</p>
+<p>Besides, measures to please the lord of the sign, Venus will bring good prospects.</p>
 
-<p>Mithran is the lord of Anuradha star. Chant faithfully any of the following Mantras to appease Mithran, one of the Adityans mentioned in the Rig Veda, and receive good prospects:</p>
-<table><tr><td>Om namo mithrasya varunasya chakshase</tr></td>
+<p>Wind is the lord of Swati star. Chant faithfully any of the following Mantras to appease Lord Wind and receive good prospects:</p>
+<table><tr><td>Om vaayo ye the sahasrino</tr></td>
 
-<tr><td>Mahaadevaaya thadhritham sacharyatham dooradhrmshe</tr></td>
+<tr><td>Radhaasasthebiraagahi nithyuthwaana soma peethaye.</tr></td></table>
+<table><tr><td>Om vaayave namaha</tr></td></table>
 
-<tr><td>Devajaathaaya kethave dhivasputhraaya</tr></td>
-
-<tr><td>Suryaya samsatha</tr></td></table>
-<table><tr><td>Om mithraaya namaha</tr></td></table>
-
-<p>Besides, nurturing plants, animals and birds is considered highly auspicious. Especially, avoid harming deer, the animal of Anuradha star, and taking deer meat. Try to plant and grow Ilanji, the official tree of Anuradha and do not cut its branches. Do not harm crow, the official bird of Anuradha and if possible feed them. The element of Anuradha is Fire. Ancient astrologers testify that worshipping the lord of fire and lighting lamps during twilight will bring good luck to the people born in this star.</p>
+<p>Besides, nurturing plants, animals and birds is considered highly auspicious. Especially, keep off from harming buffalo, the animal of Swati star. Also, please avoid buffalo meat from your food. Try to plant and grow Neermaruthu, the official tree of Swati. Do not harm crow, the official bird of Swati and if possible feed them. The element of Swati is Fire. Ancient astrologers testify that worshipping the lord of fire and lighting lamps during twilight will bring good luck to the people born in this star.</p>
 
 
 <h1>Dasa Remedies</h1>
 
-<p>This prediction is for the age from 15 to 90</p>
+<p>This prediction is for the age from 20 to 90</p>
 
 
 <h2>Remedies,Problems & Obstacles</h2>
 <p>The remedies for the harmful effects of dasa
 The analysis of the general trend of fortunes and misfortunes, during the dasa of each planet, is based on the planetary position in the horoscope. The examination of the benefic and malefic effects of the planets shows that some dasa periods are not generally favorable to you. In order to mitigate the harmful effects of the unfavourable dasa periods, you must observe certain remedial rites.
 The unfavourable dasa periods in this horoscope and the remedial rites to be observed during that period are given below.</p>
-<p><h2>Dasa: Ketu </h2>
-<p>Your Ketu dasa starts on 16-7-2026. </p>
-<p>Your birth star is Anuradha.<BR>
+<p><h2>Dasa: Sani </h2>
+<p>Now you are going through the dasa period of Sani. </p>
+<p>Your birth star is Swati.<BR>
+
+Sani is in Mesha Rasi.<BR>
 
 Therefore you may occasionally face unfavorable experiences during this dasa.<BR></p>
-<p>Aiswarya, according to the planetary position in this horoscope, you are likely to undergo adverse experiences during Ketu dasa. During this period your imaginative insight in every field may be defective. You will fear for the success of every venture in which you are involved. As this period may affect your concentration you will be slow in grasping things.
+<p>Tester2, according to the planetary position in this horoscope, you are likely to undergo adverse experiences during Saturn dasa. You will have to face unexpected obstacles and difficulties in every field. You may not be able to fight against unfavourable situations. Tension may affect your natural sleep.
+The intensity of the harmful effects of Saturn dasa varies according to the positional variation of Saturn. Some of the difficulties that you may have to face, when Saturn is in unfavourable positions, are given below.
+When Saturn is debilitated, you will have to face the frequent difficulties in your life with a courageous spirit. You may not always be able to formulate   ideas with insight and put it in to practice. As a result you may incur financial losses.
+During this period the relation with the elderly people may be strained. Generally your social transactions will lack warmth. Take care that your food is hygienic. 
+During this period there will be a considerable decrease in your capacity to resist diseases. You may not get respite from diseases easily. You may suffer excessively due to Saturn's bad influence.
+When Saturn is in unfavourable positions, your ability to think practically will decline considerably. You are advised not to be mentally disturbed.
+If you experience an increase in these sorts of troubles during Saturn dasa, you can easily deduce that Saturn is in unfavourable positions. Those who are more affected by these troubles must adopt the ways to appease Saturn. Appeasing Saturn not only nullifies its harmful effects but also makes your life prosperous.
+Based on the detailed examination of this horoscope, the specific directions you are to follow in the Saturn dasa are given below.</p>
+<h3>Sani dasa remedies</h3>
+<p>This remedy is for the Sani dasa duration (from age 20y 5m 8d to 39y 5m 9d)</p>
+<h3>Dress</h3>
+<p>Dark blue and black are the favourite colours of Saturn. Wearing these colours will help you to appease Saturn. In order to reduce the harmful effects, you should wear dark blue on Saturdays.</p>
+<h3></h3>
+<p></p>
+<h3>Devatha Bhajanam</h3>
+<p>Lord Shiva and Sri Ayyappa are usually worshipped to eliminate the harmful effects of Saturn dasa. Some astrologers have recommended the worship of Hanuman. The astrologers of Kerala recommend the worship of Sri Ayyappa. Visiting the temple of Sri Ayyappa wearing black or blue dresses, while fasting; and presenting light offerings and sesame sweet broth (Ellu payasa) libation are some of the ways to appease Saturn.</p>
+<p>Morning Prayer</p>
+<h3>Suryaaya sheetharuchaye dharaneesuthaaya<br>
+ 
+Soumyaaya devagurave brigunandanaaya<br>
+ 
+Suryaathmajaaya bujagaaya cha kethave cha<br>
+ 
+Nithyam namo bagavathe gurave varaaya(After this prayer)<br>
+ 
+Krishnaaya vaasudevaaya namaami haraye sadaa<br>
+ 
+Mandasyaanishtasambootham doshajaatham vinaashaya(say this prayer too).<br> </h3>
+<p>Chant this prayer daily, waking from sleep, while facing east in your bed.</p>
+<h3></h3>
+<p></p>
+<h3>Alms (Daanam)</h3>
+<p>Giving alms good heartedly is a fine method to wash away your sins.
+You can donate sesame, black cow, blue sapphire, sesame oil, iron statue of Saturn, antimony sulphate (anjanakallu), black silk, black grains etc to appease Saturn. It is beneficial to give food to the destitute. Take some sesame oil in a flat vessel and see your reflection in it. Giving away this oil will provide good results.</p>
+<h3></h3>
+<p></p>
+<p></p>
+<h3>Poojas</h3>
+<p>Some poojas are suggested to appease Saturn. Flowers like Clitoria Ternata (Neela Shangu pushpam), blue lotus (Karinkoovalathila), blue hibiscus, blue lotus etc are used to do Saturn pooja. Libation is prepared with sesame and black gram. It is beneficial to visit the temple where the nine planets are consecrated; adorning Saturn with blue lotus (Karinkoovalathila) and lighting the oil lamps. The poojas should be performed according to the expert advice of the astrologers.</p>
+<h3>Chanting of Mantras</h3>
+<p>Those who have any technical difficulty in observing the remedial rites can win the favour of Saturn through prayer. You can appease Saturn by chanting the following mantras.</p>
+<p>Om suryaputhraya vidhmahe<br>
+
+Shaneishchraya dhimahi<br>
+
+Thanno mandhaha prajodhayath<br></p> 
+<p></p>    
+<p>You will get result only if you chant these mantras with the utmost faith and devotion. </p>
+<p></p>
+<p></p>
+<p></p>
+<p>Note : Observe the above remedies till 10-6-2039.</p>
+
+<h2>Dasa: Ketu </h2>
+<p>Your Ketu dasa starts on 9-6-2056. </p>
+<p>Your birth star is Swati.<BR>
+
+Therefore you may occasionally face unfavorable experiences during this dasa.<BR></p>
+<p>Tester2, according to the planetary position in this horoscope, you are likely to undergo adverse experiences during Ketu dasa. During this period your imaginative insight in every field may be defective. You will fear for the success of every venture in which you are involved. As this period may affect your concentration you will be slow in grasping things.
 The intensity of the harmful effects of Ketu dasa varies according to the positional variation of Ketu. Some of the difficulties that you may have to face, when Ketu is in unfavourable positions, are given below.
 When Ketu is debilitated, you may have the tendency to take contrary decisions. You will have to depend on others to fulfill your needs. You may debase the necessity for self defense.  
 During this period you will like to live in the past. Try to maintain privacy in your activities. Your body temperature will increase.
@@ -666,7 +682,7 @@ You will have a tendency to use others possessions when Ketu is in an unfavourab
 If you experience an increase in these sorts of troubles during Ketu dasa, you can easily deduce that Ketu is in unfavourable positions. Those who are more affected by these troubles must adopt the ways to appease Ketu. Appeasing Ketu not only nullifies its harmful effects but also makes your life prosperous.
 Based on the detailed examination of this horoscope, the specific directions you are to follow in the Ketu dasa are given below.</p>
 <h3>Ketu dasa remedies</h3>
-<p>This remedy is for the Ketu dasa duration (from age 32y 10m 22d to 39y 10m 22d)</p>
+<p>This remedy is for the Ketu dasa duration (from age 56y 5m 8d to 63y 5m 9d)</p>
 <h3>Dress</h3>
 <p>Wearing red dresses will help you to appease Ketu. You can also wear black dresses. You must wear red dresses on Tuesdays. It is auspicious to wear back or red dresses while worshiping.</p>
 <h3>LifeStyle</h3>
@@ -681,11 +697,9 @@ Based on the detailed examination of this horoscope, the specific directions you
 <h3>Alms (Daanam)</h3>
 <p>Giving alms good heartedly is a fine method to wash away your sins.
 You can donate horse-gram, goat, weapons, beryl, red or black silk etc to appease Ketu. It is beneficial to give away the statue of Ketu made of gold, silver or five metals.</p>
-<h3>Flowers</h3>
-<p>You can either wear red flowers like Chrysanthus (thechi), hibiscus or flowers like blue Clitoria Ternata (Neela Shangu pushpam), blue lotus, blue hibiscus etc to appease Ketu. Take the flowers to wear in your hand. Chant the mantra given below and wear it.</p>
-<p>Anishtasthaanasanjaatha doshashaanthikaram sumam<br>
-
-Santhathe shirasaa thena praseethathu shikheemama<br></p>
+<h3></h3>
+<p></p>
+<p></p>
 <h3></h3>
 <p></p>
 <h3></h3>
@@ -696,69 +710,14 @@ Santhathe shirasaa thena praseethathu shikheemama<br></p>
 <p></p>
 <p></p>
 <p></p>
-<p>Note : Observe the above remedies till 16-7-2033.</p>
-
-<h2>Dasa: Shukra </h2>
-<p>Your Shukra dasa starts on 16-7-2033. </p>
-<p>Shukra is in Karkata Rasi.<BR>
-
-Therefore you may occasionally face unfavorable experiences during this dasa.<BR></p>
-<p>Aiswarya, according to the planetary position in this horoscope, you are likely to undergo adverse experiences during Venus dasa. During this period you may come across many unforeseen complications. You are advised to restrain your words and actions. Be careful while socializing with others.
-The intensity of the harmful effects of Venus dasa varies according to the positional variation of Venus. Some of the difficulties that you may have to face, when Venus is in unfavourable positions, are given below.
-When Venus is debilitated, you may not achieve the desired happiness and contentment in your life. You can expect variation in your interest for people and objects. You may not be able to gain the deserving love and trust of others. You may experience unexpected fluctuations in your field of activity and financial status.
-Generally, you will be interested in luxuries during Venus dasa. This tendency will be more than usual when Venus is in an unfavourable position. So you are advised to restrain yourself, while spending money, during this period.
-During this period, you will have to give more consideration and care to your family ties. You cannot eliminate the possibility of baseless scandals. Be careful when you have to socialize with people, especially with that of the opposite sex.
-During this period you may have unexpected obstructions while traveling or handling vehicles. You will be unusually tired when you work hard.
-If you experience an increase in these sorts of troubles during Venus dasa, you can easily deduce that Venus is in unfavourable positions. Those who are more affected by these troubles must adopt the ways to appease Venus. Appeasing Venus not only nullifies its harmful effects but also makes your life prosperous.
-Based on the detailed examination of this horoscope, the specific directions you are to follow in the Venus dasa are given below.</p>
-<h3>Shukra dasa remedies</h3>
-<p>This remedy is for the Shukra dasa duration (from age 39y 10m 22d to 59y 10m 22d)</p>
-<h3>Dress</h3>
-<p>Light colours are dear to Venus. You can wear white or light blue dresses to appease Venus. Try to avoid dark colours during this period. It is best to wear bright dresses on Fridays.</p>
-<h3>LifeStyle</h3>
-<p>Your lifestyle in the Venus dasa period should complement the requirements of Venus. Try to maintain virtue and character both in your thought and action. You should be kind and behave attractively to your fellow beings. Keep your home and surroundings clean. Wear clean clothes during this period. Don't use words which will hurt others. Develop the mentality to love and respect the opposite sex. Check your desire for sensual pleasures. You should neither be an obstacle to marriage ceremonies or family relationships nor conspire with those who create impediments. Give every kind of support for marriages. Listening to music will help you to gratify Venus. Presenting temple arts as offerings and enjoying it will be beneficial to you.</p>
-<h3>Devatha Bhajanam</h3>
-<p>Mahalakshmi is the patron goddess of Venus. You can also worship goddess Annapoorneshwari and Yakshi to gratify Venus.</p>
-<p>Morning Prayer</p>
-<h3>Suryaaya sheetharuchaye dharaneesuthaaya<br>
- 
-Soumyaaya devagurave brigunandanaaya<br>
- 
-Suryaathmajaaya bujagaaya cha kethave cha<br>
- 
-Nithyam namo bagavathe gurave varaaya<br>
- 
-Krishna Krishna mahayogin bakthanaama bayaprada<br>
- 
-Baargavaanishtasambootham doshajaatham vinaashaya<br> </h3>
-<p>Chant this prayer daily, waking from sleep, while facing east in your bed.</p>
-<h3></h3>
-<p></p>
-<h3></h3>
-<p></p>
-<h3>Flowers</h3>
-<p>You must wear white flowers to appease Venus. Take the flowers to wear in your hand. Chant the mantra given below and wear it.</p>
-<p>Anishtasthaanasanjaathadoshashaanthikaram sumam<br>
-
-Santhathe shirasaa, thena daithyamanthree praseethathu<br></p>
-<h3></h3>
-<p></p>
-<h3></h3>
-<p></p>
-<p></p> 
-<p></p>    
-<p> </p>
-<p></p>
-<p></p>
-<p></p>
-<p>Note : Observe the above remedies till 16-7-2053.</p>
+<p>Note : Observe the above remedies till 10-6-2063.</p>
 
 <h2>Dasa: Surya </h2>
-<p>Your Surya dasa starts on 16-7-2053. </p>
-<p>Your birth star is Anuradha.<BR>
+<p>Your Surya dasa starts on 10-6-2083. </p>
+<p>Your birth star is Swati.<BR>
 
 Therefore you may occasionally face unfavorable experiences during this dasa.<BR></p>
-<p>Aiswarya, according to the planetary position in this horoscope, you are likely to undergo adverse experiences during Sun dasa. During this period you may have to face many obstacles. You are advised to exercise self-control in such cases. Take extra care to avoid impropriety in communication.
+<p>Tester2, according to the planetary position in this horoscope, you are likely to undergo adverse experiences during Sun dasa. During this period you may have to face many obstacles. You are advised to exercise self-control in such cases. Take extra care to avoid impropriety in communication.
 The intensity of the harmful effects of Sun dasa varies according to the positional variation of Sun. Some of the difficulties that you may have to face, when Sun is in unfavourable positions, are given below.
 When sun is debilitated, you will have a tendency to get alienated even from those closest to you. You may find it difficult to trust anyone. You will have trouble in participating in public stages. Friends and relatives may not stand up for you when you really need their assistance or co-operation.
 During this period, you may not get enough recognition or respect. You will feel alienated even among the most beloved. During such adverse situations you will try your best to stay away from others.
@@ -767,7 +726,7 @@ During this period you may not always succeed in evaluating situations in anothe
 If you experience an increase in these sorts of troubles during Sun dasa, you can easily deduce that Sun is in unfavourable positions. Those who are more affected by these troubles must adopt the ways to appease Sun. Appeasing Sun not only nullifies its harmful effects but also makes your life prosperous.
 Based on the detailed examination of this horoscope, the specific directions you are to follow in the Sun dasa are given below.</p>
 <h3>Surya dasa remedies</h3>
-<p>This remedy is for the Surya dasa duration (from age 59y 10m 22d to 65y 10m 23d)</p>
+<p>This remedy is for the Surya dasa duration (from age 83y 5m 9d to 89y 5m 9d)</p>
 <h3>Dress</h3>
 <p>Wear saffron dresses to appease Sun. You can also wear red dresses. It is auspicious to wear such dresses on Sundays and while worshipping Sun. Wearing saffron dresses while fasting will help you gain good results.</p>
 <h3>LifeStyle</h3>
@@ -782,11 +741,9 @@ Based on the detailed examination of this horoscope, the specific directions you
 <h3>Alms (Daanam)</h3>
 <p>Giving alms good heartedly is a fine method to wash away your sins. 
 The statue of Sun made of gold or copper, brown cow with its child, wheat, copper, gold, ruby, blood sandal, saffron cloth etc can be given to appease Sun.</p>
-<h3>Flowers</h3>
-<p>You must wear red flowers to reduce the harmful effects of Sun. You can also wear red lotus, Chrysanthus (thechi), hibiscus etc. After taking your bath, take the flowers placed on the leaves before the oil lamp (nilavilakku) in your hand, and wear it after chanting the following mantra.</p>
-<p>Anishta sthaanasamjaathadoshanaashakaram sumam<br>
-
-Santhathe shirasaa, thena shashanko me praseethathu<br></p>
+<h3></h3>
+<p></p>
+<p></p>
 <h3></h3>
 <p></p>
 <h3></h3>
@@ -797,16 +754,16 @@ Santhathe shirasaa, thena shashanko me praseethathu<br></p>
 <p></p>
 <p></p>
 <p></p>
-<p>Note : Observe the above remedies till 17-7-2059.</p>
+<p>Note : Observe the above remedies till 10-6-2089.</p>
 
 <h2>Dasa: Chandra </h2>
-<p>Your Chandra dasa starts on 17-7-2059. </p>
-<p>Chandra is in Vrischika Rasi.<BR>
+<p>Your Chandra dasa starts on 10-6-2089. </p>
+<p>Chandra is in Eighth Bhava.<BR>
 
-Lord of the dasa has malfic associations.<BR>
+Moon is without Pakshabala.<BR>
 
 Therefore you may occasionally face unfavorable experiences during this dasa.<BR></p>
-<p>Aiswarya, according to the planetary position in this horoscope, you are likely to undergo adverse experiences during Moon dasa. During this period you may have to face many unforeseen difficulties. You are advised to stay away from laborious mental and physical exertions. Be careful while dealing with eminent personalities.
+<p>Tester2, according to the planetary position in this horoscope, you are likely to undergo adverse experiences during Moon dasa. During this period you may have to face many unforeseen difficulties. You are advised to stay away from laborious mental and physical exertions. Be careful while dealing with eminent personalities.
 The intensity of the harmful effects of Moon dasa varies according to the positional variation of Moon. Some of the difficulties that you may have to face, when Moon is in unfavourable positions, are given below.
 You may incur unexpected losses and financial difficulties when Moon is debilitated. You are likely to suffer from sleeplessness. Your tendency to worry needlessly may create problems in most of the situations.
 During this period there will be visible changes in your thoughts and feelings. Adverse situations may force you to deviate from your own opinion. You will find it difficult to survive the hot environment.
@@ -815,13 +772,13 @@ You are prone to illness when Moon is in unfavourable positions. Be careful if s
 If you experience an increase in these sorts of troubles during Moon dasa, you can easily deduce that moon is in unfavourable positions. Those who are more affected by these troubles must adopt the ways to appease Moon. Appeasing Moon not only nullifies its harmful effects but also makes your life prosperous.
 Based on the detailed examination of this horoscope, the specific directions you are to follow in the Moon dasa are given below.</p>
 <h3>Chandra dasa remedies</h3>
-<p>This remedy is for the Chandra dasa duration (from age 65y 10m 23d to 75y 10m 22d)</p>
+<p>This remedy is for the Chandra dasa duration (from age 89y 5m 9d to 90y 0m 0d)</p>
 <h3>Dress</h3>
 <p>The colours which are bright as moon light are dear to Moon. So wear white or sandal coloured dresses to appease Moon. It is auspicious to wear such dresses on Mondays and full moon days; and also when the star lord is Rohini and while worshipping Moon.</p>
 <h3></h3>
 <p></p>
-<h3>Devatha Bhajanam</h3>
-<p>Goddess Durga is the powerful patron god of Moon in your horoscope. Therefore you should worship goddess Durga during Moon dasa. Visiting the temple of goddess Durga and doing Durga pooja in the full moon day is auspicious. You must worship goddess Badrakali to gratify Moon. The Kali pooja performed in the new moon day has special significance.</p>
+<h3></h3>
+<p></p>
 <p>Morning Prayer</p>
 <h3>Suryaya sheetharuchaye dharaneesuthaaya<br>
  
@@ -842,11 +799,9 @@ Abstain from consuming alcohol, non-vegetarian foods and other intoxicants while
 <h3>Alms (Daanam)</h3>
 <p>Giving alms good heartedly is a fine method to wash away your sins.
 White rice, pearl, white silk, plate filled with milk and ghee, conch, silver statue of Moon, camphor, sugar cane etc can be given as directed in order to appease Moon.</p>
-<h3>Flowers</h3>
-<p>You must wear white flowers to appease Moon. You can also wear white lotus, Boehima, Nandyaarvattom (shrub with white flowers), jasmine etc to appease Moon. Chant this mantra while wearing the flowers.</p>
-<p>Anishtasthaanasamjaathadoshanaashakaram sumam<br>
-
-Santhathe shirasaa, thena shashaanko me praseethathu<br></p>
+<h3></h3>
+<p></p>
+<p></p>
 <h3>Poojas</h3>
 <p>Some poojas are suggested to appease Moon. Visiting the temple where the nine planets are consecrated and doing pooja with the garland made of white flowers is beneficial. The full moon day and birth star day are suitable for this pooja. The poojas should be performed according to the expert advice of the astrologers.
 It is forbidden to do poojas to gratify moon on days like new moon, lunar eclipse (4th paadam) and on the star days like Anuradha and Jyeshta.</p>
@@ -884,220 +839,120 @@ Om jayodyogaya namaha<br>
 
 Om jyothishchakrapravarthakaya namaha<br></p>
 <p></p>
-<p>Note : Observe the above remedies till 16-7-2069.</p>
-
-<h2>Dasa: Kuja </h2>
-<p>Your Kuja dasa starts on 16-7-2069. </p>
-<p>Your birth star is Anuradha.<BR>
-
-Kuja is in Kanya Rasi.<BR>
-
-Therefore you may occasionally face unfavorable experiences during this dasa.<BR></p>
-<p>Aiswarya, according to the planetary position in this horoscope, you are likely to undergo adverse experiences during Mars dasa. During this period you may have to overcome unexpected difficulties to achieve success. You may have to depend on others even for silly things. Take extra care to preserve your enthusiasm and vitality in your field of activity.
-The intensity of the harmful effects of Mars dasa varies according to the positional variation of Mars. Some of the difficulties that you may have to face, when Mars is in unfavourable positions, are given below.
-When Mars is debilitated some changes may occur in your field. So be careful that nothing happens to your special abilities.
-During this period it is likely that you may knowingly or unknowingly get involved in scandals. You will have to restrict your lifestyle. Be careful when you have to socialize with people, especially with that of the opposite sex.
-During this period you shouldn't be prejudiced while handling situations. You will have difficulty in controlling your anger in adverse circumstances. You may be interested in interfering in others affairs. As a result you may fall in unnecessary trouble.
-Mars is considered as the planet responsible for discord. Therefore when Mars is in unfavourable positions even silly arguments and disputes may become big issues. So try to avoid adverse situations and restrain your words and behaviour. Show respect to your adversaries while participating in conversations and discussions.
-During this period you will be prone to illness. The changes in your surroundings may influence your health.
-If you experience an increase in these sorts of troubles during Mars dasa, you can easily deduce that Mars is in unfavourable positions. Those who are more affected by these troubles must adopt the ways to appease Mars. Appeasing Mars not only nullifies its harmful effects but also makes your life prosperous.
-Based on the detailed examination of this horoscope, the specific directions you are to follow in the Mars dasa are given below.</p>
-<h3>Kuja dasa remedies</h3>
-<p>This remedy is for the Kuja dasa duration (from age 75y 10m 22d to 82y 10m 22d)</p>
-<h3>Dress</h3>
-<p>Mars is the red planet. Red is also the favourite colour of Mars. You must wear red dresses on Tuesdays to appease Mars. It is beneficial to wear silk dresses of the same colour.</p>
-<h3></h3>
-<p></p>
-<h3>Devatha Bhajanam</h3>
-<p>The people who's Mars is in Oja rasi in the horoscope must worship Lord Subramanya, and those who's is in Yugma rasi must worship goddess Badrakali.</p>
-<p>Morning Prayer</p>
-<h3>Suryaaya sheetharuchaye dharaneesuthaaya<br>
- 
-Soumyaaya devagurave brigunandanaaya<br>
- 
-Suryaathmajaaya bujagaaya cha kethave cha<br>
- 
-Nithyam namo bagavathe gurave varaaya (say this prayer) Later,<br>
- 
-Devadeva jagannaada devathaa naamapeeshwara<br>
- 
-Booputhraanishtasambootham doshajaatham vinaashaaya (say this prayer too).<br> </h3>
-<p>Chant this prayer daily, waking from sleep, while facing east in your bed.</p>
-<h3></h3>
-<p></p>
-<h3>Alms (Daanam)</h3>
-<p>Giving alms good heartedly is a fine method to wash away your sins.
-Donate red bull, pigeon pea, coral, red cloth, gold, copper etc to gratify Mars. Giving away the statue made of gold or copper is also beneficial.</p>
-<h3>Flowers</h3>
-<p>You must wear red flowers like Chrysanthus (thechi), hibiscus, red lotus etc to appease Mars. Take the flowers to wear in your hand. Chant the mantra given below and wear it.</p>
-<p>Anishtasthaanasanjaathadoshashaanthikaram sumam<br>
-
-Santhathe shirasaa  thena mangalo me praseethathu<br></p>
-<h3>Poojas</h3>
-<p>Some poojas are suggested to appease Mars. You should worship Mars with red flowers like chrysanthus (thechi), hibiscus and champaka. Mars pooja is a special pooja which provides good results. It is beneficial to visit the temple where the nine planets are consecrated; worshipping the idol of Mars with Champakas and adorning it with the garland of Champakas. The poojas should be performed according to the expert advice of the astrologers. Doing this pooja when Mars is in Makara rasi will be more effective.</p>
-<h3>Chanting of Mantras</h3>
-<p>Those who have any technical difficulty in observing the remedial rites can win the favour of Mars through prayer. You can appease Mars by chanting the following mantras.</p>
-<p>Om bhumiputhraya vidhmahe<br>
-
-Lohithangaya dhimahi<br>
-
-Thannaha baumaha prajodhayath<br></p> 
-<p></p>    
-<p>You will get result only if you chant these mantras with the utmost faith and devotion. </p>
-<p></p>
-<p></p>
-<p></p>
-<p>Note : Observe the above remedies till 16-7-2076.</p>
-
-<h2>Dasa: Rahu </h2>
-<p>Your Rahu dasa starts on 16-7-2076. </p>
-<p>Rahu is in First Bhava.<BR>
-
-Therefore you may occasionally face unfavorable experiences during this dasa.<BR></p>
-<p>Aiswarya, according to the planetary position in this horoscope, you are likely to undergo adverse experiences during Rahu dasa. During this period things may happen which will affect your mental stability. You may be the victim of anxiety and unnecessary fear. Your lifestyle may change because of impractical notions.
-The intensity of the harmful effects of Rahu dasa varies according to the positional variation of Rahu. Some of the difficulties that you may have to face, when Rahu is in unfavourable positions, are given below.
-When Rahu is debilitated you will be attracted to intoxicants. The opportunities to use your abilities may decline. You may not get the chance to interact with good folks.
-As you are likely to be poisoned during this period, you must take care while eating and traveling. Some times your emotions may be uncontrollable. You may overlook the value of time.
-During this period you may not have company. You may be affected with skin diseases. You may lack decency in speech.
-If you experience an increase in these sorts of troubles during Rahu dasa, you can easily deduce that Rahu is in unfavourable positions. Those who are more affected by these troubles must adopt the ways to appease Rahu. Appeasing Rahu not only nullifies its harmful effects but also makes your life prosperous.
-Based on the detailed examination of this horoscope, the specific directions you are to follow in the Rahu dasa are given below.</p>
-<h3>Rahu dasa remedies</h3>
-<p>This remedy is for the Rahu dasa duration (from age 82y 10m 22d to 90y 0m 0d)</p>
-<h3>Dress</h3>
-<p>Black or dark coloured dresses are dear to Rahu. Therefore wear black dresses, while worshipping Nagas or visiting temples, to appease Rahu.</p>
-<h3>LifeStyle</h3>
-<p>Your lifestyle in the Rahu dasa period should complement the requirements of Rahu. Rahu dasa mostly influences thoughts and feelings. Therefore you must stay away from those sports which may disturb your mental stability. Keep busy with out giving isolation and day dreaming a chance. Stay away from those who recommend things like liquor, immoral activities and drugs as a respite to emotional problems. Getting involved in activities which give you self confidence and keeping distance from those you are mentally estranged with will be beneficial. Protect the kavu (dense wood where Kaali and the serpent-god Naga are worshipped) in your family, if there is any. Keep away from untimely travel and unnatural foods. Try to spend most of your time in peaceful environment.</p>
-<h3></h3>
-<p></p>
-<p>Morning Prayer</p>
-<h3>Suryaaya sheetharuchaye dharaneesuthaaya<br>
- 
-Soumyaaya devagurave brigunandanaaya<br>
- 
-Suryaathmajaaya bujagaaya cha kethave cha<br>
- 
-Nithyam namo bagavathe gurave varaaya<br>
- 
-Paapanaashana lokesha devadeva namosthuthe<br>
- 
-Shashaangaanishtasambootham doshajaatham vinaashaya<br>
- 
-Naaraayano mahaadeva daithyaanaamanthakaha prabuha<br>
- 
-Raahoranishtasambootham doshajaatham nirasyathu<br> </h3>
-<p>Chant this prayer daily, waking from sleep, while facing east in your bed.</p>
-<h3>Fasting (Vratham)</h3>
-<p>The term 'fasting' signifies the practice of frugality in the consumption of food materials. Above all, the ultimate motive of fasting and observing rites is to attain all kinds of purity by subduing your body, mind and utterance. You should fast on the days which are relevant to the planet and the days special to you. As Rahu don't have any dominating day in the week, worshipping Naga gods and visiting Naga temples while fasting on every birth star day is beneficial. You can also fast on the star days like Ardra, Swati, Satabhisha, and on Sundays.
-Abstain from consuming alcohol, non-vegetarian foods and other intoxicants while fasting. Natural foods like fruits, vegetables, and green leaves- which help digestion- are the suitable food for these days. Refrain from eating cereals, oily, hot and sour food. You can fast partially or fully according to the intensity of the harmful effects. It is not appropriate to indulge in pomp and pleasure while fasting. Your fasting will be fruitful only if you restrict your expression and emotion.</p>
-<h3></h3>
-<p></p>
-<h3>Flowers</h3>
-<p>You can wear blue or black tinged flowers like blue Clitoria Ternata (Neela Shangu pushpam), blue hibiscus etc to appease Rahu. Take the flowers to wear in your hand. Chant the mantra given below and wear it.</p>
-<p>Anishtasthaanasanjaathadoshashaanthikaram sumam<br>
-
-Santhathe shirasaa thena sarpparaajaha praseethathu<br></p>
-<h3></h3>
-<p></p>
-<h3></h3>
-<p></p>
-<p></p> 
-<p></p>    
-<p> </p>
-<p></p>
-<p></p>
-<p></p>
-<p>Note : Observe the above remedies till 24-8-2083.</p></p>
+<p>Note : Observe the above remedies till 1-1-2090.</p></p>
 
 <h1>AshtakaVarga Predictions</h1>
 
 <h2>Remedies,Problems & Obstacles,Personality & Self-Awareness</h2>
 <p>Ashtakavarga system is a predictive method of Indian Astrology that uses a system of points based upon planetary positions. Ashtakavarga means eightfold categorization. It depicts eightfold strength of planets excluding the nodes of the Moon but including the ascendant. It is worked out according to certain well-established rules for measuring the planetary strength. The strength of each planet and the power and intensity of their influence depends upon the location of other planets and the ascendant in relation to it. Eight full points are assigned to each planet. They can obtain strength varying from zero to 8 points which, plotted on different signs in a chart, determine the possibility of a transiting planet in inducing auspicious or other effects during its sojourn in a particular sign. Events and their timings are to a large extent determined by the positioning of particular points. Depending on their negative or positive influences the native can take remedial measures or pre-empt unpleasant possibilities, just by being aware of the likely consequences. To be forewarned is to be forearmed ---  the planets are one of the best guides to help condition mans mind to the possibilities of his future.</p>
 
-<h2>Moon's Ashtakavarga, Status & Public Life,Money & Wealth,Home Life</h2>
-<p>Aiswarya, your luck with the influence of the  moon is due to the presence of  four Bindus in your chart. You will be generally regarded as a lucky mascot or the harbinger of good fortune. This influence may be responsible for the prosperity your household is likely to enjoy.</p>
-<h2>Sun's Ashtakavarga, Money & Wealth,Expenses & Losses,Problems & Obstacles</h2>
-<p>Just when you have  decided to consolidate your well deserved gains  there may arise cicumstances which  may take them away from you. The sun has four Bindus in its own ashtakavarga  denoting the phenomena  of  evasive wealth. But you will be blessed with happiness in other areas of life which will make up for it.</p>
-<h2>Mercury's Ashtakavarga, Business,Partnerships,Problems & Obstacles</h2>
-<p>There are six Bindus in Mercury's ashtakavarga in your chart. This prophecies the success of your undertakings. You have little or no chance to confront difficulties in going ahead with official agreements on projects and joint ventures.</p>
+<h2>Moon's Ashtakavarga, Personality & Self-Awareness</h2>
+<p>Tester2, rare is one who is showered with the courage that radiates from moral uprightness. The moon's ashtakavarga having five Bindus in your chart will charge you with the guts to always take the moral high ground.  This will give you a clear conscience and you will be at peace with yourself.</p>
+<h2>Sun's Ashtakavarga, Personality & Self-Awareness,Money & Wealth,Status & Public Life</h2>
+<p>Fortunate to have the influence of the six Bindus present in the suns ashtakavarga, you will be bestowed with  good looks and a charming demeanor. Your winning manner will give you plenty of friends and well wishers. Your wealth and fortune will be of decent proportions and  you will earn good fame for your deeds.</p>
+<h2>Mercury's Ashtakavarga, Status & Public Life,Personality & Self-Awareness</h2>
+<p>Lucky you to be favoured by Mercury's ashtakavarga with the presence of five Bindus. You will top the popularity charts  with your warm and friendly nature. Your ability to put yourself in others shoes and understand the other persons  point of view will give you an edge in establishing good  relationships  with all.</p>
 <h2>Venus' Ashtakavarga, Personality & Self-Awareness</h2>
 <p>There is something about you that attracts the association of a variety of  wonderful persons. That something is the presence of six Bindus that occur in Venus' ashtakavarga on your chart. Your magnetic personality will draw them into your fold. This could serve you well if you handle your charms in the right way.</p>
-<h2>Mars'  Ashtakavarga, Personality & Self-Awareness</h2>
-<p>You are fortunate to have the presence of four Bindus in the  ashtakavarga of Mars on your chart. This positioning helps to mitigate the detrimental effects  of  the planets endowing you with equal proportions of good and bad fortune.You may not have the chance for  excessive jubilation but neither will you sink into the abyss of  deep sorrow.</p>
-<h2>Jupiter's Ashtakavarga, Money & Wealth,Property & Assets</h2>
-<p>The godess of wealth does not cease to smile on your fortunes. You are so blessed with the unusual presence of six Bindus in Jupiter's ashtakavarga that you are unlikely to ever experience lack of money or vehicles. The best of both will always be at your service.</p>
-<h2>Saturn's Ashtakavarga, Personality & Self-Awareness,Family & Relatives</h2>
-<p>Saturn has four Bindus in its ashtakavarga. This indicates happiness on account of  dependence on others. Your network of family and friends will always be at hand to contribute to your well being.</p>
-<h2>Sarvashtakavarga Predictions, Money & Wealth,Status & Public Life,Education,Health & Sickness,Family & Relatives,Home Life,Career,Business,Marriage & Spouse,Children & Progeny</h2>
+<h2>Mars'  Ashtakavarga, Personality & Self-Awareness,Status & Public Life,Family & Relatives</h2>
+<p>The presence of five Bindus in mars' ashtakavarga  will make you noted for charm and pleasing manners. You will be inclined to be mild and  good natured  to all in your dealing and will be appreciated for it and will make you popular among friends and relatives. There will be no occasion to point a  finger  in your direction for bad conduct.</p>
+<h2>Jupiter's Ashtakavarga, Career,Problems & Obstacles,Personality & Self-Awareness</h2>
+<p>The power wielded  by the five Bindus occurring in Jupiter's ashtakavarga in your chart is a great blessing. It spells success in endeavours and in  overcoming challenges, and getting the better of your opponents. Overall you are born under this lucky planetary position and will enjoy the benefits of circumstances conspiring to help you succeed.</p>
+<h2>Saturn's Ashtakavarga, Problems & Obstacles,Status & Public Life,Health & Sickness,Remedies</h2>
+<p>At some point in your life there may  come a time when the chances of imprisonment will loom large. You should be careful while brushing with the authorities as the presence of two Bindus in Saturn's ashtakavarga indicates the likelihood of  incarceration. You are also prone to ill-health. It would be prudent to look after your health and  keep official documentation up- to-date to avoid punishment.</p>
+<h2>Sarvashtakavarga Predictions, Career,Education,Money & Wealth,Problems & Obstacles,Home Life,Status & Public Life,Marriage & Spouse,Children & Progeny</h2>
 <p>
-In your horoscope, the 11th house has more bindus than the 10th , but the 12th has less number of bindus than the 11th and the bindus in the ascendant are greater than those in the 12th.  Even if you want to, you cant run away from the wealth and fame that are likely to befall any person whose planetary influences are such as those of yours. You are doubly fortunate in that your riches and recognition do not prevent happiness from blessing your life in equal measure. A  blessed life indeed .
-
-
-Meena to Mithuna has the most number of bindus in your chart. This points to bliss in childhood . The days that you are most likely to cherish are the best days of your childhood  years. Academically, physically, financially and from the family angle, any which way you look at it, your early formative years look fulfilled and care free.
-
-
-When most people are struggling to establish themselves in their businesses or careers, your planets (with the 4th and 9th houses having 25 to 30 bindus), are partial to you in favour of success. You are likely to be endowed with riches around your 28th year or thereafter allowing you a lifestyle that is a cut above the rest of your ilk. Enjoy the benevolence with an attitude of gratitude and take good care of  your fortune.
+The proliferation of maximum bindus in your chart appears in Karkata to Tula signifying the years of youth. Your career path appears to take off to unexpected heights. Academic and personal aspirations will get a head start during this stage of life and happiness and prosperity seem to be at the peak.  Destiny may never allow you to experience the worries of unemplyment and academic tensions. Domestic bliss will also come seeking you.
 
 
 At the age corresponding to the figures in the signs occupied by Jupiter, Venus and Mercury..your fortune turns for the better . Your  educational ambitions will materialise and you could acquire that coveted seat  for  higher education if  you have been aspiring towards that. Your future looks set to take off  on the path to wealth, recognition and fame for your professional accomplishments .  Personal life will also match up giving  you the ideal mate and marital togetherness will bring  much joy . Your life with progeny also appears blessed.  This is the stage of life that will be one of the most rewarding for you.
 
 
-In your case this special periods comes in your 31, 28 and 27 years of age.</p>
+In your case this special periods comes in your 25, 26 and 33 years of age.</p>
 
 <h1>Special Combination of Planets in the Horoscope (YOGA)</h1>
-<h2>Problems & Obstacles</h2>
+<h2>Personality & Self-Awareness,Problems & Obstacles</h2>
 <p>Yogas are special combination of planets in the horoscope which influence the life and future of a person. Some are formed by simple conjunction of planets,whereas others are based on complex astrological logic or peculiar placement of planets in the chart. Hundreds of combinations and their effects have been described in the ancient astrological texts. While some combinations are good, others may have undesirable effects.
-Aiswarya, the important combinations identified in your horoscope are listed below with a brief mention of the effect it can have on you.</p>
-<h2>Sasa Mahayoga</h2>
-<h3>Career,Marriage & Spouse,Family & Relatives,Personality & Self-Awareness,Status & Public Life,Longevity,Problems & Obstacles</h3>
-<p>Logic : Saturn in a kendra in own house.</p>
-<p>As a result of the Sasha Maha Yoga, you, your husband or your close relatives will be connected with the law, the police, or the armed forces. You will be a dignified and thoughtful, women regardless of your profession or circumstance. You will have numerous assistants. You may decide to participate in social activities with determination. Your life span is over 70. You may have enemies who resent you. You have the strength and capability to head an institution or organization and run it efficiently.</p>
+Tester2, the important combinations identified in your horoscope are listed below with a brief mention of the effect it can have on you.</p>
+<h2>Neecha Banga Rajayoga</h2>
+<h3>Career,Status & Public Life,Money & Wealth,Personality & Self-Awareness</h3>
+<p>Logic : Sani  is in its house of debilitation.
+
+Planet which is exalted in the debilitated rasi is in Lagna kendra.
+
+Debilitated planet exchanges house with the lord of debilitated house.</p>
+<p>You will be very fortunate and reach high positions. You will be just and fair in all your dealings.</p>
 
 <h2>Raja Yoga</h2>
 <h3></h3>
-<p>Logic : Lords of First and Fifth houses  are in conjunction
+<p>Logic : Lords of First and Fifth houses  aspect each other
 
-Raja yoga is seen in this horoscope.</p>
+Lords of Fifth and Tenth houses  aspect each other
+
+Beneficial Raja yoga is seen in this horoscope</p>
 <p>You will rise to positions of power and authority</p>
 
+<h2>Sunabha Yoga</h2>
+<h3>Money & Wealth,Intellect,Status & Public Life,Personality & Self-Awareness</h3>
+<p>Logic : Planet (excepting Sun) situated in the second house from Moon.</p>
+<p>Sunabha Yoga is formed when the second house from the Moon is occupied by Mars, Mercury, Jupiter, Venus or Saturn either alone or together. Men born with Sunabha Yoga will naturally become wealthy, intelligent and famous. They delight in the pleasures of sound and sight. They are generally self-made men.</p>
+
+<h2>Gajakesari Yoga</h2>
+<h3>Money & Wealth,Career,Longevity,Personality & Self-Awareness,Marriage & Spouse,Problems & Obstacles</h3>
+<p>Logic : Jupiter in a kendra from Moon.</p>
+<p>Gaja Kesari Yoga is formed when Jupiter is positioned well with respect to the Moon. Astrologically, men born with Kesari Yoga are considered especially lucky. Wealth, prosperity and success are natural to them. Kesari Yoga overpowers the evil effects of many yogas such as Kemudhruma Yoga, if present in your horoscope. You can normally expect a long and successful life. You are strong-willed and even inflexible at times. Your wife and assistants will have a hard time changing your mind once it is made up.</p>
+
 <h2>Amala Yoga</h2>
-<h3>Status & Public Life,Money & Wealth,Personality & Self-Awareness,Home Life</h3>
+<h3>Status & Public Life,Money & Wealth,Personality & Self-Awareness</h3>
 <p>Logic : Tenth house from Moon or Lagna occupied by benefic.</p>
-<p>As you are born with Amala Yoga, you will be able to generate goodwill in people. Your influence will be felt and remembered. You will have abundant wealth. You will be respected and noticed for your generosity and purity of spirit. Your character will be above reproach. You will lead a happy and joyful life.</p>
+<p>As you are a boy born with Amala Yoga, you will enjoy lasting fame and wealth. You will be respected in the community for your purity of thought and action. You will lead a prosperous life. You will be known for your ethical nature in all situations.</p>
+
+<h2>Parvatha Yoga</h2>
+<h3>Money & Wealth,Personality & Self-Awareness,Status & Public Life</h3>
+<p>Logic : Lord of lagna and lord of 12th house in mutually kendra position.</p>
+<p>You will become wealthy, prosperous, liberal, charitable,humerous and head of an institution,town or village.You will be passionate also.</p>
+
+<h2>Sada Sanchara Yoga</h2>
+<h3>Personality & Self-Awareness,Career,Problems & Obstacles</h3>
+<p>Logic : Lord of Lagna in a movable sign.</p>
+<p>You are always on the move. Even your job may involve plenty of travelling. Ensure that your objectives are definite and clear so that you do not become a wanderer.</p>
 
 <h2>SubhaVasi Yoga</h2>
-<h3>Education,Career,Intellect,Money & Wealth,Personality & Self-Awareness</h3>
+<h3>Education,Career,Intellect,Status & Public Life,Money & Wealth,Personality & Self-Awareness</h3>
 <p>Logic : Benefic planet other than Moon occupy twelfth from Sun.</p>
-<p>The benefic planet in the twelfth from the Sun is giving you good benefits. You will be interested in science and technology. You can even be a researcher in this domain. You will be known as an intelligent woman.  You may get much amount of wealth. You will have attractive features.</p>
+<p>The benefic planet in the twelfth from the Sun is giving you good benefits. You will be interested in science and technology. You can even be a researcher in this domain. You will be known as an intelligent man.  You may get much amount of wealth. You will have attractive features.</p>
 
 <h2>Pasa Yoga</h2>
 <h3>Money & Wealth,Career,Status & Public Life,Personality & Self-Awareness</h3>
 <p>Logic : All planets occupy any five signs.</p>
-<p>This yoga is indicating wealth and prosperity. You will have subordinates. Your friends will be dependent on you. You will be known as a very friendly woman. Your nature will attract many.</p>
+<p>This yoga is indicating wealth and prosperity. You will have subordinates. Your friends will be dependent on you. You will be known as a very friendly man. Your nature will attract many.</p>
 
-<h2>Swaveeryaddhana Yoga</h2>
-<h3>Money & Wealth,Status & Public Life</h3>
-<p>Logic : The second lord occupies a kendra or trikona from lagna lord.</p>
-<p>This yoga is an indication of you making money by your own effort. You will get many opportunities to make money. It is even possible for you to make money in multiple ways. Altogether, this yoga helps you to be financially independent. You will be known as a rich woman.</p>
-
-<h2>Ayatna Griha Prapta Yoga</h2>
-<h3>Property & Assets,Status & Public Life</h3>
-<p>Logic : Ninth lord is in a Kendra. Fourth lord is in exaltation, moolatrikona or own house.</p>
-<p>This is a yoga for owning a house. You will be a fortunate woman to have a good house, that too with less effort. This will make you happy. Others will praise you for your luck.</p>
-
-<h2>Nishkapata Yoga</h2>
+<h2>Sumukha Yoga</h2>
 <h3>Personality & Self-Awareness,Status & Public Life</h3>
-<p>Logic : The fourth house is occupied by a benefic or an exalted planet or a friendly planet or its lord.</p>
-<p>This yoga is a proof of your innocence. You will be known as a woman with clear intentions. You will hate hypocrisy. You will try to be truthful even in the utmost hard situations.</p>
+<p>Logic : The second house is joined by benefics.</p>
+<p>This yoga means attractive and radiant face.  You will have a natural tendency to attract others with your character. As a man, it can be an advantage for you. You will be noticed in the crowd, especially in a world which needs hope and happiness.</p>
 
-<h2>Suputra Yoga</h2>
-<h3>Children & Progeny</h3>
-<p>Logic : Jupiter is the lord of the fifth house and sun occupies exaltation, friendly or own sign.</p>
-<p>Every woman has a desire to have great children. This yoga shows the possibility to have a great son.  Your son will add value to your life.</p>
+<h2>Bandhu Pujya Yoga</h2>
+<h3>Status & Public Life,Family & Relatives,Intellect</h3>
+<p>Logic : Fourth lord have the association or aspect of Jupiter.</p>
+<p>You will be treated a respectful man. This yoga is showing great honor in the family circle. Your friends and relatives will come to take inputs from you. They will treat you as a very knowledgeable person.</p>
 
-<h2>Parijata Yoga</h2>
-<h3>Personality & Self-Awareness,Education,Problems & Obstacles,Status & Public Life,Money & Wealth</h3>
-<p>Logic : The lord of the house occupied by ascendant lord is in a rasi. The lord of this rasi is in a kendra.</p>
-<p>According to the placement of your ascendant  lord,  you have a great yoga called Parijat Yoga, which is a kind of Raj yoga. This yoga gives you a happy and satisfied life, especially during the latter part. You may have to really put a lot of effort into  studies. There will be progress in a slow pace. You will get honor from the rules and you may be closely associated with them. Your education will be a strong foundation for you even though you have to good efforts in it.  You may have all the conveniences and fond of traditions and rituals.</p>
+<h2>Vahana Yoga</h2>
+<h3>Money & Wealth,Property & Assets,Personality & Self-Awareness</h3>
+<p>Logic : The lord of lagna join the fourth , eleventh or ninth lord.</p>
+<p>This is a great yoga for material comforts and luxury items. You will have all the comforts and this will make you a happy man.</p>
+
+<h2>Satkalatra Yoga</h2>
+<h3>Personality & Self-Awareness,Marriage & Spouse</h3>
+<p>Logic : Lord of seventh or Venus joins or is aspected by Jupiter or Mercury.</p>
+<p>This yoga shows that you will be a happy man and you will get a good spouse. Your spouse will be righteous and pious and this will add value to your life.</p>
+
+<h2>Dwigraha Yoga</h2>
+<h3>Career,Status & Public Life,Love & Romance,Problems & Obstacles,Money & Wealth,Personality & Self-Awareness,Foreign</h3>
+<p>Logic : Two planets are situated in the same house
+
+Guru, Sani are in Second house</p>
+<p>Your leadership skills will earn you respect and influential power. Avoid suspecting your partner as this may lead to greater problems later on. Making money will not be a problem, once you acknowledge the value of your own work. You would love to travel and explore new places and cultures.</p>
 
 <h2>Dwigraha Yoga</h2>
 <h3>Education,Intellect,Personality & Self-Awareness,Money & Wealth,Status & Public Life</h3>
@@ -1106,47 +961,40 @@ Raja yoga is seen in this horoscope.</p>
 Surya, Budha are in Tenth house</p>
 <p>You will be inclined to gain more and more knowledge. Your intelligence and learning capability will attract attention. But you will seldom show consistency in opinions. There are chances of you making money through projects that will benefit others also. Your amazing communication skills will win you many admirers.</p>
 
-<h2>Dwigraha Yoga</h2>
-<h3>Intellect,Education,Personality & Self-Awareness,Status & Public Life</h3>
-<p>Logic : Two planets are situated in the same house
-
-Kuja, Guru are in Eleventh house</p>
-<p>You will be proficient in intellectual activities. You are curious to learn more about new areas and are eager to effectively share and discuss these with others. The excellent learning skills, memory power and leadership skills will make you respectable.</p>
-
 <h1>Transit predictions</h1>
 
 <h2>Transit of Sun</h2>
 <h3></h3>
 <p>The Sun takes about a month to transit through one sign.</p>
 <p><h3>15 December 2025 - 14 January 2026</h3>
-<p>During this period Surya transits the Second house.</p>
-<p>Earlier losses will continue to affect you for some more time, but with less damaging effect. As a wife, or mother, you may have to deal with problems connected with the finances of the home. However, the general trend at this time is toward progress. In matters of health, you may experience difficulty with your eyes and/or head.</p>
+<p>During this period Surya transits the Third house.</p>
+<p>This is the start of a good period for you. Your capabilities are being established at this time, and will be appreciated by the woman who cares about you. Your financial situation will improve. You will also experience improvement in position, type of work, or status. You will do well in examinations or evaluations of any kind. This is the time to establish your worth with professors or employers. The relationship you are involved in now will be serious. You will be much busier these days. Although you may start off slowly, you will complete all the work you have to do.</p>
 
 <h3>14 January 2026 - 13 February 2026</h3>
-<p>During this period Surya transits the Third house.</p>
-<p>This is the beginning of a good period for you. You will progress, either professionally or monetarily. You will also feel and project success. You will be more dedicated to your husband and your family.</p>
+<p>During this period Surya transits the Fourth house.</p>
+<p>Tester2, the transitory influence of the Sun is not favourable during this period. If you are married, there may be a difference of opinion with your wife. You may resent delays caused by your children or people who have to report to you at work. You may begin to feel unnoticed or unappreciated. At this time, you will also be prone to minor illnesses. You can do a lot to salvage the position at home. You may be involved in an accident, but you will escape serious injury.</p>
 
 <h3>13 February 2026 - 15 March 2026</h3>
-<p>During this period Surya transits the Fourth house.</p>
-<p>Aiswarya, the transitory influence of the Sun is not favourable during this period. If you are married, there may be a difference of opinion with your husband. There may be minor illnesses or delays, and problems caused by your children or people who have to report to you at work. You may begin to feel unnoticed or unappreciated. At this time, you will also be prone to minor illnesses. You can do a lot to salvage the position at home.</p></p>
+<p>During this period Surya transits the Fifth house.</p>
+<p>If you are careful now, you can avoid disappointments later. Failures and losses are part of the present position of the stars. You tend to work hard, neglect food and feel tired. However, all these habits are counter-productive. You should be extremely careful while eating out since the possibility of food poisoning exists.</p></p>
 <h2>Transit of Jupiter</h2>
 <h3></h3>
 <p>Jupiter stays in one sign for about a year. It is a powerful planet and a lot of importance is attached to the effect of this planet.</p>
 <p><h3>5 December 2025 - 2 June 2026</h3>
-<p>During this period Guru transits the Eighth house.</p>
-<p>The transitory influence of Jupiter is at its worst during this period. You become frustrated since you meet with obstacles to almost any initiative. You may experience a failure, or breakdown, of vehicles and equipment. You may be worried about a variety of things. You have to minimize stress and control your diet before your worries overwhelm your system.</p>
+<p>During this period Guru transits the Ninth house.</p>
+<p>Tester2, you are a lucky individual. You are finally at a time when you can make swift progress. Many factors which irritated you or caused you inconvenience no longer exist. People who are close to you appreciate you. You will find your friends are loyal to you. Your relationship or life-partnership will be happy and mutually rewarding. You may be recognized or noticed for your work. You feel more self-confident and secure.</p>
 
 <h3>2 June 2026 - 31 October 2026</h3>
-<p>During this period Guru transits the Ninth house.</p>
-<p>Aiswarya, you are feeling lucky again. Situations which irritated you earlier are slowly changing. People demonstrate their regard for you. This is a period where domestic happiness, enhanced prestige and respect from others will be experienced. You will get recognition for your service and attitude.</p></p>
+<p>During this period Guru transits the Tenth house.</p>
+<p>You may face some annoying obstacles, but as you feel fairly self-confident you tend to ignore them and go ahead with your objectives. You will be successful in what you do, although there may be some delay in executing your plans. You will be determined enough to forge ahead. You will be less willing to take short-cuts, and more willing to work hard. But sometimes you lack patience and perseverance. People will be willing to help you at this time. You will especially be helped by women.</p></p>
 <h2>Transit of Saturn</h2>
-<h3>Personality & Self-Awareness,Problems & Obstacles</h3>
-<p>Saturn is generally a sorrowful planet and its influence can be depressing. However, in certain positions it gives powerful and beneficial results. Saturn takes about two and a half years to move through a sign.</p>
+<h3>Personality & Self-Awareness</h3>
+<p>Saturn is generally a sorrowful planet and its influence can be depressing. However, in certain positions, it gives powerful and beneficial results. Saturn takes about two and a half years to move through a sign.</p>
 <p><h3>30 March 2025 - 3 June 2027</h3>
-<p>During this period Sani transits the Fifth house.</p>
-<p>You may have problems due to children during this period. You may have to distance yourself from people you enjoy being with; but, this separation will probably be brief. The transit of Saturn will soon be favorable for you. You will suddenly be more financially secure.</p>
+<p>During this period Sani transits the Sixth house.</p>
+<p>Tester2, you are entering a happier phase than before. Your adversaries will have to leave you alone. You may have new and enterprising plans. At this time, you will do well in your career. There will also be an improvement in your financial situation at this time. You will do well in all things.</p>
 
 <h3>4 June 2027 - 20 October 2027</h3>
-<p>During this period Sani transits the Sixth house.</p>
-<p>Aiswarya, you are entering a happier phase than before. Your adversaries will have to leave you alone. You, or your husband, may have new and enterprising plans. There will also be an improvement in your financial situation at this time. You will do well in all things.</p></p>
+<p>During this period Sani transits the Seventh house.</p>
+<p>You appear gloomy as a result of the effect of Saturn. You have to consciously work at optimism and positive thinking. You tend to take your achievements for granted. You may find travel inconvenient or uncomfortable. Plans and arrangements may be erratic. This is the result of Kandaka Sani. You are much more irritable at this time.</p></p>
 

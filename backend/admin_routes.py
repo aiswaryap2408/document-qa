@@ -108,6 +108,25 @@ async def update_system_prompt(request: SystemPromptRequest):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+@router.get("/maya-prompt")
+async def get_maya_prompt():
+    try:
+        if os.path.exists("maya_system_prompt.txt"):
+            with open("maya_system_prompt.txt", "r", encoding="utf-8") as f:
+                return {"prompt": f.read()}
+        return {"prompt": "Default Maya Prompt (File not found)."}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/maya-prompt")
+async def update_maya_prompt(request: SystemPromptRequest):
+    try:
+        with open("maya_system_prompt.txt", "w", encoding="utf-8") as f:
+            f.write(request.prompt)
+        return {"message": "Maya prompt updated successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 # --- RAG TESTER ENDPOINTS ---
 
 TEST_DOC_DIR = os.path.join("backend", "test_docs")
