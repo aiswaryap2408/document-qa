@@ -49,9 +49,7 @@ const Login = () => {
                     <Typography fontSize={16} mt={1} color="text.primary">
                         Welcome to <strong style={{ color: "#dc5d35" }}>Findastro</strong>!
                     </Typography>
-                    <Typography fontSize={12} color="text.secondary">
-                        AI powered Astrologer consultations
-                    </Typography>
+
                 </Box>
 
                 <Typography
@@ -79,8 +77,10 @@ const Login = () => {
                         overflow: "hidden",
                         bgcolor: "#fff",
                         mx: 'auto',
-                        maxWidth: 300,
-                        mb: 3,
+                        mx: 3,
+                        mb: 2,
+                        // maxWidth: 300,
+
                     }}
                 >
                     <Box px={2} py={1.5} fontSize={14} color="text.primary">

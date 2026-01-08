@@ -18,7 +18,7 @@ const Layout = ({ children }) => {
                     sx={{
                         width: { xs: '100%', sm: 450 },
                         minHeight: '100vh',
-                        bgcolor: 'background.default',
+                        bgcolor: '#FFF6EB',
                         boxShadow: 3,
                         display: 'flex',
                         flexDirection: 'column',

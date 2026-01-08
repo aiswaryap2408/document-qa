@@ -3,7 +3,7 @@ import { Box } from "@mui/material";
 
 const GurujiImage = () => {
     return (
-        <Box width={250} mx="auto">
+        <Box width={300} mx="auto">
             <img
                 src="/svg/guruji_illustrated.svg"
                 alt="guruji"

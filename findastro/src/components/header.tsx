@@ -1,7 +1,13 @@
 import { Box } from "@mui/material";
 import React from "react";
 
-const Header: React.FC = () => {
+interface HeaderProps {
+  backgroundImage?: string;
+}
+
+const Header: React.FC<HeaderProps> = ({
+  backgroundImage = "/svg/top_curve_light.svg",
+}) => {
   return (
     <Box
       sx={{
@@ -15,7 +21,7 @@ const Header: React.FC = () => {
         sx={{
           position: "absolute",
           inset: 0,
-          backgroundImage: "url(/svg/top_curve_light.svg)",
+          backgroundImage: `url(${backgroundImage})`,
           backgroundRepeat: "no-repeat",
           backgroundSize: "contain",
           zIndex: 1,

@@ -5,6 +5,8 @@ import OtpPage from "../pages/otpPage";
 import UserRegistration from "../pages/userRegistration";
 import IntroCard from "../pages/IntroCard";
 import IntroFlow from "../pages/IntroFlow";
+import ConsultCard from "../pages/ConsultCard";
+import Consultation from "../pages/Consultation";
 
 const AppRoutes = () => {
   return (
@@ -30,6 +32,8 @@ const AppRoutes = () => {
           <Route path="user-registration" element={<UserRegistration />} />
           <Route path="intro-card" element={<IntroCard />} />
           <Route path="introFlow" element={<IntroFlow />} />
+          <Route path="consultcard" element={<ConsultCard />} />
+          <Route path="Consultation" element={<Consultation />} />
         </Routes>
       </Box>
     </Box>

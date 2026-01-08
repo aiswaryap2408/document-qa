@@ -9,7 +9,6 @@ import PlaceIcon from '@mui/icons-material/Place';
 import EmailIcon from '@mui/icons-material/Email';
 import PhoneIcon from '@mui/icons-material/Phone';
 import Header from '../components/header';
-import GurujiImage from '../components/gurujiImg';
 
 const UserProfile = () => {
     const navigate = useNavigate();
@@ -60,11 +59,30 @@ const UserProfile = () => {
     );
 
     return (
-        <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', bgcolor: '#F9FAFB', minHeight: '100vh' }}>
-            <Header />
+        <Box sx={{
+            height: '100vh',
+            display: 'flex',
+            flexDirection: 'column',
+            bgcolor: '#FFF6EB',
+            overflow: 'hidden'
+        }}>
+            {/* Header Section - Wrapped to provide a solid background for the top logo area */}
+            <Box sx={{ position: 'relative', flexShrink: 0, zIndex: 100, bgcolor: '#FFF6EB' }}>
+                <Header />
+            </Box>
 
-            <Box sx={{ flex: 1, p: 3, maxWidth: 'md', mx: 'auto', width: '100%' }}>
-                <Box sx={{ textAlign: 'center', mb: 4, mt: -8, position: 'relative', zIndex: 10 }}>
+            {/* Scrollable Content */}
+            <Box sx={{
+                flex: 1,
+                overflowY: 'auto',
+                position: 'relative',
+                zIndex: 10,
+                mt: -10, // Pull up to overlap the curve
+                px: 2,
+                pb: 5
+            }}>
+                {/* Profile Header Block */}
+                <Box sx={{ textAlign: 'center', mb: 4, position: 'relative' }}>
                     <Box
                         sx={{
                             width: 100,
@@ -94,9 +112,9 @@ const UserProfile = () => {
                         <div className="spinner-indigo" style={{ width: 40, height: 40 }} />
                     </Box>
                 ) : error ? (
-                    <Typography color="error" textAlign="center">{error}</Typography>
+                    <Typography color="error" textAlign="center" sx={{ mt: 4 }}>{error}</Typography>
                 ) : (
-                    <Card sx={{ borderRadius: 3, boxShadow: '0 4px 12px rgba(0,0,0,0.05)', overflow: 'visible' }}>
+                    <Card sx={{ borderRadius: 3, boxShadow: '0 4px 12px rgba(0,0,0,0.05)', overflow: 'visible', maxWidth: 'md', mx: 'auto' }}>
                         <CardContent sx={{ p: 4 }}>
                             <Typography variant="h6" sx={{ mb: 3, color: '#F26A2E', fontWeight: 600, borderBottom: '2px solid #FFF0E6', pb: 1, display: 'inline-block' }}>
                                 Personal & Birth Details

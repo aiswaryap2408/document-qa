@@ -14,9 +14,10 @@ export const sendOtp = (mobile) => api.post('/auth/send-otp', { mobile });
 export const verifyOtp = (mobile, otp) => api.post('/auth/verify-otp', { mobile, otp });
 export const registerUser = (data) => api.post('/auth/register', data);
 
-export const sendMessage = (mobile, message, history) => api.post('/auth/chat', { mobile, message, history });
-export const endChat = (mobile, history) => api.post('/auth/end-chat', { mobile, history });
+export const sendMessage = (mobile, message, history, sessionId) => api.post('/auth/chat', { mobile, message, history, session_id: sessionId });
+export const endChat = (mobile, history, sessionId) => api.post('/auth/end-chat', { mobile, history, session_id: sessionId });
 export const getChatHistory = (mobile) => api.get(`/auth/history/${mobile}`);
+export const submitFeedback = (data) => api.post('/auth/feedback', data);
 
 // Admin Endpoints
 export const adminLogin = (username, password) => api.post('/admin/login', { username, password });

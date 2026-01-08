@@ -8,8 +8,15 @@ import time
 import os
 import random
 from pydantic import BaseModel
+from typing import Optional
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
+
+class FeedbackRequest(BaseModel):
+    mobile: str
+    session_id: Optional[str] = None
+    rating: int
+    feedback: str
 
 @router.post("/send-otp")
 async def send_otp(request: MobileRequest):
@@ -26,13 +33,14 @@ async def send_otp(request: MobileRequest):
         # 2. Check if a valid (non-expired) request already exists
         existing_record = otp_col.find_one({"mobile": request.mobile})
         
-        # 3. Generate Random 4-digit Numeric OTP
-        otp_value = str(random.randint(1000, 9999))
+        # 3. STATIC OTP FOR TEMPORARY USE
+        otp_value = "1234"
         
-        # 4. Send via SMS API (Non-blocking)
-        print(f"DEBUG: Sending SMS OTP via threadpool...")
-        from starlette.concurrency import run_in_threadpool
-        sms_sent = await run_in_threadpool(send_sms_otp, request.mobile, otp_value)
+        # 4. PAUSED: Send via SMS API
+        # print(f"DEBUG: Sending SMS OTP via threadpool...")
+        # from starlette.concurrency import run_in_threadpool
+        # sms_sent = await run_in_threadpool(send_sms_otp, request.mobile, otp_value)
+        sms_sent = True # Mocking success
         
         # Update or create OTP record
         otp_col.update_one(
@@ -47,9 +55,9 @@ async def send_otp(request: MobileRequest):
             },
             upsert=True
         )
-        print(f"DEBUG: OTP {otp_value} generated and sent={sms_sent} for {request.mobile}")
+        print(f"DEBUG: STATIC OTP {otp_value} set for {request.mobile}")
         
-        return {"message": f"OTP sent to {request.mobile}", "status": "success"}
+        return {"message": f"OTP sent to {request.mobile} (Static: 1234)", "status": "success"}
     except Exception as e:
         print(f"ERROR in send_otp: {e}")
         import traceback
@@ -298,6 +306,7 @@ class ChatMessage(BaseModel):
     message: str
     history: list = []
     mobile: str
+    session_id: Optional[str] = None
 
 @router.post("/chat")
 async def chat(request: ChatMessage):
@@ -338,6 +347,7 @@ async def chat(request: ChatMessage):
                 # Store user message
                 conv_col.insert_one({
                     "mobile": request.mobile,
+                    "session_id": request.session_id,
                     "role": "user",
                     "message": request.message,
                     "timestamp": time.time()
@@ -345,6 +355,7 @@ async def chat(request: ChatMessage):
                 # Store Maya's response
                 conv_col.insert_one({
                     "mobile": request.mobile,
+                    "session_id": request.session_id,
                     "role": "maya",
                     "message": maya_message,
                     "category": category,
@@ -480,6 +491,7 @@ async def chat(request: ChatMessage):
             # Store user message
             conv_col.insert_one({
                 "mobile": request.mobile,
+                "session_id": request.session_id,
                 "role": "user",
                 "message": request.message,
                 "timestamp": time.time()
@@ -487,6 +499,7 @@ async def chat(request: ChatMessage):
             # Store Guruji's response
             conv_col.insert_one({
                 "mobile": request.mobile,
+                "session_id": request.session_id,
                 "role": "guruji",
                 "message": response,
                 "cost": cost,
@@ -527,6 +540,7 @@ async def chat(request: ChatMessage):
 class EndChatRequest(BaseModel):
     mobile: str
     history: list
+    session_id: Optional[str] = None
 
 @router.post("/end-chat")
 async def end_chat(request: EndChatRequest):
@@ -557,11 +571,19 @@ async def end_chat(request: EndChatRequest):
         # Save summary to DB
         try:
             chats_col = get_db_collection("summaries")
-            chats_col.insert_one({
-                "mobile": request.mobile,
-                "summary": summary,
-                "timestamp": time.time()
-            })
+            chats_col.update_one(
+                {"session_id": request.session_id},
+                {
+                    "$set": {
+                        "mobile": request.mobile,
+                        "session_id": request.session_id,
+                        "summary": summary,
+                        "timestamp": time.time()
+                    }
+                },
+                upsert=True
+            )
+            print(f"DEBUG: Saved summary for session {request.session_id}")
         except Exception as db_err:
             print(f"DEBUG: Failed to save summary to DB: {db_err}")
             
@@ -574,16 +596,19 @@ async def end_chat(request: EndChatRequest):
 @router.get("/history/{mobile}")
 async def get_history(mobile: str):
     """
-    Retrieve conversation history for a user.
+    Retrieve conversation history for a user, grouped by session.
     """
     try:
         conv_col = get_db_collection("conversation_history")
         # Find all messages for this mobile, sorted by timestamp
         cursor = conv_col.find({"mobile": mobile}).sort("timestamp", 1)
         
-        history = []
+        sessions = {} # session_id -> {topic, timestamp, messages: []}
+        
         for doc in cursor:
             role = doc.get("role")
+            sid = doc.get("session_id") or "legacy"
+            
             msg_obj = {
                 "role": "user" if role == "user" else "assistant",
                 "content": doc.get("message"),
@@ -598,13 +623,50 @@ async def get_history(mobile: str):
                 msg_obj["assistant"] = "guruji"
                 msg_obj["metrics"] = doc.get("metrics")
                 msg_obj["cost"] = doc.get("cost")
-                
-            history.append(msg_obj)
             
-        return {"history": history}
+            if sid not in sessions:
+                # Initialize new session group
+                sessions[sid] = {
+                    "session_id": sid,
+                    "topic": "Consultation",
+                    "timestamp": doc.get("timestamp"),
+                    "messages": []
+                }
+            
+            # Use first user message as topic if still default
+            if role == "user" and sessions[sid]["topic"] == "Consultation":
+                topic_text = doc.get("message", "")[:50]
+                if len(doc.get("message", "")) > 50: topic_text += "..."
+                sessions[sid]["topic"] = topic_text
+
+            sessions[sid]["messages"].append(msg_obj)
+            
+        # Convert to list and sort by session's latest message or start time
+        history_list = list(sessions.values())
+        history_list.sort(key=lambda x: x["timestamp"], reverse=True)
+            
+        return {"sessions": history_list}
         
     except Exception as e:
         print(f"ERROR in get_history: {e}")
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/feedback")
+async def submit_feedback(request: FeedbackRequest):
+    try:
+        feedback_col = get_db_collection("feedback")
+        feedback_col.insert_one({
+            "mobile": request.mobile,
+            "session_id": request.session_id,
+            "rating": request.rating,
+            "feedback": request.feedback,
+            "timestamp": time.time()
+        })
+        return {"status": "success", "message": "Feedback submitted successfully"}
+    except Exception as e:
+        print(f"ERROR in submit_feedback: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 
