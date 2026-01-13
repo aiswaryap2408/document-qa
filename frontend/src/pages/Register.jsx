@@ -23,7 +23,23 @@ const Register = () => {
         dob: '2000-01-01',
         tob: '12:00',
         pob: '',
-        email: ''
+        email: '',
+        // Location-related hidden fields
+        country: '',
+        state: '',
+        region_dist: '',
+        txt_place_search: '',
+        longdeg: '',
+        longmin: '',
+        longdir: '',
+        latdeg: '',
+        latmin: '',
+        latdir: '',
+        timezone: '0',
+        timezone_name: '',
+        latitude_google: '',
+        longitude_google: '',
+        correction: '0'
     });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
@@ -63,16 +79,61 @@ const Register = () => {
             initPlaces();
         }
 
-        const script = document.createElement('script');
-        script.src = 'https://placesapis.clickastro.com/capac/api/?key=AJSjkshjjSDkjhKDJDhjdjdklDldld&callback=CAPACInitListener';
-        script.async = true;
-        document.body.appendChild(script);
+
+        // Load scripts in sequence to ensure proper initialization
+        // Load jQuery first
+        const jqueryScript = document.createElement('script');
+        jqueryScript.src = 'https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js';
+        jqueryScript.onload = () => {
+            console.log('jQuery loaded');
+
+            // Load solar.js after jQuery
+            const solarScript = document.createElement('script');
+            solarScript.src = '/solar.js';
+            solarScript.onload = () => {
+                console.log('solar.js loaded');
+
+                // Load CAPAC API script after solar.js
+                const capacScript = document.createElement('script');
+                capacScript.src = 'https://placesapis.clickastro.com/capac/api/?key=AJSjkshjjSDkjhKDJDhjdjdklDldld&callback=initAutocomplete';
+                capacScript.onload = () => {
+                    console.log('CAPAC API loaded');
+                };
+                capacScript.onerror = () => {
+                    console.error('Failed to load CAPAC API');
+                };
+                document.body.appendChild(capacScript);
+            };
+            solarScript.onerror = () => {
+                console.error('Failed to load solar.js');
+            };
+            document.body.appendChild(solarScript);
+        };
+        jqueryScript.onerror = () => {
+            console.error('Failed to load jQuery');
+        };
+        document.body.appendChild(jqueryScript);
 
         return () => {
             clearTimeout(timeoutId);
-            if (document.body.contains(script)) {
-                document.body.removeChild(script);
-            }
+
+            // Remove all dynamically added scripts
+            const scriptsToRemove = [
+                'https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js',
+                // '/solar.js',
+                'https://www.clickastro.com/js/cad/google_place_for_cards-solar.js?ver=6.201',
+                'https://placesapis.clickastro.com/capac/api/'
+            ];
+
+            scriptsToRemove.forEach(src => {
+                const scripts = document.querySelectorAll(`script[src^="${src}"]`);
+                scripts.forEach(script => {
+                    if (document.body.contains(script)) {
+                        document.body.removeChild(script);
+                    }
+                });
+            });
+
             delete window.CAPACInitListener;
         };
     }, [navigate]);
@@ -92,7 +153,27 @@ const Register = () => {
         }
 
         try {
-            const payload = { ...details, mobile };
+            // Get location details from hidden inputs (populated by solar.js)
+            // solar.js updates the DOM directly, so we need to read from there
+            const locationFields = {
+                country: document.getElementById('country')?.value || '',
+                state: document.getElementById('state')?.value || '',
+                region_dist: document.getElementById('region_dist')?.value || '',
+                txt_place_search: document.getElementById('txt_place_search')?.value || '',
+                longdeg: document.getElementById('longdeg')?.value || '',
+                longmin: document.getElementById('longmin')?.value || '',
+                longdir: document.getElementById('longdir')?.value || '',
+                latdeg: document.getElementById('latdeg')?.value || '',
+                latmin: document.getElementById('latmin')?.value || '',
+                latdir: document.getElementById('latdir')?.value || '',
+                timezone: document.getElementById('timezone')?.value || '0',
+                timezone_name: document.getElementById('timezone_name')?.value || '',
+                latitude_google: document.getElementById('latitude_google')?.value || '',
+                longitude_google: document.getElementById('longitude_google')?.value || '',
+                correction: document.getElementById('correction')?.value || '0'
+            };
+
+            const payload = { ...details, ...locationFields, mobile };
             const res = await registerUser(payload);
             const { access_token } = res.data;
 
@@ -123,6 +204,8 @@ const Register = () => {
 
             <Box p={2} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    {/* Hidden location fields moved to BirthDetailsForm */}
+
                     {/* <Box sx={{ width: { xs: "100%", sm: "85%" }, mx: "auto" }}> */}
                     <BirthDetailsForm details={details} setDetails={setDetails} error={error} />
                     {/* </Box> */}

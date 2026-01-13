@@ -35,7 +35,7 @@ const Header = () => {
         <Box
             sx={{
                 position: "relative",
-                height: 190,
+                height: 172,
                 overflow: "hidden",
             }}
         >

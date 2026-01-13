@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { sendOtp } from '../api';
 import { Box, Typography, TextField, ThemeProvider } from "@mui/material";
@@ -12,6 +12,13 @@ const Login = () => {
     const [mobile, setMobile] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
+
+    useEffect(() => {
+        const mobile = localStorage.getItem('mobile');
+        if (mobile) {
+            navigate('/chat');
+        }
+    }, [navigate]);
 
     const handleMobileSubmit = async (e) => {
         if (e) e.preventDefault();
@@ -77,7 +84,7 @@ const Login = () => {
                         overflow: "hidden",
                         bgcolor: "#fff",
                         mx: 'auto',
-                        mx: 3,
+
                         mb: 2,
                         // maxWidth: 300,
 

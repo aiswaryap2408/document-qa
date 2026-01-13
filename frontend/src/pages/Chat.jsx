@@ -27,6 +27,8 @@ import AddCommentIcon from '@mui/icons-material/AddComment';
 import CancelIcon from '@mui/icons-material/Cancel';
 import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
 import PrimaryButton from '../components/PrimaryButton';
+import Header from "../components/header";
+import ChatInputFooter from "../components/ChatInputFooter";
 
 const MayaIntro = ({ name, content }) => (
     <Box sx={{ px: 3, pt: 2, pb: 1, width: "100%" }}>
@@ -101,17 +103,15 @@ const Chat = () => {
                         const history = mostRecentSession.messages;
                         if (history && history.length > 0) {
                             const lastMsg = history[history.length - 1];
-                            const lastTimestamp = lastMsg.timestamp;
-                            const currentTimestamp = Date.now() / 1000;
-                            const diffInMinutes = (currentTimestamp - lastTimestamp) / 60;
+                            // Relaxed Logic: Always load the most recent session to ensure sync
+                            // We can add a larger threshold if needed (e.g. 24 hours), but for sync, always loading is safer.
 
-                            if (diffInMinutes <= 30) {
-                                setSessionId(mostRecentSession.session_id);
-                                setMessages(prev => {
-                                    if (prev.length > 1) return prev;
-                                    return [...prev, ...history];
-                                });
-                            }
+                            setSessionId(mostRecentSession.session_id);
+                            setMessages(prev => {
+                                // Only append if empty or just initial greeting
+                                if (prev.length > 2) return prev;
+                                return [...prev, ...history];
+                            });
                         }
                     }
                 } catch (err) {
@@ -135,7 +135,7 @@ const Chat = () => {
             }
 
             try {
-                const res = await axios.get(`http://localhost:8088/auth/user-status/${mobile}`);
+                const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/auth/user-status/${mobile}`);
                 const status = res.data.status;
                 setUserStatus(status);
                 if (res.data.wallet_balance !== undefined) {
@@ -145,7 +145,7 @@ const Chat = () => {
                 if (status === 'processing') {
                     const pollInterval = setInterval(async () => {
                         try {
-                            const pollRes = await axios.get(`http://localhost:8088/auth/user-status/${mobile}`);
+                            const pollRes = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/auth/user-status/${mobile}`);
                             const newStatus = pollRes.data.status;
                             setUserStatus(newStatus);
                             if (pollRes.data.wallet_balance !== undefined) {
@@ -289,93 +289,48 @@ const Chat = () => {
 
     return (
         <Box sx={{
-            minHeight: '100vh',
+            // minHeight: '100vh',
             display: 'flex',
             flexDirection: 'column',
             bgcolor: '#FFF6EB',
-            position: 'relative',
-            width: '100%'
+            height: "100vh",
+            // position: 'relative',
+            // width: '100%'
         }}>
-            {/* Header section matching findastro Header.tsx */}
-            <Box sx={{ position: "relative", height: 190, overflow: "hidden" }}>
-                {/* Top Curve */}
-                <Box sx={{
+            <Header backgroundImage="/svg/top_curve_dark.svg" />
+
+            <PrimaryButton
+                label="End Consultation"
+                onClick={handleEndChat}
+                disabled={loading || messages.length < 1}
+                startIcon={<CancelIcon sx={{ fontSize: 24 }} />}
+                sx={{
                     position: "absolute",
-                    inset: 0,
-                    backgroundImage: "url(/svg/top_curve_dark.svg)",
-                    backgroundRepeat: "no-repeat",
-                    backgroundSize: "contain",
-                    zIndex: 1,
-                }} />
+                    top: 135,
+                    left: 0,
+                    right: 0,
+                    m: "auto",
+                    width: 200,
+                    height: 40,
+                    borderRadius: 10,
 
-                {/* Stars */}
-                <Box sx={{
-                    position: "absolute",
-                    inset: 0,
-                    backgroundImage: "url(/svg/header_stars.svg)",
-                    backgroundRepeat: "no-repeat",
-                    backgroundPosition: "center",
-                    backgroundSize: "contain",
-                    zIndex: 2,
-                    mt: { xs: -4, sm: 0 },
-                }} />
-
-                {/* Hamburger menu */}
-                <Box
-                    onClick={() => setDrawerOpen(true)}
-                    sx={{
-                        position: "absolute",
-                        top: 50,
-                        left: 15,
-                        display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "space-between",
-                        height: 20,
-                        cursor: "pointer",
-                        zIndex: 3,
-                    }}
-                >
-                    {[1, 2, 3].map((i) => (
-                        <Box key={i} sx={{ width: 30, height: "0.2rem", bgcolor: "text.primary" }} />
-                    ))}
-                </Box>
-
-                {/* Wallet Balance Overlay (Customized integration) */}
-                {/* <Box sx={{ position: 'absolute', top: 50, right: 15, zIndex: 10 }}>
-                    <Box sx={{ bgcolor: 'rgba(255,255,255,0.7)', backdropFilter: 'blur(4px)', px: 1.5, py: 0.5, borderRadius: 10, border: '1px solid rgba(243,106,47,0.3)', display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                        <Typography sx={{ color: '#F36A2F', fontSize: '0.75rem', fontWeight: 800 }}>🪙 {walletBalance}</Typography>
-                    </Box>
-                </Box> */}
-            </Box>
-
-            {/* End Consultation Button - Using PrimaryButton component for exact match */}
-            <Box sx={{ mt: -5, mb: 4, zIndex: 10, display: 'flex', justifyContent: 'center', flexShrink: 0 }}>
-                <PrimaryButton
-                    label="End Consultation"
-                    onClick={handleEndChat}
-                    disabled={loading || messages.length < 1}
-                    startIcon={<CancelIcon sx={{ fontSize: 24 }} />}
-                    sx={{
-                        width: "auto",
-                        minWidth: 180,
-                        borderRadius: 10,
-                        bgcolor: '#F36A2F',
-                        boxShadow: '0 4px 12px rgba(243,106,47,0.3)',
-                        '&:hover': { bgcolor: '#FF7A28' }
-                    }}
-                />
-            </Box>
+                    // bgcolor: '#F36A2F',
+                    // boxShadow: '0 4px 12px rgba(243,106,47,0.3)',
+                    // '&:hover': { bgcolor: '#FF7A28' }
+                }}
+            />
 
             {/* Chat Messages Area - Scrollable segment with visible scrollbar */}
-            <Box sx={{
-                flex: 1,
-                px: 2,
-                pb: 4, // Increased bottom padding for more height
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 2,
-                overflowY: 'auto'
-            }}>
+            <Box
+                sx={{
+                    flex: 1,
+                    overflowY: "auto",
+                    px: 3,
+                    pb: 1,
+                    "&::-webkit-scrollbar": { display: "block" },
+                    scrollbarWidth: "thin",
+                }}
+            >
                 {messages.map((msg, i) => {
                     const isFirstMaya = i === 0 && msg.assistant === 'maya';
 

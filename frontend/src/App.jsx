@@ -8,6 +8,7 @@ import Onboarding from './pages/Onboarding';
 import Chat from './pages/Chat';
 import UserProfile from './pages/UserProfile';
 import ChatHistory from './pages/ChatHistory';
+import PlaceTest from './pages/PlaceTest';
 
 import AdminLogin from './pages/admin/AdminLogin';
 import AdminDashboard from './pages/admin/AdminDashboard';
@@ -91,6 +92,7 @@ function App() {
               </ProtectedRoute>
             }
           />
+          <Route path="/place-test" element={<PlaceTest />} />
         </Route>
 
         {/* Admin Routes (Full Screen, No Mobile Layout) */}

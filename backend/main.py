@@ -6,6 +6,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from backend.auth_routes import router as auth_router
 from backend.admin_routes import router as admin_router
+from backend.places_routes import router as places_router
 
 app = FastAPI(
     title="Astrology Bot API",
@@ -27,6 +28,7 @@ app.add_middleware(
 # Include Routers
 app.include_router(auth_router)
 app.include_router(admin_router)
+app.include_router(places_router)
 
 @app.get("/")
 async def root():

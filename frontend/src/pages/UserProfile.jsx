@@ -25,7 +25,7 @@ const UserProfile = () => {
             }
 
             try {
-                const res = await axios.get(`http://localhost:8088/auth/user-status/${mobile}`);
+                const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/auth/user-status/${mobile}`);
                 if (res.data.user_profile) {
                     setUser(res.data.user_profile);
                 } else {

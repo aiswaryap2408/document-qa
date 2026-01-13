@@ -11,10 +11,13 @@ const InputField = ({
     type = "text",
     helperText,
     inputProps,
+    className,
+    name,
 }) => (
     <TextField
         fullWidth
         id={id}
+        name={name}
         type={type}
         placeholder={placeholder}
         value={value}
@@ -26,7 +29,10 @@ const InputField = ({
                 <Box sx={{ color: "#FF8A3D", mr: 1 }}>{icon}</Box>
             ),
         }}
-        inputProps={inputProps}
+        inputProps={{
+            ...inputProps,
+            className: className,
+        }}
         sx={{
             mb: 2,
             bgcolor: "#fff",

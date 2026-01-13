@@ -1,8 +1,9 @@
 import requests
 import json
+import time
 from urllib.parse import unquote_plus
 
-def generate_astrology_report(name, gender, dob, tob, pob, mobile, email, chart_style):
+def generate_astrology_report(name, gender, dob, tob, pob, mobile, email, chart_style, place, longdeg, longmin, longdir, latdeg, latmin, latdir, timezone):
     """
     Call ClickAstro API to generate report.
     Returns the HTML report content (string) or JSON string.
@@ -30,10 +31,26 @@ def generate_astrology_report(name, gender, dob, tob, pob, mobile, email, chart_
         if len(tob) == 5:
             tob = f"{tob}:00"
         tob = tob.replace(":", ".")
-            
-        xml = f"""<DATA><BIRTHDATA><SEX>{sex}</SEX><NAME>{name}</NAME><DAY>{day}</DAY><MONTH>{month}</MONTH><YEAR>{year}</YEAR><TIME24HR>{tob}</TIME24HR><CORR>1</CORR><PLACE>Kochi</PLACE><LONG>076.40</LONG><LAT>09.13</LAT><LONGDIR>E</LONGDIR><LATDIR>N</LATDIR><TZONE>05.30</TZONE><TZONEDIR>E</TZONEDIR></BIRTHDATA><OPTIONS><CHARTSTYLE>{c_style_code}</CHARTSTYLE><CHARTBORDERSTYLE>1</CHARTBORDERSTYLE><VARIANT>V0</VARIANT><LANGUAGE>ENG</LANGUAGE><REPTYPE>CC-AI</REPTYPE><REPFORMAT>HTM</REPFORMAT><CLNTID>CLICKASTRO</CLNTID><ORDID/><HSETTINGS><AYANAMSA>1</AYANAMSA><DASASYSTEM>1</DASASYSTEM><SHOWGULIKAN>1</SHOWGULIKAN><GULIKATYPE>1</GULIKATYPE><PARYANTHARSTART>0</PARYANTHARSTART><PARYANTHAREND>25</PARYANTHAREND><FAVMARPERIOD>50</FAVMARPERIOD><BHAVABALAMETHOD>1</BHAVABALAMETHOD><YEARSPREVDASAPREDREQD>0</YEARSPREVDASAPREDREQD><SUNRISEMETHOD>1</SUNRISEMETHOD><BHAVATYPE>2</BHAVATYPE><ADVANCEDOPTION1>0</ADVANCEDOPTION1><ADVANCEDOPTION2>0</ADVANCEDOPTION2><ADVANCEDOPTION3>0</ADVANCEDOPTION3><ADVANCEDOPTION4>0</ADVANCEDOPTION4></HSETTINGS><EMAIL>{email}</EMAIL></OPTIONS></DATA>"""
+
+        if len(timezone) == 5:
+            timezone = f"{timezone}:00"
         
-        # print(f"DEBUG: Generated XML Payload: {xml}")
+        # Extract timezone direction (last character if it's an alphabet)
+        timezone_dir = 'E'  # Default
+        if timezone and timezone[-1].isalpha():
+            timezone_dir = timezone[-1].upper()
+            timezone = timezone[:-1]
+        
+        # Extract longitude and latitude directions
+        long_dir = longdir.upper() if longdir else 'E'
+        lat_dir = latdir.upper() if latdir else 'N'
+        
+        # Format longitude and latitude degrees with leading zeros
+        longdeg_formatted = str(longdeg).zfill(3)  # 3 digits for longitude
+        latdeg_formatted = str(latdeg).zfill(2)    # 2 digits for latitude
+            
+        xml = f"""<DATA><BIRTHDATA><SEX>{sex}</SEX><NAME>{name}</NAME><DAY>{day}</DAY><MONTH>{month}</MONTH><YEAR>{year}</YEAR><TIME24HR>{tob}</TIME24HR><CORR>1</CORR><PLACE>{place}</PLACE><LONG>{longdeg_formatted}.{longmin}</LONG><LAT>{latdeg_formatted}.{latmin}</LAT><LONGDIR>{long_dir}</LONGDIR><LATDIR>{lat_dir}</LATDIR><TZONE>{timezone}</TZONE><TZONEDIR>{timezone_dir}</TZONEDIR></BIRTHDATA><OPTIONS><CHARTSTYLE>{c_style_code}</CHARTSTYLE><CHARTBORDERSTYLE>1</CHARTBORDERSTYLE><VARIANT>V0</VARIANT><LANGUAGE>ENG</LANGUAGE><REPTYPE>CC-AI</REPTYPE><REPFORMAT>HTM</REPFORMAT><CLNTID>CLICKASTRO</CLNTID><ORDID/><HSETTINGS><AYANAMSA>1</AYANAMSA><DASASYSTEM>1</DASASYSTEM><SHOWGULIKAN>1</SHOWGULIKAN><GULIKATYPE>1</GULIKATYPE><PARYANTHARSTART>0</PARYANTHARSTART><PARYANTHAREND>25</PARYANTHAREND><FAVMARPERIOD>50</FAVMARPERIOD><BHAVABALAMETHOD>1</BHAVABALAMETHOD><YEARSPREVDASAPREDREQD>0</YEARSPREVDASAPREDREQD><SUNRISEMETHOD>1</SUNRISEMETHOD><BHAVATYPE>2</BHAVATYPE><ADVANCEDOPTION1>0</ADVANCEDOPTION1><ADVANCEDOPTION2>0</ADVANCEDOPTION2><ADVANCEDOPTION3>0</ADVANCEDOPTION3><ADVANCEDOPTION4>0</ADVANCEDOPTION4></HSETTINGS><EMAIL>{email}</EMAIL></OPTIONS></DATA>"""
+        
 
         # 3. Call API with retries
         url = "https://api.ccrdev.clickastro.com/chat/api.php"

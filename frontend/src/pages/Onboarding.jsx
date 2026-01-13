@@ -47,15 +47,15 @@ const Onboarding = () => {
                 </>,
             ],
             points: [
-                <>
+                <span>
                     <span style={{ color: "#F36A2F", fontWeight: 600 }}>
                         All conversations
                     </span>{" "}
                     between you and your astrologer{" "}
                     <span style={{ color: "#F36A2F", fontWeight: 600 }}>stays private</span>
                     . I assure you, no other humans read your conversations.
-                </>,
-                <>
+                </span>,
+                <span>
                     <span style={{ color: "#F36A2F", fontWeight: 600 }}>
                         {" "}
                         Our astrologers take help of Softwares and/or AI{" "}
@@ -66,10 +66,9 @@ const Onboarding = () => {
                         because accuracy and time is valuable for both of us.
                     </span>
                     .
-                </>,
+                </span>,
             ],
         },
-
         {
             title: (
                 <>
@@ -237,6 +236,7 @@ const Onboarding = () => {
                                         sx={{
                                             fontSize: '.9rem',
                                             mb: 2,
+                                            listStyleType: "decimal",
                                             listStylePosition: "inside",
                                         }}
                                     >

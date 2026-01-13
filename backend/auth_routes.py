@@ -33,14 +33,14 @@ async def send_otp(request: MobileRequest):
         # 2. Check if a valid (non-expired) request already exists
         existing_record = otp_col.find_one({"mobile": request.mobile})
         
-        # 3. STATIC OTP FOR TEMPORARY USE
-        otp_value = "1234"
+        # 3. Generate Random OTP
+        otp_value = str(random.randint(1000, 9999))
         
-        # 4. PAUSED: Send via SMS API
-        # print(f"DEBUG: Sending SMS OTP via threadpool...")
-        # from starlette.concurrency import run_in_threadpool
-        # sms_sent = await run_in_threadpool(send_sms_otp, request.mobile, otp_value)
-        sms_sent = True # Mocking success
+        # 4. Send via SMS API
+        print(f"DEBUG: Sending SMS OTP via threadpool...")
+        from starlette.concurrency import run_in_threadpool
+        sms_sent = await run_in_threadpool(send_sms_otp, request.mobile, otp_value)
+        # sms_sent = True # Mocking success
         
         # Update or create OTP record
         otp_col.update_one(
@@ -129,10 +129,9 @@ async def process_user_registration_background(reg: UserRegistration):
         # 1. Generate Report
         print("DEBUG: [BACKGROUND] Calling generate_astrology_report...")
         report_text = generate_astrology_report(
-            reg.name, reg.gender, reg.dob, reg.tob, reg.pob, reg.mobile, reg.email, reg.chart_style
+            reg.name, reg.gender, reg.dob, reg.tob, reg.pob, reg.mobile, reg.email, reg.chart_style, reg.txt_place_search, reg.longdeg, reg.longmin, reg.longdir, reg.latdeg, reg.latmin, reg.latdir, reg.timezone
         )
         print("DEBUG: [BACKGROUND] Report generated successfully.")
-        
         # 2. Save Report to File
         os.makedirs("reports", exist_ok=True)
         with open(f"reports/{reg.mobile}.txt", "w", encoding="utf-8") as f:
@@ -223,6 +222,21 @@ async def register_user(reg: UserRegistration, background_tasks: BackgroundTasks
                     "dob": reg.dob,
                     "tob": reg.tob,
                     "pob": reg.pob,
+                    "country": reg.country,
+                    "state": reg.state,
+                    "region_dist": reg.region_dist,
+                    "txt_place_search": reg.txt_place_search,
+                    "longdeg": reg.longdeg,
+                    "longmin": reg.longmin,
+                    "longdir": reg.longdir,
+                    "latdeg": reg.latdeg,
+                    "latmin": reg.latmin,
+                    "latdir": reg.latdir,
+                    "timezone": reg.timezone,
+                    "timezone_name": reg.timezone_name,
+                    "latitude_google": reg.latitude_google,
+                    "longitude_google": reg.longitude_google,
+                    "correction": reg.correction,
                     "status": "processing",
                     "updated_at": time.time()
                 }}
@@ -237,6 +251,21 @@ async def register_user(reg: UserRegistration, background_tasks: BackgroundTasks
                 "dob": reg.dob,
                 "tob": reg.tob,
                 "pob": reg.pob,
+                "country": reg.country,
+                "state": reg.state,
+                "region_dist": reg.region_dist,
+                "txt_place_search": reg.txt_place_search,
+                "longdeg": reg.longdeg,
+                "longmin": reg.longmin,
+                "longdir": reg.longdir,
+                "latdeg": reg.latdeg,
+                "latmin": reg.latmin,
+                "latdir": reg.latdir,
+                "timezone": reg.timezone,
+                "timezone_name": reg.timezone_name,
+                "latitude_google": reg.latitude_google,
+                "longitude_google": reg.longitude_google,
+                "correction": reg.correction,
                 "processed_doc_id": reg.mobile,
                 "status": "processing",
                 "wallet_balance": 100,

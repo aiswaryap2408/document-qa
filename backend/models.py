@@ -32,6 +32,23 @@ class UserRegistration(BaseModel):
     mobile: str
     email: str = Field(..., min_length=1)
     chart_style: str = Field(..., min_length=1)
+    
+    # Location-related optional fields
+    country: Optional[str] = ''
+    state: Optional[str] = ''
+    region_dist: Optional[str] = ''
+    txt_place_search: Optional[str] = ''
+    longdeg: Optional[str] = ''
+    longmin: Optional[str] = ''
+    longdir: Optional[str] = ''
+    latdeg: Optional[str] = ''
+    latmin: Optional[str] = ''
+    latdir: Optional[str] = ''
+    timezone: Optional[str] = '0'
+    timezone_name: Optional[str] = ''
+    latitude_google: Optional[str] = ''
+    longitude_google: Optional[str] = ''
+    correction: Optional[str] = '0'
 
     @field_validator('mobile')
     @classmethod
