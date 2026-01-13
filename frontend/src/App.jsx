@@ -9,6 +9,7 @@ import Chat from './pages/Chat';
 import UserProfile from './pages/UserProfile';
 import ChatHistory from './pages/ChatHistory';
 import PlaceTest from './pages/PlaceTest';
+import Dakshina from './pages/Dakshina';
 
 import AdminLogin from './pages/admin/AdminLogin';
 import AdminDashboard from './pages/admin/AdminDashboard';
@@ -93,6 +94,14 @@ function App() {
             }
           />
           <Route path="/place-test" element={<PlaceTest />} />
+          <Route
+            path="/dakshina"
+            element={
+              <ProtectedRoute>
+                <Dakshina />
+              </ProtectedRoute>
+            }
+          />
         </Route>
 
         {/* Admin Routes (Full Screen, No Mobile Layout) */}

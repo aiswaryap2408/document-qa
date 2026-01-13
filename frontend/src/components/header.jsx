@@ -12,7 +12,7 @@ const Header = () => {
     const location = useLocation();
 
     // Only show menu on specific pages
-    const showMenu = ['/chat', '/profile', '/history'].includes(location.pathname);
+    const showMenu = ['/chat', '/profile', '/history', '/dakshina'].includes(location.pathname);
 
     const toggleDrawer = (open) => (event) => {
         if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {

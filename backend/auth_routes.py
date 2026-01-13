@@ -131,7 +131,13 @@ async def process_user_registration_background(reg: UserRegistration):
         report_text = generate_astrology_report(
             reg.name, reg.gender, reg.dob, reg.tob, reg.pob, reg.mobile, reg.email, reg.chart_style, reg.txt_place_search, reg.longdeg, reg.longmin, reg.longdir, reg.latdeg, reg.latmin, reg.latdir, reg.timezone
         )
-        print("DEBUG: [BACKGROUND] Report generated successfully.")
+        print(f"DEBUG: [BACKGROUND] Report generated. Length: {len(report_text) if report_text else 0}")
+        
+        if not report_text:
+            print("WARNING: [BACKGROUND] Report text is empty! Context will be missing.")
+            report_text = f"Astrology report for {reg.name}. Data was not available at generation time."
+        
+        print("DEBUG: [BACKGROUND] Report text processed.")
         # 2. Save Report to File
         os.makedirs("reports", exist_ok=True)
         with open(f"reports/{reg.mobile}.txt", "w", encoding="utf-8") as f:

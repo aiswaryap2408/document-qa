@@ -82,11 +82,15 @@ def generate_astrology_report(name, gender, dob, tob, pob, mobile, email, chart_
                 if response.status_code == 200:
                     try:
                         json_response = response.json()
+                        print(f"DEBUG: [BACKGROUND] ClickAstro API Response keys: {list(json_response.keys())}")
                         
                         # Check for mainHtml and decode it
                         if "mainHtml" in json_response:
-                            return unquote_plus(json_response["mainHtml"])
+                            content = unquote_plus(json_response["mainHtml"])
+                            print(f"DEBUG: [BACKGROUND] mainHtml length: {len(content)}")
+                            return content
                         
+                        print("DEBUG: [BACKGROUND] mainHtml not found in response.")
                         return json.dumps(json_response, indent=2)
                     except Exception as e:
                         # Not JSON?

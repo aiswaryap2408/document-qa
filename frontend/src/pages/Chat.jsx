@@ -29,6 +29,7 @@ import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArro
 import PrimaryButton from '../components/PrimaryButton';
 import Header from "../components/header";
 import ChatInputFooter from "../components/ChatInputFooter";
+import FeedbackDrawer from '../components/FeedbackDrawer';
 
 const MayaIntro = ({ name, content }) => (
     <Box sx={{ px: 3, pt: 2, pb: 1, width: "100%" }}>
@@ -72,6 +73,7 @@ const MayaIntro = ({ name, content }) => (
 const Chat = () => {
     const navigate = useNavigate();
     const [drawerOpen, setDrawerOpen] = useState(false);
+    const [feedbackDrawerOpen, setFeedbackDrawerOpen] = useState(false);
     const [messages, setMessages] = useState([
         { role: 'assistant', content: 'I am Maya, the receptionist. How can I help you reach Guruji today! 🙏', assistant: 'maya' }
     ]);
@@ -135,7 +137,9 @@ const Chat = () => {
             }
 
             try {
-                const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/auth/user-status/${mobile}`);
+                // Use the configured api instance instead of raw axios
+                // Add a cache-buster just in case
+                const res = await api.get(`/auth/user-status/${mobile}?t=${Date.now()}`);
                 const status = res.data.status;
                 setUserStatus(status);
                 if (res.data.wallet_balance !== undefined) {
@@ -145,7 +149,7 @@ const Chat = () => {
                 if (status === 'processing') {
                     const pollInterval = setInterval(async () => {
                         try {
-                            const pollRes = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/auth/user-status/${mobile}`);
+                            const pollRes = await api.get(`/auth/user-status/${mobile}?t=${Date.now()}`);
                             const newStatus = pollRes.data.status;
                             setUserStatus(newStatus);
                             if (pollRes.data.wallet_balance !== undefined) {
@@ -157,15 +161,23 @@ const Chat = () => {
                         } catch (err) {
                             console.error('Status polling error:', err);
                         }
-                    }, 2000);
+                    }, 3000);
                     return () => clearInterval(pollInterval);
                 }
             } catch (err) {
                 console.error('Status check error:', err);
+                // Fallback to ready after a failure to unblock UI if possible
                 setUserStatus('ready');
             }
         };
+
+        // Fallback: If still checking after 10 seconds, force ready to allow manual attempt
+        const fallbackTimer = setTimeout(() => {
+            setUserStatus(prev => prev === 'checking' ? 'ready' : prev);
+        }, 10000);
+
         checkUserStatus();
+        return () => clearTimeout(fallbackTimer);
     }, [navigate]);
 
     const handleLogout = () => {
@@ -184,7 +196,7 @@ const Chat = () => {
         setDrawerOpen(false);
     };
 
-    const handleEndChat = async () => {
+    const handleEndChat = async (keepFeedback = false) => {
         if (messages.length < 1) return;
         setShowInactivityPrompt(false);
         setLoading(true);
@@ -192,13 +204,41 @@ const Chat = () => {
             const mobile = localStorage.getItem('mobile');
             const res = await endChat(mobile, messages, sessionId);
             setSummary(res.data.summary);
-            setFeedback({ rating: 0, comment: '' });
-            setFeedbackSubmitted(false);
+            if (!keepFeedback) {
+                setFeedback({ rating: 0, comment: '' });
+                setFeedbackSubmitted(false);
+            }
         } catch (err) {
             console.error("End Chat Error:", err);
             alert("Failed to summarize chat. You can still logout.");
         } finally {
             setLoading(false);
+        }
+    };
+
+    const handleDrawerSubmit = async (rating, comment) => {
+        setSubmittingFeedback(true);
+        try {
+            const mobile = localStorage.getItem('mobile');
+            await submitFeedback({
+                mobile,
+                session_id: sessionId,
+                rating,
+                feedback: comment
+            });
+            setFeedbackSubmitted(true);
+            setFeedback({ rating, comment });
+
+            // Fire and forget endChat to generate summary in DB, but don't show it 
+            // We do NOT call handleEndChat() because that sets 'summary' state which triggers the modal.
+            // We just want to ensure the session is wrapped up on the backend.
+            endChat(mobile, messages, sessionId).catch(e => console.error("Silent end chat error:", e));
+
+        } catch (err) {
+            console.error("Feedback error:", err);
+            alert("Failed to submit feedback.");
+        } finally {
+            setSubmittingFeedback(false);
         }
     };
 
@@ -301,7 +341,7 @@ const Chat = () => {
 
             <PrimaryButton
                 label="End Consultation"
-                onClick={handleEndChat}
+                onClick={() => setFeedbackDrawerOpen(true)}
                 disabled={loading || messages.length < 1}
                 startIcon={<CancelIcon sx={{ fontSize: 24 }} />}
                 sx={{
@@ -313,11 +353,19 @@ const Chat = () => {
                     width: 200,
                     height: 40,
                     borderRadius: 10,
-
-                    // bgcolor: '#F36A2F',
-                    // boxShadow: '0 4px 12px rgba(243,106,47,0.3)',
-                    // '&:hover': { bgcolor: '#FF7A28' }
+                    zIndex: 10
                 }}
+            />
+
+            <FeedbackDrawer
+                open={feedbackDrawerOpen}
+                onClose={() => {
+                    setFeedbackDrawerOpen(false);
+                    if (feedbackSubmitted) {
+                        navigate('/dakshina');
+                    }
+                }}
+                onSubmit={handleDrawerSubmit}
             />
 
             {/* Chat Messages Area - Scrollable segment with visible scrollbar */}
@@ -508,7 +556,7 @@ const Chat = () => {
                             <ListItemButton onClick={() => setShowInactivityPrompt(false)} sx={{ borderRadius: 2, textAlign: 'center', justifyContent: 'center', border: '1px solid #ccc' }}>
                                 Continue
                             </ListItemButton>
-                            <ListItemButton onClick={handleEndChat} sx={{ borderRadius: 2, textAlign: 'center', justifyContent: 'center', bgcolor: '#F36A2F', color: 'white', '&:hover': { bgcolor: '#FF7A28' } }}>
+                            <ListItemButton onClick={() => { setShowInactivityPrompt(false); setFeedbackDrawerOpen(true); }} sx={{ borderRadius: 2, textAlign: 'center', justifyContent: 'center', bgcolor: '#F36A2F', color: 'white', '&:hover': { bgcolor: '#FF7A28' } }}>
                                 End & Review
                             </ListItemButton>
                         </Box>
@@ -582,14 +630,21 @@ const Chat = () => {
                             </Box>
                         ) : (
                             <Box sx={{ textAlign: 'center', py: 4 }}>
+                                <Typography variant="h5" sx={{ fontWeight: 900, mb: 1, color: '#F36A2F' }}>Session Insights</Typography>
+                                <Box sx={{ bgcolor: '#FFF6EB', p: 3, borderRadius: 3, borderLeft: '6px solid #F36A2F', mb: 4, textAlign: 'left' }}>
+                                    <Typography sx={{ fontStyle: 'italic', fontSize: '0.95rem', color: '#555', lineHeight: 1.7 }}>
+                                        "{summary}"
+                                    </Typography>
+                                </Box>
+
                                 <Box sx={{ width: 80, height: 80, bgcolor: '#E8F5E9', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', mx: 'auto', mb: 3 }}>
                                     <Box sx={{ color: '#4CAF50', fontSize: 40 }}>✓</Box>
                                 </Box>
                                 <Typography variant="h5" sx={{ fontWeight: 900, mb: 1 }}>Gratitude!</Typography>
                                 <Typography variant="body2" sx={{ color: '#666', mb: 4 }}>
-                                    Your feedback has been cast into the heavens. May your journey be enlightened.
+                                    Your feedback has been cast into the heavens.
                                 </Typography>
-                                <Box sx={{ display: 'flex', gap: 2 }}>
+                                <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center' }}>
                                     <ListItemButton onClick={handleNewChat} sx={{ borderRadius: 2, justifyContent: 'center', bgcolor: '#F36A2F', color: 'white' }}>
                                         New Journey
                                     </ListItemButton>
