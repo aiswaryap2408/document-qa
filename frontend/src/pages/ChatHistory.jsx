@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getChatHistory } from '../api';
-import { Box, Typography, Card, CardContent, Divider, Chip, Accordion, AccordionSummary, AccordionDetails } from '@mui/material';
+import { Box, Typography, Card, CardContent, Divider, Chip, Accordion, AccordionSummary, AccordionDetails, Button, CircularProgress } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Header from '../components/header';
 import HistoryIcon from '@mui/icons-material/History';
@@ -44,13 +44,46 @@ const ChatHistory = () => {
         fetchHistory();
     }, [navigate]);
 
-    const getRoleLabel = (role) => {
-        switch (role.toLowerCase()) {
-            case 'user': return { label: 'You', color: 'default', icon: <PersonIcon fontSize="small" /> };
-            case 'maya': return { label: 'Maya', color: 'warning', icon: <SmartToyIcon fontSize="small" /> };
-            case 'guruji': return { label: 'Guruji', color: 'primary', icon: <img src="/svg/guruji.svg" style={{ width: 16, height: 16 }} alt="G" /> };
-            default: return { label: role, color: 'default', icon: null };
+    const getRoleLabel = (msg) => {
+        const role = msg.role || 'user';
+        const assistant = msg.assistant || '';
+
+        if (role === 'user') {
+            return { label: 'You', color: 'default', icon: <PersonIcon fontSize="small" /> };
         }
+
+        if (assistant === 'maya' || role === 'maya') {
+            return { label: 'Maya', color: 'warning', icon: <SmartToyIcon fontSize="small" /> };
+        }
+
+        if (assistant === 'guruji' || role === 'guruji') {
+            return { label: 'Guruji', color: 'primary', icon: <img src="/svg/guruji_illustrated.svg" style={{ width: 16, height: 16 }} alt="G" /> };
+        }
+
+        return { label: role, color: 'default', icon: null };
+    };
+
+    const formatContent = (content) => {
+        if (!content) return "";
+
+        // Check if content is a JSON string (Guruji's new format)
+        if (content.trim().startsWith('{')) {
+            try {
+                const data = JSON.parse(content);
+                const parts = [];
+                if (data.para1) parts.push(data.para1);
+                if (data.para2) parts.push(data.para2);
+                if (data.para3) parts.push(data.para3);
+                if (data.follow_up || data.followup) {
+                    parts.push(`<br>🤔 <b>${data.follow_up || data.followup}</b>`);
+                }
+                return parts.join("<br><br>");
+            } catch (e) {
+                // Not valid JSON or parsing failed, fallback to raw
+                return content;
+            }
+        }
+        return content;
     };
 
     return (
@@ -107,7 +140,7 @@ const ChatHistory = () => {
 
                 {loading ? (
                     <Box sx={{ display: 'flex', justifyContent: 'center', py: 5 }}>
-                        <div className="spinner-indigo" style={{ width: 40, height: 40 }} />
+                        <div className="spinner spinner-indigo" style={{ width: 40, height: 40 }} />
                     </Box>
                 ) : error ? (
                     <Typography color="error" textAlign="center">{error}</Typography>
@@ -151,7 +184,7 @@ const ChatHistory = () => {
                                         pr: 1 // Padding for scrollbar
                                     }}>
                                         {session.messages.map((msg, mIndex) => {
-                                            const { label, color, icon } = getRoleLabel(msg.role || 'user');
+                                            const { label, color, icon } = getRoleLabel(msg);
                                             const isUser = msg.role === 'user';
                                             return (
                                                 <Box key={mIndex} sx={{ display: 'flex', flexDirection: 'column', alignItems: isUser ? 'flex-end' : 'flex-start' }}>
@@ -159,16 +192,19 @@ const ChatHistory = () => {
                                                         <Typography variant="caption" sx={{ fontWeight: 600, color: '#666' }}>{label}</Typography>
                                                         {icon}
                                                     </Box>
-                                                    <Box sx={{
-                                                        maxWidth: '90%',
-                                                        bgcolor: isUser ? '#F26A2E' : '#fff',
-                                                        color: isUser ? '#fff' : '#333',
-                                                        p: 1.5,
-                                                        borderRadius: isUser ? '16px 16px 0 16px' : '16px 16px 16px 0',
-                                                        boxShadow: '0 1px 4px rgba(0,0,0,0.05)',
-                                                        border: isUser ? 'none' : '1px solid #eee'
-                                                    }}>
-                                                        <Typography variant="body2" dangerouslySetInnerHTML={{ __html: msg.content }} />
+                                                    <Box
+                                                        className="chat-bubble"
+                                                        sx={{
+                                                            maxWidth: '95%',
+                                                            bgcolor: isUser ? '#2f3148' : (msg.assistant === 'maya' ? '#FFF6EB' : '#ff8338'),
+                                                            color: isUser || (msg.assistant === 'guruji' || msg.role === 'guruji') ? '#fff' : '#333',
+                                                            p: 1.5,
+                                                            borderRadius: isUser ? '16px 16px 0 16px' : '16px 16px 16px 0',
+                                                            boxShadow: '0 1px 4px rgba(0,0,0,0.05)',
+                                                            border: isUser ? 'none' : '1px solid rgba(0,0,0,0.05)'
+                                                        }}
+                                                    >
+                                                        <Typography variant="body2" dangerouslySetInnerHTML={{ __html: formatContent(msg.content) }} />
                                                     </Box>
                                                 </Box>
                                             );
