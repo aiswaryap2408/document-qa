@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { sendMessage, endChat, getChatHistory, submitFeedback } from '../api';
+import api, { sendMessage, endChat, getChatHistory, submitFeedback } from '../api';
 import axios from 'axios';
 
 import {
@@ -32,7 +32,7 @@ import ChatInputFooter from "../components/ChatInputFooter";
 import FeedbackDrawer from '../components/FeedbackDrawer';
 
 const MayaIntro = ({ name, content }) => (
-    <Box sx={{ px: 3, pt: 2, pb: 1, width: "100%" }}>
+    <Box sx={{ px: 3, pt: 4, pb: 1, width: "100%" }}>
         <Box sx={{
             position: "relative",
             border: "2px solid #F36A2F",
@@ -63,7 +63,7 @@ const MayaIntro = ({ name, content }) => (
             <Typography sx={{ mb: 1.5, fontWeight: 700, color: '#333', textAlign: 'center', mt: 1 }}>
                 Namaste!
             </Typography>
-            <Typography sx={{ fontSize: '0.9rem', lineHeight: 1.6, color: '#444' }}>
+            <Typography sx={{ fontSize: '1rem', lineHeight: 1.5, color: '#444' }}>
                 {content}
             </Typography>
         </Box>
@@ -287,13 +287,13 @@ const Chat = () => {
         };
     }, [summary, showInactivityPrompt, drawerOpen]);
 
-    const handleSend = async (e) => {
-        if (e) e.preventDefault();
-        if (!input.trim() || loading || userStatus !== 'ready') return;
+    const handleSend = async (msg = null) => {
+        const text = typeof msg === 'string' ? msg : input;
+        if (!text.trim() || loading || userStatus !== 'ready') return;
 
-        const userMsg = { role: 'user', content: input };
+        const userMsg = { role: 'user', content: text };
         setMessages(prev => [...prev, userMsg]);
-        setInput('');
+        if (typeof msg !== 'string') setInput('');
         setLoading(true);
 
         try {
@@ -304,7 +304,7 @@ const Chat = () => {
                 return;
             }
             const history = messages.slice(1);
-            const res = await sendMessage(mobile, input, history, sessionId);
+            const res = await sendMessage(mobile, text, history, sessionId);
             const { answer, metrics, context, assistant, wallet_balance, amount, maya_json } = res.data;
 
             if (wallet_balance !== undefined) setWalletBalance(wallet_balance);
@@ -442,7 +442,7 @@ const Chat = () => {
                                             color: msg.assistant === 'maya' ? '#9333ea' : '#F36A2F',
                                             letterSpacing: 0.5
                                         }}>
-                                            {msg.assistant === 'maya' ? 'Receptionist Maya' : 'Astrology Guruji'}
+                                            {msg.assistant === 'maya' ? 'Maya' : 'Astrology Guruji'}
                                         </Typography>
                                     )}
                                     <Typography
@@ -473,7 +473,7 @@ const Chat = () => {
             </Box>
 
             {/* Input Section - Cleaned up to remove dark SVG background */}
-            <Box sx={{
+            {/* <Box sx={{
                 flexShrink: 0,
                 width: '100%',
                 bgcolor: '#FFF6EB',
@@ -536,8 +536,14 @@ const Chat = () => {
                         </IconButton>
                     </Box>
                 </Box>
-            </Box>
+            </Box> */}
 
+            <ChatInputFooter
+                onSend={handleSend}
+                userStatus={userStatus}
+                loading={loading}
+                summary={summary}
+            />
             {/* Same overlays as before (Inactivity, Summary, Drawer) */}
             {/* ... preserved ... */}
 
@@ -722,5 +728,6 @@ const Chat = () => {
         </Box>
     );
 };
+
 
 export default Chat;

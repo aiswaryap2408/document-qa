@@ -6,7 +6,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import HistoryIcon from '@mui/icons-material/History';
 import LogoutIcon from '@mui/icons-material/Logout';
 
-const Header = () => {
+const Header = ({ backgroundImage = "/svg/top_curve_light.svg" }) => {
     const [drawerOpen, setDrawerOpen] = React.useState(false);
     const navigate = useNavigate();
     const location = useLocation();
@@ -44,7 +44,7 @@ const Header = () => {
                 sx={{
                     position: "absolute",
                     inset: 0,
-                    backgroundImage: "url(/svg/top_curve_light.svg)",
+                    backgroundImage: `url(${backgroundImage})`,
                     backgroundRepeat: "no-repeat",
                     backgroundSize: "contain",
                     zIndex: 1,

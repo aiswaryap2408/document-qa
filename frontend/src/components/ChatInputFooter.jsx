@@ -6,11 +6,11 @@ import {
 import SendIcon from "@mui/icons-material/Send";
 import { useState } from "react";
 
-const ChatInputFooter = ({ onSend }) => {
+const ChatInputFooter = ({ onSend, userStatus, loading, summary }) => {
     const [message, setMessage] = useState("");
 
     const handleSend = () => {
-        if (!message.trim()) return;
+        if (!message.trim() || loading || summary || userStatus !== 'ready') return;
         onSend(message);
         setMessage("");
     };
@@ -22,8 +22,8 @@ const ChatInputFooter = ({ onSend }) => {
             <Box
                 sx={{
                     position: "absolute",
-                    bottom: 55,
-                    left: 0,
+                    bottom: 65,
+                    left: -11,
                     width: 100,
                 }}
             >
@@ -38,8 +38,8 @@ const ChatInputFooter = ({ onSend }) => {
             <Box
                 sx={{
                     position: "absolute",
-                    bottom: 55,
-                    right: 0,
+                    bottom: 65,
+                    right: -11,
                     width: 100,
                 }}
             >
@@ -65,10 +65,11 @@ const ChatInputFooter = ({ onSend }) => {
                 >
                     <InputBase
                         fullWidth
-                        placeholder="Type your message..."
+                        placeholder={userStatus === 'ready' ? "Type your message..." : "Preparing..."}
                         value={message}
-                        onChange={(e) => setInput(e.target.value)}
-                        onKeyDown={(e) => e.key === "Enter" && handleSend()}
+                        onChange={(e) => setMessage(e.target.value)}
+                        onKeyPress={(e) => e.key === 'Enter' && handleSend()}
+                        disabled={loading || summary || userStatus !== 'ready'}
                     />
                 </Box>
 
@@ -81,10 +82,9 @@ const ChatInputFooter = ({ onSend }) => {
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
-                        cursor: "pointer",
+                        cursor: message.trim() && !loading && !summary && userStatus === 'ready' ? "pointer" : "default",
                     }}
                     onClick={handleSend}
-                    disabled={loading || !input.trim() || summary || userStatus !== 'ready'}
                 >
                     <SendIcon sx={{ color: "#2f3148" }} />
                 </Box>
