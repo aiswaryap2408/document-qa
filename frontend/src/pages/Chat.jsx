@@ -1,37 +1,132 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import api, { sendMessage, endChat, getChatHistory, submitFeedback } from '../api';
 import axios from 'axios';
 
 import {
-    Drawer,
-    List,
-    ListItem,
-    ListItemButton,
-    ListItemIcon,
-    ListItemText,
     Box,
     Typography,
     IconButton,
     Rating,
     CircularProgress,
     TextField,
-    Divider
+    Divider,
+    ListItemButton
 } from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
-import HomeIcon from '@mui/icons-material/Home';
-import PersonIcon from '@mui/icons-material/Person';
-import HistoryIcon from '@mui/icons-material/History';
-import LogoutIcon from '@mui/icons-material/Logout';
-import AddCommentIcon from '@mui/icons-material/AddComment';
 import CancelIcon from '@mui/icons-material/Cancel';
-import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
 import PrimaryButton from '../components/PrimaryButton';
 import Header from "../components/header";
 import ChatInputFooter from "../components/ChatInputFooter";
 import FeedbackDrawer from '../components/FeedbackDrawer';
 
-const MayaIntro = ({ name, content }) => (
+
+const SequentialResponse = ({ gurujiJson, onComplete, animate = false }) => {
+    const p1 = gurujiJson?.para1 || '';
+    const p2 = gurujiJson?.para2 || '';
+    const p3 = (gurujiJson?.para3 || '') + "<br><br>" + (gurujiJson?.follow_up || gurujiJson?.followup || "🤔 What's Next?");
+
+    const [step, setStep] = useState(animate ? 0 : 4);
+    const [visibleParas, setVisibleParas] = useState(animate ? [p1] : [p1, p2, p3]);
+    const textEndRef = useRef(null);
+
+    const scrollToText = () => {
+        if (animate) {
+            textEndRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+    };
+
+    useEffect(() => {
+        if (!gurujiJson || !animate) return;
+
+        const p1 = gurujiJson.para1 || '';
+        const p2 = gurujiJson.para2 || '';
+        const p3 = (gurujiJson.para3 || '') + "<br><br>" + (gurujiJson.follow_up || gurujiJson.followup || "🤔 What's Next?");
+
+        // Animation Sequence:
+        const t1 = setTimeout(() => {
+            setStep(1);
+            scrollToText();
+        }, 2500);
+
+        const t2 = setTimeout(() => {
+            setStep(2);
+            setVisibleParas([p1, p2]);
+            scrollToText();
+        }, 5000);
+
+        const t3 = setTimeout(() => {
+            setStep(3);
+            scrollToText();
+        }, 8000);
+
+        const t4 = setTimeout(() => {
+            setStep(4);
+            setVisibleParas([p1, p2, p3]);
+            scrollToText();
+            if (onComplete) onComplete();
+        }, 11000);
+
+        return () => {
+            clearTimeout(t1);
+            clearTimeout(t2);
+            clearTimeout(t3);
+            clearTimeout(t4);
+        };
+    }, [gurujiJson, animate]);
+
+    useEffect(() => {
+        if (animate) scrollToText();
+    }, [visibleParas, step]);
+
+    const bubbleSx = {
+        p: 2,
+        borderRadius: '20px 20px 20px 0',
+        bgcolor: '#ff8338',
+        color: 'white',
+        boxShadow: '0 4px 15px rgba(0,0,0,0.05)',
+        border: 'none',
+        position: 'relative',
+        mb: 1.5,
+        maxWidth: '100%',
+    };
+
+    return (
+        <Box sx={{ width: '100%' }}>
+            {visibleParas.map((para, idx) => (
+                <Box key={idx} sx={bubbleSx}>
+                    {idx === 0 && (
+                        <Typography sx={{
+                            fontSize: '0.65rem',
+                            fontWeight: 900,
+                            textTransform: 'uppercase',
+                            mb: 0.5,
+                            color: 'rgba(255,255,255,0.9)',
+                            letterSpacing: 1
+                        }}>
+                            Astrology Guruji
+                        </Typography>
+                    )}
+                    <Typography
+                        variant="body2"
+                        sx={{ lineHeight: 1.6, fontSize: '0.9rem' }}
+                        dangerouslySetInnerHTML={{ __html: para }}
+                    />
+                </Box>
+            ))}
+
+            {(step === 1 || step === 3) && (
+                <Box sx={{ display: 'flex', gap: 1, mt: 1, mb: 2, ml: 1 }}>
+                    <Box sx={{ width: 6, height: 6, bgcolor: '#ff8338', borderRadius: '50%', animation: 'bounce 1s infinite' }} />
+                    <Box sx={{ width: 6, height: 6, bgcolor: '#ff8338', borderRadius: '50%', animation: 'bounce 1s infinite 0.2s' }} />
+                    <Box sx={{ width: 6, height: 6, bgcolor: '#ff8338', borderRadius: '50%', animation: 'bounce 1s infinite 0.4s' }} />
+                </Box>
+            )}
+            <div ref={textEndRef} style={{ height: 1 }} />
+        </Box>
+    );
+};
+
+const MayaIntro = ({ name, content, mayaJson, rawResponse }) => (
     <Box sx={{ px: 3, pt: 4, pb: 1, width: "100%" }}>
         <Box sx={{
             position: "relative",
@@ -60,27 +155,46 @@ const MayaIntro = ({ name, content }) => (
             </Box>
 
             {/* Content */}
-            <Typography sx={{ mb: 1.5, fontWeight: 700, color: '#333', textAlign: 'center', mt: 1 }}>
-                Namaste!
+            <Typography sx={{ fontSize: '1rem', lineHeight: 1.5, color: '#444', mt: 1, whiteSpace: 'pre-line' }}>
+                <strong>{name},</strong> {content}
             </Typography>
-            <Typography sx={{ fontSize: '1rem', lineHeight: 1.5, color: '#444' }}>
-                {content}
-            </Typography>
+
+            {/* JSON Output View for Maya Intro */}
+            {(mayaJson || rawResponse) && (
+                <Box sx={{ mt: 1.5, pt: 1.5, borderTop: '1px dashed rgba(0,0,0,0.1)' }}>
+                    <Typography sx={{ fontSize: '0.65rem', fontWeight: 700, color: '#666', mb: 0.5, textTransform: 'uppercase' }}>
+                        JSON Output:
+                    </Typography>
+                    <Box sx={{
+                        bgcolor: 'rgba(255,255,255,0.5)',
+                        p: 1,
+                        borderRadius: 1,
+                        fontSize: '0.75rem',
+                        fontFamily: 'monospace',
+                        whiteSpace: 'pre-wrap',
+                        wordBreak: 'break-all',
+                        color: '#444'
+                    }}>
+                        {JSON.stringify(mayaJson || rawResponse, null, 2)}
+                    </Box>
+                </Box>
+            )}
         </Box>
     </Box>
 );
 
 const Chat = () => {
     const navigate = useNavigate();
-    const [drawerOpen, setDrawerOpen] = useState(false);
+    const location = useLocation();
     const [feedbackDrawerOpen, setFeedbackDrawerOpen] = useState(false);
     const [messages, setMessages] = useState([
-        { role: 'assistant', content: 'I am Maya, the receptionist. How can I help you reach Guruji today! 🙏', assistant: 'maya' }
+        { role: 'assistant', content: "welcome! I'll connect you to our astrologer.\nYou may call him as 'Guruji'", assistant: 'maya' }
     ]);
     const [input, setInput] = useState('');
     const [loading, setLoading] = useState(false);
     const [summary, setSummary] = useState(null);
     const [userStatus, setUserStatus] = useState('checking'); // 'checking', 'processing', 'ready', 'failed'
+    const [userName, setUserName] = useState(localStorage.getItem('userName') || '');
     const [walletBalance, setWalletBalance] = useState(100);
     const [sessionId, setSessionId] = useState(`SESS_${Date.now()}`);
     const [showInactivityPrompt, setShowInactivityPrompt] = useState(false);
@@ -96,6 +210,10 @@ const Chat = () => {
     // Load Chat History (Smart Resume Logic)
     useEffect(() => {
         const loadHistory = async () => {
+            if (location.state?.newSession) {
+                handleNewChat();
+                return;
+            }
             const mobile = localStorage.getItem('mobile');
             if (mobile) {
                 try {
@@ -122,7 +240,7 @@ const Chat = () => {
             }
         };
         loadHistory();
-    }, []);
+    }, [location.state?.newSession]); // Added location.state?.newSession to dependencies
 
     useEffect(() => {
         scrollToBottom();
@@ -142,6 +260,10 @@ const Chat = () => {
                 const res = await api.get(`/auth/user-status/${mobile}?t=${Date.now()}`);
                 const status = res.data.status;
                 setUserStatus(status);
+                if (res.data.user_profile?.name) {
+                    setUserName(res.data.user_profile.name);
+                    localStorage.setItem('userName', res.data.user_profile.name);
+                }
                 if (res.data.wallet_balance !== undefined) {
                     setWalletBalance(res.data.wallet_balance);
                 }
@@ -187,13 +309,12 @@ const Chat = () => {
 
     const handleNewChat = () => {
         setMessages([
-            { role: 'assistant', content: 'I am Maya, the receptionist. How can I help you reach Guruji today! 🙏', assistant: 'maya' }
+            { role: 'assistant', content: "welcome! \n\nI'll connect you to our astrologer.You may call him as 'Guruji'", assistant: 'maya' }
         ]);
         setSessionId(`SESS_${Date.now()}`);
         setSummary(null);
         setFeedback({ rating: 0, comment: '' });
         setFeedbackSubmitted(false);
-        setDrawerOpen(false);
     };
 
     const handleEndChat = async (keepFeedback = false) => {
@@ -229,9 +350,7 @@ const Chat = () => {
             setFeedbackSubmitted(true);
             setFeedback({ rating, comment });
 
-            // Fire and forget endChat to generate summary in DB, but don't show it 
-            // We do NOT call handleEndChat() because that sets 'summary' state which triggers the modal.
-            // We just want to ensure the session is wrapped up on the backend.
+            // Fire and forget endChat
             endChat(mobile, messages, sessionId).catch(e => console.error("Silent end chat error:", e));
 
         } catch (err) {
@@ -277,7 +396,7 @@ const Chat = () => {
 
     // Background scroll lock when modals are open
     useEffect(() => {
-        if (summary || showInactivityPrompt || drawerOpen) {
+        if (summary || showInactivityPrompt) {
             document.body.style.overflow = 'hidden';
         } else {
             document.body.style.overflow = 'unset';
@@ -285,7 +404,7 @@ const Chat = () => {
         return () => {
             document.body.style.overflow = 'unset';
         };
-    }, [summary, showInactivityPrompt, drawerOpen]);
+    }, [summary, showInactivityPrompt]);
 
     const handleSend = async (msg = null) => {
         const text = typeof msg === 'string' ? msg : input;
@@ -305,7 +424,7 @@ const Chat = () => {
             }
             const history = messages.slice(1);
             const res = await sendMessage(mobile, text, history, sessionId);
-            const { answer, metrics, context, assistant, wallet_balance, amount, maya_json } = res.data;
+            const { answer, metrics, context, assistant, wallet_balance, amount, maya_json, guruji_json } = res.data;
 
             if (wallet_balance !== undefined) setWalletBalance(wallet_balance);
 
@@ -317,7 +436,9 @@ const Chat = () => {
                 context,
                 amount,
                 rawResponse: res.data,
-                mayaJson: maya_json
+                mayaJson: maya_json,
+                gurujiJson: guruji_json,
+                animate: true
             }]);
         } catch (err) {
             console.error("Chat Error:", err);
@@ -359,13 +480,16 @@ const Chat = () => {
 
             <FeedbackDrawer
                 open={feedbackDrawerOpen}
-                onClose={() => {
-                    setFeedbackDrawerOpen(false);
-                    if (feedbackSubmitted) {
-                        navigate('/dakshina');
-                    }
-                }}
+                onClose={() => setFeedbackDrawerOpen(false)}
                 onSubmit={handleDrawerSubmit}
+                onAddDakshina={() => {
+                    setFeedbackDrawerOpen(false);
+                    navigate('/dakshina');
+                }}
+                onNewJourney={() => {
+                    setFeedbackDrawerOpen(false);
+                    handleNewChat();
+                }}
             />
 
             {/* Chat Messages Area - Scrollable segment with visible scrollbar */}
@@ -383,7 +507,67 @@ const Chat = () => {
                     const isFirstMaya = i === 0 && msg.assistant === 'maya';
 
                     if (isFirstMaya) {
-                        return <MayaIntro key={i} content={msg.content} />;
+                        return (
+                            <MayaIntro
+                                key={i}
+                                name={userName}
+                                content={msg.content}
+                                mayaJson={msg.mayaJson}
+                                rawResponse={msg.rawResponse}
+                            />
+                        );
+                    }
+
+                    if (msg.gurujiJson) {
+                        return (
+                            <Box key={i} sx={{ display: 'flex', alignItems: 'flex-start', gap: 1.5, mb: 2, width: '100%' }}>
+                                <Box sx={{
+                                    width: 40,
+                                    height: 40,
+                                    borderRadius: '50%',
+                                    bgcolor: 'white',
+                                    border: '3px solid #F36A2F',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    flexShrink: 0,
+                                    boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+                                }}>
+                                    <img src="/svg/guruji_illustrated.svg" style={{ width: 32 }} alt="G" />
+                                </Box>
+                                <Box sx={{ flex: 1, maxWidth: '85%' }}>
+                                    <SequentialResponse
+                                        gurujiJson={msg.gurujiJson}
+                                        animate={msg.animate}
+                                        onComplete={() => { }}
+                                    />
+                                    {/* JSON Output View for Guruji Multi-bubble */}
+                                    {(msg.gurujiJson || msg.mayaJson) && (
+                                        <Box sx={{ mt: 1, pt: 1, borderTop: '1px dashed rgba(255,255,255,0.2)' }}>
+                                            <Typography sx={{ fontSize: '0.65rem', fontWeight: 800, color: 'rgba(0,0,0,0.4)', mb: 0.5, textTransform: 'uppercase' }}>
+                                                Debug Data:
+                                            </Typography>
+                                            {msg.mayaJson && (
+                                                <Box sx={{ mb: 1 }}>
+                                                    <Typography sx={{ fontSize: '0.6rem', color: '#999', fontWeight: 700 }}>RECEPTIONIST CLASSIFICATION</Typography>
+                                                    <Box sx={{ bgcolor: 'rgba(0,0,0,0.03)', p: 1, borderRadius: 1, fontSize: '0.75rem', fontFamily: 'monospace', whiteSpace: 'pre-wrap', color: '#666' }}>
+                                                        {JSON.stringify(msg.mayaJson, null, 2)}
+                                                    </Box>
+                                                </Box>
+                                            )}
+                                            {msg.gurujiJson && (
+                                                <Box>
+                                                    <Typography sx={{ fontSize: '0.6rem', color: '#999', fontWeight: 700 }}>ASTROLOGER STRUCTURED RESPONSE</Typography>
+                                                    <Box sx={{ bgcolor: 'rgba(243,106,47,0.05)', p: 1, borderRadius: 1, fontSize: '0.75rem', fontFamily: 'monospace', whiteSpace: 'pre-wrap', color: '#444', border: '1px solid rgba(243,106,47,0.1)' }}>
+                                                        {JSON.stringify(msg.gurujiJson, null, 2)}
+                                                    </Box>
+                                                </Box>
+                                            )}
+                                        </Box>
+                                    )}
+                                </Box>
+                            </Box>
+                        );
                     }
 
                     return (
@@ -393,7 +577,8 @@ const Chat = () => {
                                 display: 'flex',
                                 flexDirection: 'column',
                                 alignItems: msg.role === 'user' ? 'flex-end' : 'flex-start',
-                                maxWidth: '100%'
+                                maxWidth: '100%',
+                                mb: 2
                             }}
                         >
                             <Box sx={{
@@ -427,29 +612,46 @@ const Chat = () => {
                                 <Box sx={{
                                     p: 2,
                                     borderRadius: msg.role === 'user' ? '20px 20px 0 20px' : '20px 20px 20px 0',
-                                    bgcolor: msg.role === 'user' ? '#F36A2F' : 'white',
-                                    color: msg.role === 'user' ? 'white' : '#333',
+                                    bgcolor: msg.role === 'user' ? '#2f3148' : '#ff8338',
+                                    color: 'white',
                                     boxShadow: '0 4px 15px rgba(0,0,0,0.05)',
-                                    border: msg.role === 'user' ? 'none' : '1px solid #FFEDD5',
+                                    border: 'none',
                                     position: 'relative'
                                 }}>
                                     {msg.role === 'assistant' && (
                                         <Typography sx={{
                                             fontSize: '0.65rem',
-                                            fontWeight: 800,
+                                            fontWeight: 900,
                                             textTransform: 'uppercase',
                                             mb: 0.5,
-                                            color: msg.assistant === 'maya' ? '#9333ea' : '#F36A2F',
-                                            letterSpacing: 0.5
+                                            color: 'rgba(255,255,255,0.9)',
+                                            letterSpacing: 1
                                         }}>
                                             {msg.assistant === 'maya' ? 'Maya' : 'Astrology Guruji'}
                                         </Typography>
                                     )}
+
                                     <Typography
                                         variant="body2"
                                         sx={{ lineHeight: 1.6, fontSize: '0.9rem' }}
                                         dangerouslySetInnerHTML={{ __html: msg.content }}
                                     />
+
+                                    {/* JSON Output View (for regular messages) */}
+                                    {(msg.mayaJson && !msg.gurujiJson) && (
+                                        <Box sx={{ mt: 1.5, pt: 1.5, borderTop: '1px dashed rgba(255,255,255,0.2)' }}>
+                                            <Typography sx={{ fontSize: '0.65rem', fontWeight: 800, color: 'rgba(255,255,255,0.7)', mb: 0.5, textTransform: 'uppercase' }}>
+                                                Debug Data:
+                                            </Typography>
+                                            <Box sx={{ mb: 1 }}>
+                                                <Typography sx={{ fontSize: '0.6rem', color: 'rgba(255,255,255,0.6)', fontWeight: 700 }}>RECEPTIONIST CLASSIFICATION</Typography>
+                                                <Box sx={{ bgcolor: 'rgba(255,255,255,0.1)', p: 1, borderRadius: 1, fontSize: '0.75rem', fontFamily: 'monospace', whiteSpace: 'pre-wrap', color: 'white' }}>
+                                                    {JSON.stringify(msg.mayaJson, null, 2)}
+                                                </Box>
+                                            </Box>
+                                        </Box>
+                                    )}
+
                                     {msg.amount > 0 && (
                                         <Box sx={{ mt: 1, display: 'flex', alignItems: 'center', gap: 0.5 }}>
                                             <Typography sx={{ fontSize: '0.65rem', fontWeight: 700, color: '#B45309', bgcolor: '#FEF3C7', px: 1, py: 0.2, borderRadius: 1 }}>
@@ -471,72 +673,6 @@ const Chat = () => {
                 )}
                 <div ref={messagesEndRef} />
             </Box>
-
-            {/* Input Section - Cleaned up to remove dark SVG background */}
-            {/* <Box sx={{
-                flexShrink: 0,
-                width: '100%',
-                bgcolor: '#FFF6EB',
-                pt: 1, // Reduced padding as background SVG is gone
-                pb: 3, // Slightly more padding at bottom
-                px: 2,
-                display: 'flex',
-                justifyContent: 'center',
-            }}>
-                <Box sx={{
-                    width: '100%',
-                    maxWidth: 420,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                }}>
-                    <Box sx={{
-                        width: '100%',
-                        display: 'flex',
-                        gap: 1,
-                        alignItems: 'center',
-                        bgcolor: 'white',
-                        p: 0.5,
-                        pl: 2,
-                        borderRadius: 10,
-                        boxShadow: '0 8px 32px rgba(243,106,47,0.15)',
-                        border: '2px solid #F36A2F'
-                    }}>
-                        <input
-                            type="text"
-                            placeholder={userStatus === 'ready' ? "Ask the stars..." : "Preparing..."}
-                            value={input}
-                            onChange={(e) => setInput(e.target.value)}
-                            onKeyPress={(e) => e.key === 'Enter' && handleSend()}
-                            disabled={loading || summary || userStatus !== 'ready'}
-                            style={{
-                                flex: 1,
-                                padding: '12px 0',
-                                border: 'none',
-                                outline: 'none',
-                                fontSize: '0.95rem',
-                                background: 'transparent'
-                            }}
-                        />
-                        <IconButton
-                            onClick={handleSend}
-                            disabled={loading || !input.trim() || summary || userStatus !== 'ready'}
-                            sx={{
-                                bgcolor: '#F36A2F',
-                                color: 'white',
-                                '&:hover': { bgcolor: '#FF7A28' },
-                                '&:disabled': { bgcolor: '#FFD7C2' },
-                                width: 44,
-                                height: 44,
-                                m: 0.5
-                            }}
-                        >
-                            <KeyboardDoubleArrowRightIcon />
-                        </IconButton>
-                    </Box>
-                </Box>
-            </Box> */}
 
             <ChatInputFooter
                 onSend={handleSend}
@@ -664,70 +800,15 @@ const Chat = () => {
                 </Box>
             )}
 
-            {/* Navigation Drawer */}
-            <Drawer
-                anchor="left"
-                open={drawerOpen}
-                onClose={() => setDrawerOpen(false)}
-                PaperProps={{
-                    sx: { width: { xs: '80vw', sm: 320 }, bgcolor: '#FFF6EB' }
-                }}
-            >
-                <Box sx={{ p: 4, bgcolor: '#F36A2F', color: 'white' }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1 }}>
-                        <Box sx={{ width: 60, height: 60, bgcolor: 'white', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '4px solid rgba(255,255,255,0.3)' }}>
-                            <img src="/svg/guruji_illustrated.svg" style={{ width: 45 }} alt="Logo" />
-                        </Box>
-                        <Box>
-                            <Typography variant="h6" sx={{ fontWeight: 900, lineHeight: 1.2 }}>Astrology<br />Guruji</Typography>
-                        </Box>
-                    </Box>
-                </Box>
-
-                <List sx={{ p: 2 }}>
-                    <ListItem disablePadding onClick={handleNewChat} sx={{ mb: 1 }}>
-                        <ListItemButton sx={{ borderRadius: 2, py: 1.5 }}>
-                            <ListItemIcon><AddCommentIcon sx={{ color: '#F36A2F' }} /></ListItemIcon>
-                            <ListItemText primary="New Consultation" primaryTypographyProps={{ fontWeight: 800, color: '#F36A2F' }} />
-                        </ListItemButton>
-                    </ListItem>
-                    <ListItem disablePadding onClick={() => navigate('/chat')} sx={{ mb: 1 }}>
-                        <ListItemButton sx={{ borderRadius: 2, py: 1.5 }}>
-                            <ListItemIcon><HomeIcon /></ListItemIcon>
-                            <ListItemText primary="Home" />
-                        </ListItemButton>
-                    </ListItem>
-                    <ListItem disablePadding onClick={() => navigate('/history')} sx={{ mb: 1 }}>
-                        <ListItemButton sx={{ borderRadius: 2, py: 1.5 }}>
-                            <ListItemIcon><HistoryIcon /></ListItemIcon>
-                            <ListItemText primary="Past Journeys" />
-                        </ListItemButton>
-                    </ListItem>
-                    <ListItem disablePadding onClick={() => navigate('/profile')} sx={{ mb: 1 }}>
-                        <ListItemButton sx={{ borderRadius: 2, py: 1.5 }}>
-                            <ListItemIcon><PersonIcon /></ListItemIcon>
-                            <ListItemText primary="My Profile" />
-                        </ListItemButton>
-                    </ListItem>
-                    <Divider sx={{ my: 2, opacity: 0.5 }} />
-                    <ListItem disablePadding onClick={handleLogout}>
-                        <ListItemButton sx={{ borderRadius: 2, py: 1.5 }}>
-                            <ListItemIcon><LogoutIcon /></ListItemIcon>
-                            <ListItemText primary="Sign Out" />
-                        </ListItemButton>
-                    </ListItem>
-                </List>
-            </Drawer>
 
             <style>{`
-                @keyframes bounce {
-                    0%, 100% { transform: translateY(0); }
-                    50% { transform: translateY(-5px); }
-                }
-            `}</style>
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+}
+`}</style>
         </Box>
     );
 };
-
 
 export default Chat;

@@ -95,6 +95,7 @@ const Dakshina = () => {
                             fontWeight: 700,
                             textTransform: 'none',
                             boxShadow: '0 4px 15px rgba(243,106,47,0.3)',
+                            mb: 2,
                             '&:hover': {
                                 bgcolor: '#FF7A28',
                                 boxShadow: '0 6px 20px rgba(243,106,47,0.4)',
@@ -102,6 +103,25 @@ const Dakshina = () => {
                         }}
                     >
                         Proceed to Payment
+                    </Button>
+
+                    <Button
+                        fullWidth
+                        onClick={() => navigate('/chat', { state: { newSession: true } })}
+                        sx={{
+                            color: '#F36A2F',
+                            py: 1,
+                            borderRadius: 10,
+                            fontSize: '0.9rem',
+                            fontWeight: 700,
+                            textTransform: 'none',
+                            border: '1px solid #F36A2F',
+                            '&:hover': {
+                                bgcolor: 'rgba(243,106,47,0.05)',
+                            }
+                        }}
+                    >
+                        Start New Journey
                     </Button>
                 </Box>
             </Box>

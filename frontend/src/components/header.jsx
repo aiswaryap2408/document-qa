@@ -5,6 +5,7 @@ import HomeIcon from '@mui/icons-material/Home';
 import PersonIcon from '@mui/icons-material/Person';
 import HistoryIcon from '@mui/icons-material/History';
 import LogoutIcon from '@mui/icons-material/Logout';
+import AddCommentIcon from '@mui/icons-material/AddComment';
 
 const Header = ({ backgroundImage = "/svg/top_curve_light.svg" }) => {
     const [drawerOpen, setDrawerOpen] = React.useState(false);
@@ -25,6 +26,8 @@ const Header = ({ backgroundImage = "/svg/top_curve_light.svg" }) => {
         if (path === 'logout') {
             localStorage.clear();
             navigate('/');
+        } else if (path === '/chat-new') {
+            navigate('/chat', { state: { newSession: true } });
         } else {
             navigate(path);
         }
@@ -140,6 +143,13 @@ const Header = ({ backgroundImage = "/svg/top_curve_light.svg" }) => {
                                     <ListItemButton sx={{ py: 1.5 }}>
                                         <ListItemIcon sx={{ minWidth: 40, color: '#F26A2E' }}><HomeIcon /></ListItemIcon>
                                         <ListItemText primary="Home" primaryTypographyProps={{ fontWeight: 500 }} />
+                                    </ListItemButton>
+                                </ListItem>
+
+                                <ListItem disablePadding onClick={() => handleNavigation('/chat-new')}>
+                                    <ListItemButton sx={{ py: 1.5 }}>
+                                        <ListItemIcon sx={{ minWidth: 40, color: '#F26A2E' }}><AddCommentIcon /></ListItemIcon>
+                                        <ListItemText primary="New Consultation" primaryTypographyProps={{ fontWeight: 500 }} />
                                     </ListItemButton>
                                 </ListItem>
 

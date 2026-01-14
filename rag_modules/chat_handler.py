@@ -50,7 +50,7 @@ def get_openai_client(api_key: str = None):
     return OpenAI(api_key=api_key)
 
 def generate_with_openai(system_prompt, context_chunks, conversation_history, question,
-                         model="gpt-4o-mini", api_key=None):
+                         model="gpt-4o-mini", api_key=None, json_mode=False):
 
     client = get_openai_client(api_key)
 
@@ -68,9 +68,9 @@ def generate_with_openai(system_prompt, context_chunks, conversation_history, qu
             "2. If a user provides a short response (like 'yes', 'ok', 'go on') to your previous question, "
             "be conversational and proceed with the relevant details from the context. "
             "3. If the answer is truly missing from the context and history, say 'Not found in document.' "
-            "4. NEVER break character. Always end with your signature follow-up question: '🤔 What's Next?'"
         )}
     ]
+    # Note: Structure/formatting is controlled by the main system_prompt.
 
     # Append conversation history
     for msg in conversation_history:
@@ -83,10 +83,14 @@ def generate_with_openai(system_prompt, context_chunks, conversation_history, qu
     })
 
     # Ask model
-    resp = client.chat.completions.create(
-        model=model,
-        messages=messages
-    )
+    kwargs = {
+        "model": model,
+        "messages": messages
+    }
+    if json_mode:
+        kwargs["response_format"] = {"type": "json_object"}
+
+    resp = client.chat.completions.create(**kwargs)
 
     ans = resp.choices[0].message.content
     return convert_markdown_to_html(ans)

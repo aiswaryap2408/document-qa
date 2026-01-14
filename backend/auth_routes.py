@@ -500,16 +500,62 @@ async def chat(request: ChatMessage):
             system_prompt=system_prompt,
             context_chunks=clean_chunks,
             conversation_history=request.history,
-            question=request.message
+            question=request.message,
+            json_mode=True
         )
         
+        # ----------------------------------------------------
+        # 3. Handle Guruji Response (Structured JSON Parsing)
+        # ----------------------------------------------------
+        import json, re
+        guruji_json = None
+        
+        try:
+            # Clean possible markdown code fences
+            clean_response = response.strip()
+            if clean_response.startswith("```"):
+                # Use regex to extract content within backticks
+                match = re.search(r'```(?:json)?\s*(\{.*?\})\s*```', clean_response, re.DOTALL)
+                if match:
+                    clean_response = match.group(1)
+                else:
+                    # Fallback: remove fences manually
+                    clean_response = re.sub(r'^```(json)?\s*', '', clean_response)
+                    clean_response = re.sub(r'\s*```$', '', clean_response)
+
+            # Try to parse response as JSON
+            temp_json = json.loads(clean_response)
+            # Ensure it has the expected keys
+            if any(k in temp_json for k in ["para1", "para2", "para3", "follow_up"]):
+                guruji_json = temp_json
+                
+                # Construct formatted HTML answer from paragraphs
+                parts = []
+                for k in ["para1", "para2", "para3"]:
+                    if temp_json.get(k):
+                        parts.append(temp_json[k])
+                
+                formatted_body = "<br><br>".join(parts)
+                follow_up = temp_json.get("follow_up", "🤔 What's Next?")
+                
+                final_answer = f"{formatted_body}<br><br>{follow_up}"
+            else:
+                # Valid JSON but not our format
+                final_answer = response.strip().replace("\n\n", "<br>").replace("\n", " ")
+        except:
+            # Not JSON, use raw response
+            final_answer = response.strip().replace("\n\n", "<br>").replace("\n", " ")
+
+        # ----------------------------------------------------
+        # 4. Save to History
+        # ----------------------------------------------------
         # Save to Chat History (legacy format)
         try:
             chats_col = get_db_collection("chats")
             chats_col.insert_one({
                 "mobile": request.mobile,
                 "user_message": request.message,
-                "bot_response": response,
+                "bot_response": final_answer,
                 "timestamp": time.time(),
                 "assistant": "guruji",
                 "cost": cost,
@@ -531,12 +577,12 @@ async def chat(request: ChatMessage):
                 "message": request.message,
                 "timestamp": time.time()
             })
-            # Store Guruji's response
+            # Store Guruji's response (store raw string to preserve format)
             conv_col.insert_one({
                 "mobile": request.mobile,
                 "session_id": request.session_id,
                 "role": "guruji",
-                "message": response,
+                "message": response, # Raw string (could be JSON)
                 "cost": cost,
                 "category": category,
                 "metrics": {
@@ -547,10 +593,6 @@ async def chat(request: ChatMessage):
             })
         except Exception as e:
             print(f"Error storing Guruji conversation: {e}")
-        
-        # Return structured JSON
-        # Convert double newlines to breaks
-        final_answer = response.strip().replace("\n\n", "<br>").replace("\n", " ")
 
         return {
             "answer": final_answer,
@@ -563,7 +605,8 @@ async def chat(request: ChatMessage):
                 "rag_score": round(max_score * 100, 1),
                 "modelling_score": round(avg_score * 100, 1)
             },
-            "maya_json": maya_res  # Include Maya's raw JSON response
+            "maya_json": maya_res,
+            "guruji_json": guruji_json
         }
         
     except Exception as e:

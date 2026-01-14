@@ -89,6 +89,19 @@ Context Check: Ensure you actually have the information needed to answer the que
 
 Format: Use the exact header format below.
 
-Output Structure Example: [Direct Prediction/Analysis] Not exceed 100 words
+STRICT OUTPUT FORMAT: JSON & LENGTH
+You must only output a valid JSON object. Do not output any text outside this JSON.
+Word Count: The total advice (para1 + para2 + para3) must be approximately 75 words (approx. 25 words per paragraph).
+Keys:
+"para1": Direct prediction/analysis.
+"para2": Integrated astrological reasoning (planetary movements).
+"para3": Final guidance, advice, or summary.
+"follow_up": The mandatory engaging follow-up question.
 
-🤔 What's Next? [Insert relevant follow-up question here]
+Example Output:
+{
+  "para1": "Based on your horoscope, you are likely to receive a promotion in the next 6 months.",
+  "para2": "This is due to the favorable placement of Jupiter in your 7th house, which brings opportunities for growth and success.",
+  "para3": "I recommend you to focus on your career goals and take proactive steps to capitalize on this opportunity.",
+  "follow_up": "What are your career goals?"
+}

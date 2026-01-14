@@ -6,6 +6,8 @@ const FeedbackDrawer = ({
     open,
     onClose,
     onSubmit,
+    onAddDakshina,
+    onNewJourney
 }) => {
     const [rating, setRating] = useState(0);
     const [feedback, setFeedback] = useState("");
@@ -133,23 +135,41 @@ const FeedbackDrawer = ({
                     <Typography sx={{ fontSize: 15, lineHeight: 1.6, mb: 4 }}>
                         Thank you for your feedback/rating. This for sure will help us continue improving the service.
                     </Typography>
-                    <Button
-                        onClick={onClose}
-                        sx={{
-                            bgcolor: "#fff",
-                            color: "#5AA270",
-                            borderRadius: 30,
-                            height: 42,
-                            fontSize: 16,
-                            width: "40%",
-                            textTransform: "none",
-                            "&:hover": {
-                                bgcolor: "#f3f3f3",
-                            },
-                        }}
-                    >
-                        Close
-                    </Button>
+                    <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center' }}>
+                        <Button
+                            onClick={onAddDakshina}
+                            sx={{
+                                bgcolor: "#fff",
+                                color: "#5AA270",
+                                borderRadius: 30,
+                                height: 42,
+                                fontSize: 14,
+                                width: "45%",
+                                textTransform: "none",
+                                fontWeight: 700,
+                                "&:hover": { bgcolor: "#f3f3f3" },
+                            }}
+                        >
+                            Add Dakshina
+                        </Button>
+                        <Button
+                            onClick={onNewJourney}
+                            sx={{
+                                bgcolor: "rgba(255,255,255,0.2)",
+                                color: "#fff",
+                                borderRadius: 30,
+                                height: 42,
+                                fontSize: 14,
+                                width: "45%",
+                                textTransform: "none",
+                                border: '1px solid #fff',
+                                fontWeight: 600,
+                                "&:hover": { bgcolor: "rgba(255,255,255,0.3)" },
+                            }}
+                        >
+                            New Journey
+                        </Button>
+                    </Box>
                 </Box>
             )}
         </Drawer>

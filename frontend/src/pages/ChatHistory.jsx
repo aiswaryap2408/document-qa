@@ -8,6 +8,7 @@ import HistoryIcon from '@mui/icons-material/History';
 import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
 import SmartToyIcon from '@mui/icons-material/SmartToy';
 import PersonIcon from '@mui/icons-material/Person';
+import AddCommentIcon from '@mui/icons-material/AddComment';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 
@@ -78,6 +79,30 @@ const ChatHistory = () => {
                     <Typography variant="body2" sx={{ color: '#666' }}>
                         Browse your past spiritual journeys with Guruji
                     </Typography>
+                </Box>
+
+                <Box sx={{ mb: 3, display: 'flex', justifyContent: 'center' }}>
+                    <Button
+                        variant="contained"
+                        startIcon={<AddCommentIcon />}
+                        onClick={() => navigate('/chat', { state: { newSession: true } })}
+                        sx={{
+                            bgcolor: '#F26A2E',
+                            color: 'white',
+                            borderRadius: '30px',
+                            px: 4,
+                            py: 1.5,
+                            fontWeight: 700,
+                            textTransform: 'none',
+                            boxShadow: '0 8px 20px rgba(242, 106, 46, 0.2)',
+                            '&:hover': {
+                                bgcolor: '#d95a23',
+                                boxShadow: '0 10px 25px rgba(242, 106, 46, 0.3)',
+                            }
+                        }}
+                    >
+                        Start New Consultation
+                    </Button>
                 </Box>
 
                 {loading ? (
