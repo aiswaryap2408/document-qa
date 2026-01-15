@@ -48,15 +48,26 @@ const Login = () => {
         <>
             <Header />
 
-            {/* Content */}
-            <Box textAlign="center" px={3} pb={4} sx={{ flexGrow: 1 }}>
-                <Box mt={2}>
+            {/* Content Container - ensuring it takes up remaining height and centers content */}
+            <Box
+                sx={{
+                    flex: 1,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    textAlign: 'center',
+                    px: 3,
+                    pb: 10, // Extra padding at bottom to balance the header
+                    mt: -5  // Pull up slightly to account for the large header space
+                }}
+            >
+                <Box>
                     <GurujiImage />
 
                     <Typography fontSize={16} mt={1} color="text.primary">
                         Welcome to <strong style={{ color: "#dc5d35" }}>Findastro</strong>!
                     </Typography>
-
                 </Box>
 
                 <Typography
@@ -75,43 +86,44 @@ const Login = () => {
                     </Typography>
                 )}
 
-                {/* Phone Input */}
+                {/* Phone Input Box */}
                 <Box
                     sx={{
                         display: "flex",
                         border: "2px solid #f2a28a",
-                        borderRadius: 1,
+                        borderRadius: 2, // Slightly more rounded
                         overflow: "hidden",
                         bgcolor: "#fff",
-                        mx: 'auto',
-
-                        mb: 2,
-                        // maxWidth: 300,
-
+                        width: "100%",
+                        maxWidth: 320,
+                        mb: 3,
+                        boxShadow: '0 4px 12px rgba(242,162,138,0.1)'
                     }}
                 >
-                    <Box px={2} py={1.5} fontSize={14} color="text.primary">
+                    <Box sx={{ px: 2, py: 2, fontSize: 16, color: "#666", bgcolor: "#FFF0E6", borderRight: "1px solid #f2a28a", fontWeight: 700 }}>
                         +91
                     </Box>
                     <TextField
                         variant="standard"
                         fullWidth
-                        InputProps={{ disableUnderline: true }}
-                        placeholder="Enter mobile number"
+                        InputProps={{
+                            disableUnderline: true,
+                            sx: { px: 2, height: '100%', fontSize: 16, fontWeight: 600 }
+                        }}
+                        placeholder="Mobile number"
                         value={mobile}
                         onChange={(e) => setMobile(e.target.value)}
-                        inputProps={{ maxLength: 10 }}
-                        sx={{ mt: 1 }}
+                        inputProps={{ maxLength: 10, type: 'tel' }}
+                        onKeyPress={(e) => e.key === 'Enter' && handleMobileSubmit()}
                     />
                 </Box>
 
                 <PrimaryButton
                     label={loading ? "Sending..." : "Get OTP"}
-                    sx={{ mt: 0, width: { xs: '80%', sm: '220px' } }}
+                    sx={{ width: { xs: '100%', sm: '280px' }, height: 50, borderRadius: 3 }}
                     onClick={handleMobileSubmit}
                     disabled={loading}
                 />
-
             </Box>
         </>
     );

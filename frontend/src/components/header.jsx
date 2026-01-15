@@ -13,7 +13,7 @@ const Header = ({ backgroundImage = "/svg/top_curve_light.svg" }) => {
     const location = useLocation();
 
     // Only show menu on specific pages
-    const showMenu = ['/chat', '/profile', '/history', '/dakshina'].includes(location.pathname);
+    const showMenu = ['/chat', '/profile', '/history', '/dakshina', '/wallet', '/wallet/recharge'].includes(location.pathname);
 
     const toggleDrawer = (open) => (event) => {
         if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
@@ -164,6 +164,15 @@ const Header = ({ backgroundImage = "/svg/top_curve_light.svg" }) => {
                                     <ListItemButton sx={{ py: 1.5 }}>
                                         <ListItemIcon sx={{ minWidth: 40, color: '#F26A2E' }}><HistoryIcon /></ListItemIcon>
                                         <ListItemText primary="History" primaryTypographyProps={{ fontWeight: 500 }} />
+                                    </ListItemButton>
+                                </ListItem>
+
+                                <ListItem disablePadding onClick={() => handleNavigation('/wallet')}>
+                                    <ListItemButton sx={{ py: 1.5 }}>
+                                        <ListItemIcon sx={{ minWidth: 40, color: '#F26A2E' }}>
+                                            <span style={{ fontSize: 20 }}>💰</span>
+                                        </ListItemIcon>
+                                        <ListItemText primary="My Wallet" primaryTypographyProps={{ fontWeight: 500 }} />
                                     </ListItemButton>
                                 </ListItem>
 

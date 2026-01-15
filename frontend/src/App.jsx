@@ -10,6 +10,8 @@ import UserProfile from './pages/UserProfile';
 import ChatHistory from './pages/ChatHistory';
 import PlaceTest from './pages/PlaceTest';
 import Dakshina from './pages/Dakshina';
+import Wallet from './pages/wallet/Wallet';
+import Recharge from './pages/wallet/Recharge';
 
 import AdminLogin from './pages/admin/AdminLogin';
 import AdminDashboard from './pages/admin/AdminDashboard';
@@ -99,6 +101,22 @@ function App() {
             element={
               <ProtectedRoute>
                 <Dakshina />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/wallet"
+            element={
+              <ProtectedRoute>
+                <Wallet />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/wallet/recharge"
+            element={
+              <ProtectedRoute>
+                <Recharge />
               </ProtectedRoute>
             }
           />

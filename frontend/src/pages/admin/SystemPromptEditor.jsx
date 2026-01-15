@@ -40,7 +40,7 @@ const SystemPromptEditor = () => {
     return (
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
             <div className="p-6 border-bottom border-gray-100">
-                <h3 className="text-xl font-bold text-gray-900">System Prompt Configuration</h3>
+                <h3 className="text-xl font-bold text-gray-900">Guruji Prompt Configuration</h3>
                 <p className="text-sm text-gray-500 mt-1">
                     This prompt defines the core personality and rules for the Astrology Guruji.
                 </p>

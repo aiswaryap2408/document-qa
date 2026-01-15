@@ -2,6 +2,7 @@ from fastapi import APIRouter, HTTPException, BackgroundTasks
 from backend.models import MobileRequest, OTPRequest, UserRegistration, LoginResponse
 from backend.db import get_db_collection
 from backend.astrology_service import generate_astrology_report, send_sms_otp
+from backend.wallet_service import WalletService
 from backend.rag_service import get_rag_engine
 from rag_modules.chunking import extract_hierarchy, chunk_hierarchy_for_rag
 import time
@@ -371,11 +372,10 @@ async def chat(request: ChatMessage):
         pass_to_guruji = maya_res.get("pass_to_guruji", True)
         maya_message = maya_res.get("response_message", "")
         
-        # Note: 'amount' logic is currently zeroed as the new prompt removed costs.
-        # We can re-integrate specifics if needed later.
         cost = maya_res.get("amount", 0) 
-
-        current_balance = user.get("wallet_balance", 100)
+        wallet_enabled = WalletService.is_wallet_enabled()
+        wallet = WalletService.get_wallet(request.mobile)
+        current_balance = wallet.get("balance", 0)
         
         # If pass_to_guruji is False, Maya handles it directly
         if not pass_to_guruji:
@@ -411,34 +411,18 @@ async def chat(request: ChatMessage):
                 "maya_json": maya_res  # Include Maya's raw JSON response
             }
 
-        # Wallet check for passed queries (if any cost)
-        if cost > 0 and current_balance < cost:
-            return {
-                "answer": "You have insufficient coins for this detailed analysis. Please top up your wallet. 🙏",
-                "amount": 0,
-                "flag": "INSUFFICIENT_FUNDS",
-                "assistant": "maya",
-                "wallet_balance": current_balance,
-                "maya_json": maya_res  # Include Maya's raw JSON response
-            }
-
-        # Deduct coins if applicable
-        if cost > 0:
-            users_col.update_one(
-                {"mobile": request.mobile},
-                {"$inc": {"wallet_balance": -cost}}
-            )
-            # Record Transaction
-            try:
-                trans_col = get_db_collection("transactions")
-                trans_col.insert_one({
-                    "mobile": request.mobile,
-                    "amount": cost,
-                    "query": request.message,
-                    "category": category,
-                    "timestamp": time.time()
-                })
-            except: pass
+        # Wallet check for passed queries (if any cost and wallet system is enabled)
+        if wallet_enabled and cost > 0:
+            success = WalletService.debit_money(request.mobile, cost, f"AI Chat: {category}")
+            if not success:
+                return {
+                    "answer": "You have insufficient coins for this detailed analysis. Please top up your wallet. 🙏",
+                    "amount": 0,
+                    "flag": "INSUFFICIENT_FUNDS",
+                    "assistant": "maya",
+                    "wallet_balance": current_balance,
+                    "maya_json": maya_res
+                }
             current_balance -= cost
 
         # ----------------------------------------------------

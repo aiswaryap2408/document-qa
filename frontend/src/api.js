@@ -42,6 +42,14 @@ export const testProcess = (filename) => {
 };
 export const testChat = (message, docId, model = "gpt-4o-mini") => api.post('/admin/test-chat', { message, doc_id: docId, model });
 
+// Wallet Endpoints
+export const getWalletStatus = () => api.get('/wallet/status');
+export const getBalance = (mobile) => api.get(`/wallet/balance/${mobile}`);
+export const getTransactionHistory = (mobile) => api.get(`/wallet/history/${mobile}`);
+export const rechargeWallet = (data) => api.post('/wallet/recharge', data);
+export const toggleWalletSystem = (enabled) => api.post(`/wallet/toggle-system?enabled=${enabled}`);
+export const getDashboardStats = () => api.get('/admin/stats');
+
 export const setAuthToken = (token) => {
     if (token) {
         api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
