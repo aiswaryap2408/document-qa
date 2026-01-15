@@ -7,6 +7,7 @@ from rag_modules.chunking import extract_hierarchy, chunk_hierarchy_for_rag
 import time
 import os
 import random
+import re
 from pydantic import BaseModel
 from typing import Optional
 
@@ -362,8 +363,10 @@ async def chat(request: ChatMessage):
         # ----------------------------------------------------
         # 2. Maya Classification & Gatekeeping
         # ----------------------------------------------------
+        t_start = time.time()
         from rag_modules.maya_receptionist import check_with_maya
         maya_res = check_with_maya(request.message, request.history, user_details=user)
+        print(f"DEBUG: Maya took {time.time() - t_start:.2f}s")
         category = maya_res.get("category", "PROCEED")
         pass_to_guruji = maya_res.get("pass_to_guruji", True)
         maya_message = maya_res.get("response_message", "")
@@ -438,32 +441,46 @@ async def chat(request: ChatMessage):
             except: pass
             current_balance -= cost
 
-
         # ----------------------------------------------------
-        # 2. Guruji RAG Logic
+        # 3. Guruji RAG Logic
         # ----------------------------------------------------
+        t_rag_start = time.time()
         engine, vectorstore = get_rag_engine()
         selected_docs = [request.mobile]
         
         print(f"DEBUG: Vectorstore has {len(vectorstore.document_names)} docs. Searching for: {selected_docs}")
         
-        # Query Augmentation
+        # Query Augmentation: Take last 3 messages for context
         search_query = request.message
-        if len(request.message) < 15 and request.history:
-            last_assistant = next((m["content"] for m in reversed(request.history) if m["role"] == "assistant"), "")
-            if last_assistant:
-                # Robustly strip assistant labels and follow-up questions
-                clean_last = last_assistant.split("🤔")[0]
-                if "Guruji</b>:" in clean_last:
-                    clean_last = clean_last.split("Guruji</b>:")[-1]
-                elif "Maya</b>:" in clean_last:
-                    clean_last = clean_last.split("Maya</b>:")[-1]
+        if request.history:
+            last_3 = request.history[-3:]
+            user_context = []
+            assistant_context = []
+            for m in last_3:
+                role = m.get("role")
+                content = m.get("content", "")
+                if not content: continue
+                # Remove follow-up suggestions
+                clean_content = content.split("🤔")[0]
+                # Remove HTML tags
+                clean_content = re.sub(r'<[^>]*>', '', clean_content)
+                # Remove common prefixes
+                clean_content = clean_content.replace("Guruji:", "").replace("Maya:", "").replace("Guruji</b>:", "").replace("Maya</b>:", "").strip()
                 
-                search_query = f"{clean_last.strip()} {request.message}"
-                print(f"DEBUG: Augmented query: {search_query}")
+                if role == "user":
+                    user_context.append(clean_content)
+                else:
+                    # For assistant, only take first 50 words to avoid drowning out the query
+                    short_content = " ".join(clean_content.split()[:50])
+                    assistant_context.append(short_content)
+            
+            if user_context or assistant_context:
+                # Prioritize user context
+                search_query = " ".join(user_context + assistant_context[-1:]) + " " + request.message
+                print(f"DEBUG: Augmented query (refined): {search_query}")
         
         filtered_chunks = engine.retrieve(search_query, top_k=5, doc_ids=selected_docs)
-        print(f"DEBUG: Initial retrieval found {len(filtered_chunks)} chunks.")
+        print(f"DEBUG: Initial retrieval found {len(filtered_chunks)} chunks in {time.time() - t_rag_start:.2f}s")
         
         # Reload if empty
         if not filtered_chunks:
@@ -496,6 +513,7 @@ async def chat(request: ChatMessage):
             with open("system_prompt.txt", "r", encoding="utf-8") as f:
                 system_prompt = f.read()
 
+        t_gen_start = time.time()
         response = generate_with_openai(
             system_prompt=system_prompt,
             context_chunks=clean_chunks,
@@ -503,11 +521,12 @@ async def chat(request: ChatMessage):
             question=request.message,
             json_mode=True
         )
+        print(f"DEBUG: Guruji generation took {time.time() - t_gen_start:.2f}s")
         
         # ----------------------------------------------------
         # 3. Handle Guruji Response (Structured JSON Parsing)
         # ----------------------------------------------------
-        import json, re
+        import json
         guruji_json = None
         
         try:
@@ -526,7 +545,7 @@ async def chat(request: ChatMessage):
             # Try to parse response as JSON
             temp_json = json.loads(clean_response)
             # Ensure it has the expected keys
-            if any(k in temp_json for k in ["para1", "para2", "para3", "follow_up"]):
+            if any(k in temp_json for k in ["para1", "para2", "para3", "follow_up", "followup"]):
                 guruji_json = temp_json
                 
                 # Construct formatted HTML answer from paragraphs
@@ -536,12 +555,19 @@ async def chat(request: ChatMessage):
                         parts.append(temp_json[k])
                 
                 formatted_body = "<br><br>".join(parts)
-                follow_up = temp_json.get("follow_up", "🤔 What's Next?")
+                follow_up = temp_json.get("follow_up") or temp_json.get("followup") or "🤔 What's Next?"
                 
                 final_answer = f"{formatted_body}<br><br>{follow_up}"
             else:
-                # Valid JSON but not our format
-                final_answer = response.strip().replace("\n\n", "<br>").replace("\n", " ")
+                # Valid JSON but not our format - extract all string values
+                text_parts = []
+                for val in temp_json.values():
+                    if isinstance(val, str):
+                        text_parts.append(val)
+                if text_parts:
+                    final_answer = "<br><br>".join(text_parts)
+                else:
+                    final_answer = response.strip().replace("\n\n", "<br>").replace("\n", " ")
         except:
             # Not JSON, use raw response
             final_answer = response.strip().replace("\n\n", "<br>").replace("\n", " ")

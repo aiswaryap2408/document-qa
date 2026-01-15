@@ -68,6 +68,7 @@ def generate_with_openai(system_prompt, context_chunks, conversation_history, qu
             "2. If a user provides a short response (like 'yes', 'ok', 'go on') to your previous question, "
             "be conversational and proceed with the relevant details from the context. "
             "3. If the answer is truly missing from the context and history, say 'Not found in document.' "
+            "4. Review the conversation history and avoid repeating information already shared."
         )}
     ]
     # Note: Structure/formatting is controlled by the main system_prompt.

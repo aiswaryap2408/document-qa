@@ -163,7 +163,7 @@ const MayaIntro = ({ name, content, mayaJson, rawResponse }) => (
             {(mayaJson || rawResponse) && (
                 <Box sx={{ mt: 1.5, pt: 1.5, borderTop: '1px dashed rgba(0,0,0,0.1)' }}>
                     <Typography sx={{ fontSize: '0.65rem', fontWeight: 700, color: '#666', mb: 0.5, textTransform: 'uppercase' }}>
-                        JSON Output:
+                        Receptionist JSON:
                     </Typography>
                     <Box sx={{
                         bgcolor: 'rgba(255,255,255,0.5)',
