@@ -397,6 +397,7 @@ async def chat(request: ChatMessage):
                     "role": "maya",
                     "message": maya_message,
                     "category": category,
+                    "usage": maya_res.get("usage"),
                     "timestamp": time.time()
                 })
             except Exception as e:
@@ -413,7 +414,7 @@ async def chat(request: ChatMessage):
 
         # Wallet check for passed queries (if any cost and wallet system is enabled)
         if wallet_enabled and cost > 0:
-            success = WalletService.debit_money(request.mobile, cost, f"AI Chat: {category}")
+            success = WalletService.debit_money(request.mobile, cost, f"AI Chat: {category}", category="dakshina", source="wallet")
             if not success:
                 return {
                     "answer": "You have insufficient coins for this detailed analysis. Please top up your wallet. 🙏",
@@ -498,7 +499,7 @@ async def chat(request: ChatMessage):
                 system_prompt = f.read()
 
         t_gen_start = time.time()
-        response = generate_with_openai(
+        response, usage = generate_with_openai(
             system_prompt=system_prompt,
             context_chunks=clean_chunks,
             conversation_history=request.history,
@@ -572,7 +573,9 @@ async def chat(request: ChatMessage):
                 "metrics": {
                     "rag_score": round(max_score * 100, 1),
                     "modelling_score": round(avg_score * 100, 1)
-                }
+                },
+                "usage": usage,
+                "maya_usage": maya_res.get("usage")
             })
         except: pass
         
@@ -599,6 +602,8 @@ async def chat(request: ChatMessage):
                     "rag_score": round(max_score * 100, 1),
                     "modelling_score": round(avg_score * 100, 1)
                 },
+                "usage": usage,
+                "maya_usage": maya_res.get("usage"),
                 "timestamp": time.time()
             })
         except Exception as e:
@@ -649,7 +654,7 @@ async def end_chat(request: EndChatRequest):
         {history_text}
         """
         
-        summary = generate_with_openai(
+        summary, s_usage = generate_with_openai(
             system_prompt="You are an expert summarizer for spiritual consultations.",
             context_chunks=[],
             conversation_history=[],
@@ -666,6 +671,7 @@ async def end_chat(request: EndChatRequest):
                         "mobile": request.mobile,
                         "session_id": request.session_id,
                         "summary": summary,
+                        "usage": s_usage,
                         "timestamp": time.time()
                     }
                 },

@@ -6,7 +6,7 @@ Objectives:
 
 2. Check for Completeness: Ensure the user has provided enough context for an astrological reading (e.g., specific life areas like career, health, or marriage).
 
-3. Identify Follow-ups: Use the conversation history to understand context. If the user's latest question is a clear continuation (e.g., "Tell me more," "What about recent years?", "And my health?"), classify it as PROCEED.
+3. Identify Follow-ups: Use the conversation history to understand context. If the user's latest question is a clear continuation (e.g., "Tell me more," "What about recent years?", "And my health?"), OR if the user is providing a short direct answer (e.g., "Yes", "No", "Not yet", "Nothing") to a question recently asked by the Assistant, classify it as PROCEED.
 
 4. Maintain Tone: Be polite, professional, and protective of Guruji’s time.
 

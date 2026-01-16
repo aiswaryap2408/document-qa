@@ -94,7 +94,12 @@ def generate_with_openai(system_prompt, context_chunks, conversation_history, qu
     resp = client.chat.completions.create(**kwargs)
 
     ans = resp.choices[0].message.content
-    return convert_markdown_to_html(ans)
+    usage = {
+        "prompt_tokens": resp.usage.prompt_tokens,
+        "completion_tokens": resp.usage.completion_tokens,
+        "total_tokens": resp.usage.total_tokens
+    }
+    return convert_markdown_to_html(ans), usage
 
 def generate_with_gemini(system_prompt, context_chunks, conversation_history, question,
                          model="gemini-1.5-pro", api_key=None):
@@ -131,7 +136,14 @@ def generate_with_gemini(system_prompt, context_chunks, conversation_history, qu
     model_ai = genai.GenerativeModel(model)
     res = model_ai.generate_content(prompt)
     ans = getattr(res, "text", str(res))
-    return convert_markdown_to_html(ans)
+    
+    # Gemini token estimation (if usage metadata is available)
+    usage = {
+        "prompt_tokens": res.usage_metadata.prompt_token_count if hasattr(res, 'usage_metadata') else 0,
+        "completion_tokens": res.usage_metadata.candidates_token_count if hasattr(res, 'usage_metadata') else 0,
+        "total_tokens": res.usage_metadata.total_token_count if hasattr(res, 'usage_metadata') else 0
+    }
+    return convert_markdown_to_html(ans), usage
 
 def stream_openai(system_prompt, context_chunks, conversation_history, question,
                   model="gpt-4o-mini", api_key=None):

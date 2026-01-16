@@ -46,6 +46,8 @@ async def recharge(request: RechargeRequest):
             request.mobile, 
             request.amount, 
             description="Recharge via Gateway", 
+            category="recharge",
+            source="gateway",
             gateway_id=request.gateway_id
         )
         if success:

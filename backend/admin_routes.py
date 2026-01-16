@@ -72,7 +72,14 @@ async def get_dashboard_stats(range: str = "7D"):
             active = chats_col.count_documents(query)
             convos = chats_col.count_documents(query)
             
-            wallet_q = {"type": "credit", "status": "success", "timestamp": {"$gte": start}}
+            wallet_q = {
+                "$or": [
+                    {"category": "recharge"},
+                    {"type": "credit", "category": {"$exists": False}}
+                ],
+                "status": "success",
+                "timestamp": {"$gte": start}
+            }
             if end: wallet_q["timestamp"]["$lt"] = end
             
             wallet_res = list(transactions_col.aggregate([
@@ -85,7 +92,61 @@ async def get_dashboard_stats(range: str = "7D"):
             if end: users_q["created_at"]["$lt"] = end
             new_users = users_col.count_documents(users_q)
             
-            return {"active": active, "convos": convos, "wallet": wallet, "new_users": new_users}
+            def get_dakshina_by_source(source_val, s, e):
+                q = {
+                    "$or": [
+                        {"category": "dakshina", "source": source_val},
+                        {"type": "debit", "category": {"$exists": False}, "source": source_val} if source_val == "wallet" else None
+                    ],
+                    "status": "success",
+                    "timestamp": {"$gte": s}
+                }
+                # Clean up None if gateway
+                if not q["$or"][-1]: q["$or"].pop()
+                if e: q["timestamp"]["$lt"] = e
+                
+                res = list(transactions_col.aggregate([
+                    {"$match": q},
+                    {"$group": {"_id": None, "total": {"$sum": "$amount"}}}
+                ]))
+                return res[0]["total"] if res else 0
+
+            dakshina_w = get_dakshina_by_source("wallet", start, end)
+            dakshina_g = get_dakshina_by_source("gateway", start, end)
+            dakshina = dakshina_w + dakshina_g
+
+            # AI Usage (Tokens)
+            # 1. From Chats
+            chat_usage_res = list(chats_col.aggregate([
+                {"$match": query},
+                {"$group": {
+                    "_id": None, 
+                    "tokens": {"$sum": "$usage.total_tokens"},
+                    "maya_tokens": {"$sum": "$maya_usage.total_tokens"}
+                }}
+            ]))
+            chat_tokens = (chat_usage_res[0]["tokens"] or 0) + (chat_usage_res[0]["maya_tokens"] or 0) if chat_usage_res else 0
+            
+            # 2. From Summaries
+            summaries_col = get_db_collection("summaries")
+            summary_usage_res = list(summaries_col.aggregate([
+                {"$match": query},
+                {"$group": {"_id": None, "tokens": {"$sum": "$usage.total_tokens"}}}
+            ]))
+            summary_tokens = summary_usage_res[0]["tokens"] if summary_usage_res else 0
+            
+            total_tokens = chat_tokens + summary_tokens
+
+            return {
+                "active": active, 
+                "convos": convos, 
+                "wallet": wallet, 
+                "new_users": new_users, 
+                "dakshina": dakshina, 
+                "dakshina_w": dakshina_w, 
+                "dakshina_g": dakshina_g,
+                "tokens": total_tokens
+            }
 
         def calculate_pct(cur, prev):
             if prev <= 0: return 100 if cur > 0 else 0
@@ -112,6 +173,9 @@ async def get_dashboard_stats(range: str = "7D"):
             active_today = chats_col.count_documents({"timestamp": {"$gte": now_ts - 86400}})
             total_convos = current_stats["convos"]
             wallet_volume = current_stats["wallet"]
+            total_dakshina = current_stats["dakshina"]
+            total_dakshina_w = current_stats["dakshina_w"]
+            total_dakshina_g = current_stats["dakshina_g"]
             # Search duration for RAG (keep it same as the range)
             rag_range_start = lm_start_dt.timestamp()
             rag_range_end = lm_end_dt.timestamp()
@@ -120,12 +184,45 @@ async def get_dashboard_stats(range: str = "7D"):
             active_today = chats_col.count_documents({"timestamp": {"$gte": now_ts - 86400}})
             total_convos = chats_col.count_documents({})
             
-            dakshina_match = {"type": "credit", "status": "success"}
+            dakshina_match = {
+                "$or": [
+                    {"category": "recharge"},
+                    {"type": "credit", "category": {"$exists": False}}
+                ],
+                "status": "success"
+            }
             dakshina_res = list(transactions_col.aggregate([
                 {"$match": dakshina_match},
                 {"$group": {"_id": None, "total": {"$sum": "$amount"}}}
             ]))
             wallet_volume = dakshina_res[0]["total"] if dakshina_res else 0
+            
+            # Dakshina is debit
+            dakshina_w_match = {
+                "$or": [
+                    {"category": "dakshina", "source": "wallet"},
+                    {"type": "debit", "category": {"$exists": False}} # Legacy is wallet
+                ],
+                "status": "success"
+            }
+            dakshina_w_res = list(transactions_col.aggregate([{"$match": dakshina_w_match}, {"$group": {"_id": None, "total": {"$sum": "$amount"}}}]))
+            total_dakshina_w = dakshina_w_res[0]["total"] if dakshina_w_res else 0
+
+            dakshina_g_match = {"category": "dakshina", "source": "gateway", "status": "success"}
+            dakshina_g_res = list(transactions_col.aggregate([{"$match": dakshina_g_match}, {"$group": {"_id": None, "total": {"$sum": "$amount"}}}]))
+            total_dakshina_g = dakshina_g_res[0]["total"] if dakshina_g_res else 0
+            
+            total_dakshina = total_dakshina_w + total_dakshina_g
+
+            # Total Tokens ALL
+            total_tokens_period = 0
+            try:
+                c_tokens = list(chats_col.aggregate([{"$group": {"_id": None, "t": {"$sum": "$usage.total_tokens"}, "mt": {"$sum": "$maya_usage.total_tokens"}}}]))
+                s_tokens = list(get_db_collection("summaries").aggregate([{"$group": {"_id": None, "t": {"$sum": "$usage.total_tokens"}}}]))
+                total_tokens_period = (c_tokens[0]["t"] or 0) + (c_tokens[0]["mt"] or 0) if c_tokens else 0
+                total_tokens_period += (s_tokens[0]["t"] or 0) if s_tokens else 0
+            except: pass
+
             rag_range_start = 0
             rag_range_end = None
         else:
@@ -142,6 +239,10 @@ async def get_dashboard_stats(range: str = "7D"):
             active_today = current_stats["active"]
             total_convos = chats_col.count_documents({"timestamp": {"$gte": now_ts - seconds}})
             wallet_volume = current_stats["wallet"]
+            total_dakshina = current_stats["dakshina"]
+            total_dakshina_w = current_stats["dakshina_w"]
+            total_dakshina_g = current_stats["dakshina_g"]
+            total_tokens_period = current_stats["tokens"]
             rag_range_start = now_ts - seconds
             rag_range_end = None
 
@@ -156,12 +257,25 @@ async def get_dashboard_stats(range: str = "7D"):
         ]))
         avg_rag_score = round(rag_res[0]["avg_score"], 1) if rag_res else 90.0
         
+        # 5. Current Vault Balance
+        wallets_col = get_db_collection("wallets")
+        balance_res = list(wallets_col.aggregate([
+            {"$group": {"_id": None, "total": {"$sum": "$balance"}}}
+        ]))
+        current_vault_balance = balance_res[0]["total"] if balance_res else 0
+
         return {
             "totalUsers": users_col.count_documents({}),
             "activeToday": active_today,
             "totalConversations": total_convos,
             "averageRAGScore": avg_rag_score,
             "walletVolume": wallet_volume,
+            "totalDakshina": total_dakshina,
+            "dakshinaWallet": total_dakshina_w,
+            "dakshinaGateway": total_dakshina_g,
+            "totalTokens": total_tokens_period,
+            "aiCost": round(total_tokens_period * 0.0001, 2), # Mock cost: $0.10 per 1M tokens approx
+            "currentBalance": current_vault_balance,
             "activeSubscriptions": users_col.count_documents({}) // 15,
             "trends": trends
         }
@@ -314,9 +428,9 @@ async def test_chat(request: TestChatRequest):
 
         # 3. Generate
         if "gpt" in request.model:
-            ans = generate_with_openai(system_prompt, context_chunks, [], request.message, model=request.model)
+            ans, usage = generate_with_openai(system_prompt, context_chunks, [], request.message, model=request.model)
         else:
-            ans = generate_with_gemini(system_prompt, context_chunks, [], request.message, model=request.model)
+            ans, usage = generate_with_gemini(system_prompt, context_chunks, [], request.message, model=request.model)
 
         return {"response": ans, "context_used": [c['heading'] for c in context_chunks]}
     except Exception as e:

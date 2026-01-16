@@ -38,7 +38,7 @@ class WalletService:
         return wallet
 
     @staticmethod
-    def credit_money(mobile: str, amount: float, description: str, gateway_id: Optional[str] = None) -> bool:
+    def credit_money(mobile: str, amount: float, description: str, category: str = "other", source: str = "gateway", gateway_id: Optional[str] = None) -> bool:
         """Credit money to user wallet atomatically."""
         if amount <= 0:
             return False
@@ -61,6 +61,8 @@ class WalletService:
             "mobile": mobile,
             "amount": float(amount),
             "type": "credit",
+            "category": category,
+            "source": source,
             "status": "success",
             "description": description,
             "gateway_id": gateway_id,
@@ -70,7 +72,7 @@ class WalletService:
         return True
 
     @staticmethod
-    def debit_money(mobile: str, amount: float, description: str) -> bool:
+    def debit_money(mobile: str, amount: float, description: str, category: str = "other", source: str = "wallet") -> bool:
         """Debit money from user wallet atomatically with balance check (prevents double spending)."""
         if amount <= 0:
             return False
@@ -97,6 +99,8 @@ class WalletService:
                 "mobile": mobile,
                 "amount": float(amount),
                 "type": "debit",
+                "category": category,
+                "source": source,
                 "status": "failed",
                 "description": f"Insufficient funds: {description}",
                 "timestamp": time.time()
@@ -109,6 +113,8 @@ class WalletService:
             "mobile": mobile,
             "amount": float(amount),
             "type": "debit",
+            "category": category,
+            "source": source,
             "status": "success",
             "description": description,
             "timestamp": time.time()

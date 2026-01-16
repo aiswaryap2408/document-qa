@@ -52,8 +52,14 @@ def check_with_maya(question: str, history: list, user_details: dict = None) -> 
         )
         
         content = response.choices[0].message.content
+        usage = {
+            "prompt_tokens": response.usage.prompt_tokens,
+            "completion_tokens": response.usage.completion_tokens,
+            "total_tokens": response.usage.total_tokens
+        }
         print(f"MAYA RAW RESPONSE: {content}")  # Debug: Print raw response
         result = json.loads(content)
+        result["usage"] = usage
         print(f"MAYA PARSED JSON: {result}")  # Debug: Print parsed JSON
         
         # Fallback validation
