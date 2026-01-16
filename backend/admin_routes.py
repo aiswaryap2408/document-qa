@@ -5,6 +5,7 @@ from backend.rag_service import get_rag_engine
 from rag_modules.chunking import extract_hierarchy, chunk_hierarchy_for_rag
 from rag_modules.chat_handler import generate_with_openai, generate_with_gemini
 import time
+import datetime
 import os
 import json
 
@@ -44,46 +45,125 @@ async def get_all_users():
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.get("/stats")
-async def get_dashboard_stats():
+async def get_dashboard_stats(range: str = "7D"):
     try:
         users_col = get_db_collection("users")
         chats_col = get_db_collection("chats")
         transactions_col = get_db_collection("transactions")
         
         # 1. User Meta
-        total_users = users_col.count_documents({})
-        chat_users_count = len(chats_col.distinct("mobile"))
+        # 2. Define Time Windows
+        range_seconds = {
+            "24H": 86400,
+            "7D": 86400 * 7,
+            "30D": 86400 * 30,
+            "1M": 86400 * 30,
+            "LM": 86400 * 30,
+            "ALL": 0
+        }
         
-        # 2. Daily Pulse (Approximate)
-        start_of_day = time.time() - (time.time() % 86400)
-        active_today = chats_col.count_documents({"timestamp": {"$gte": start_of_day}})
+        now_ts = time.time()
+        now_dt = datetime.datetime.fromtimestamp(now_ts)
         
-        # 3. Transactional Gravity
-        dakshina_pipeline = [
-            {"$match": {"type": "credit", "status": "success"}},
-            {"$group": {"_id": None, "total": {"$sum": "$amount"}}}
-        ]
-        dakshina_res = list(transactions_col.aggregate(dakshina_pipeline))
-        wallet_volume = dakshina_res[0]["total"] if dakshina_res else 0
-        
-        # 4. Neural Quality (RAG Score)
-        rag_pipeline = [
-            {"$match": {"metrics.rag_score": {"$exists": True}}},
-            {"$group": {"_id": None, "avg_score": {"$avg": "$metrics.rag_score"}}}
-        ]
-        rag_res = list(chats_col.aggregate(rag_pipeline))
-        avg_rag_score = round(rag_res[0]["avg_score"], 1) if rag_res else 90.0
+        def compute_metrics(start, end=None):
+            query = {"timestamp": {"$gte": start}}
+            if end: query["timestamp"]["$lt"] = end
+            
+            active = chats_col.count_documents(query)
+            convos = chats_col.count_documents(query)
+            
+            wallet_q = {"type": "credit", "status": "success", "timestamp": {"$gte": start}}
+            if end: wallet_q["timestamp"]["$lt"] = end
+            
+            wallet_res = list(transactions_col.aggregate([
+                {"$match": wallet_q},
+                {"$group": {"_id": None, "total": {"$sum": "$amount"}}}
+            ]))
+            wallet = wallet_res[0]["total"] if wallet_res else 0
+            
+            users_q = {"created_at": {"$gte": start}}
+            if end: users_q["created_at"]["$lt"] = end
+            new_users = users_col.count_documents(users_q)
+            
+            return {"active": active, "convos": convos, "wallet": wallet, "new_users": new_users}
 
-        # 5. Conversation Volume
-        total_convos = chats_col.count_documents({})
+        def calculate_pct(cur, prev):
+            if prev <= 0: return 100 if cur > 0 else 0
+            return round(((cur - prev) / prev) * 100, 1)
+
+        if range == "Last Month":
+            first_of_current = now_dt.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+            lm_end_dt = first_of_current
+            last_month_point = first_of_current - datetime.timedelta(days=1)
+            lm_start_dt = last_month_point.replace(day=1)
+            
+            prev_lm_point = lm_start_dt - datetime.timedelta(days=1)
+            prev_lm_start_dt = prev_lm_point.replace(day=1)
+            
+            current_stats = compute_metrics(lm_start_dt.timestamp(), lm_end_dt.timestamp())
+            previous_stats = compute_metrics(prev_lm_start_dt.timestamp(), lm_start_dt.timestamp())
+            
+            trends = {
+                "users": calculate_pct(current_stats["new_users"], previous_stats["new_users"]),
+                "sessions": calculate_pct(current_stats["active"], previous_stats["active"]),
+                "conversations": calculate_pct(current_stats["convos"], previous_stats["convos"]),
+                "wallet": calculate_pct(current_stats["wallet"], previous_stats["wallet"])
+            }
+            active_today = chats_col.count_documents({"timestamp": {"$gte": now_ts - 86400}})
+            total_convos = current_stats["convos"]
+            wallet_volume = current_stats["wallet"]
+            # Search duration for RAG (keep it same as the range)
+            rag_range_start = lm_start_dt.timestamp()
+            rag_range_end = lm_end_dt.timestamp()
+        elif range == "ALL":
+            trends = {"users": 0, "sessions": 0, "conversations": 0, "wallet": 0}
+            active_today = chats_col.count_documents({"timestamp": {"$gte": now_ts - 86400}})
+            total_convos = chats_col.count_documents({})
+            
+            dakshina_match = {"type": "credit", "status": "success"}
+            dakshina_res = list(transactions_col.aggregate([
+                {"$match": dakshina_match},
+                {"$group": {"_id": None, "total": {"$sum": "$amount"}}}
+            ]))
+            wallet_volume = dakshina_res[0]["total"] if dakshina_res else 0
+            rag_range_start = 0
+            rag_range_end = None
+        else:
+            seconds = range_seconds.get(range, 86400 * 7)
+            current_stats = compute_metrics(now_ts - seconds)
+            previous_stats = compute_metrics(now_ts - (2 * seconds), now_ts - seconds)
+            
+            trends = {
+                "users": calculate_pct(current_stats["new_users"], previous_stats["new_users"]),
+                "sessions": calculate_pct(current_stats["active"], previous_stats["active"]),
+                "conversations": calculate_pct(current_stats["convos"], previous_stats["convos"]),
+                "wallet": calculate_pct(current_stats["wallet"], previous_stats["wallet"])
+            }
+            active_today = current_stats["active"]
+            total_convos = chats_col.count_documents({"timestamp": {"$gte": now_ts - seconds}})
+            wallet_volume = current_stats["wallet"]
+            rag_range_start = now_ts - seconds
+            rag_range_end = None
+
+        # 4. Neural Quality (RAG Score)
+        rag_match = {"metrics.rag_score": {"$exists": True}, "timestamp": {"$gte": rag_range_start}}
+        if rag_range_end:
+            rag_match["timestamp"]["$lt"] = rag_range_end
+        
+        rag_res = list(chats_col.aggregate([
+            {"$match": rag_match},
+            {"$group": {"_id": None, "avg_score": {"$avg": "$metrics.rag_score"}}}
+        ]))
+        avg_rag_score = round(rag_res[0]["avg_score"], 1) if rag_res else 90.0
         
         return {
-            "totalUsers": total_users,
+            "totalUsers": users_col.count_documents({}),
             "activeToday": active_today,
             "totalConversations": total_convos,
             "averageRAGScore": avg_rag_score,
             "walletVolume": wallet_volume,
-            "activeSubscriptions": total_users // 15 # Mocking subscription ratio
+            "activeSubscriptions": users_col.count_documents({}) // 15,
+            "trends": trends
         }
     except Exception as e:
         print(f"Error fetching stats: {e}")
