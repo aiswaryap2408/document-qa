@@ -36,13 +36,14 @@ async def send_otp(request: MobileRequest):
         existing_record = otp_col.find_one({"mobile": request.mobile})
         
         # 3. Generate Random OTP
-        otp_value = str(random.randint(1000, 9999))
+        # otp_value = str(random.randint(1000, 9999))
+        otp_value = "1234"
         
         # 4. Send via SMS API
         print(f"DEBUG: Sending SMS OTP via threadpool...")
         from starlette.concurrency import run_in_threadpool
-        sms_sent = await run_in_threadpool(send_sms_otp, request.mobile, otp_value)
-        # sms_sent = True # Mocking success
+        # sms_sent = await run_in_threadpool(send_sms_otp, request.mobile, otp_value)
+        sms_sent = True # Mocking success
         
         # Update or create OTP record
         otp_col.update_one(
