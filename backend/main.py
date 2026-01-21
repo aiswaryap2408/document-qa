@@ -16,11 +16,11 @@ app = FastAPI(
 )
 
 # CORS Configuration (Enable requests from React frontend)
-cors_origins_str = os.getenv("CORS_ALLOWED_ORIGINS", "")
+# cors_origins_str = os.getenv("CORS_ALLOWED_ORIGINS", "")
 # if cors_origins_str:
 #     origins = [origin.strip() for origin in cors_origins_str.split(",") if origin.strip()]
 # else:
-origins = ["*"]
+origins = ["localhost:5173"]
 
 app.add_middleware(
     CORSMiddleware,
@@ -40,6 +40,6 @@ app.include_router(wallet_router)
 async def root():
     return {"message": "Astrology Bot API is running!"}
 
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run("backend.main:app", host="0.0.0.0", port=8088, reload=True)
+# if __name__ == "__main__":
+#     import uvicorn
+#     uvicorn.run("backend.main:app", host="0.0.0.0", port=8088, reload=True)
