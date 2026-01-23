@@ -2,6 +2,8 @@ import time
 from backend.db import get_db_collection
 from typing import Optional, List, Dict
 from fpdf import FPDF
+import os
+from rag_modules.chat_handler import generate_with_openai, generate_with_gemini
 
 class WalletService:
     @staticmethod
@@ -136,31 +138,100 @@ class WalletService:
 
     @staticmethod
     def generate_report_pdf(mobile: str, category: str) -> bytes:
-        """Generate a simple one-paragraph PDF report based on category."""
-        pdf = FPDF()
-        pdf.add_page()
-        pdf.set_font("helvetica", "B", 16)
-        pdf.cell(0, 10, f"Astrology Insights: {category.capitalize()}", ln=True, align='C')
-        pdf.ln(10)
-        
-        pdf.set_font("helvetica", "", 12)
-        
-        # Simple paragraph based on category
-        content = ""
-        if category.lower() == "career":
-            content = "Based on your celestial alignments, the coming period shows significant opportunities for growth in your professional life. Your determination and hard work will likely lead to recognition and potentially a new responsibility or position. Focus on networking and staying disciplined."
-        elif "relation" in category.lower() or "marriage" in category.lower():
-             content = "Your relationship dynamics are entering a phase of harmony and deeper understanding. It is a good time to communicate openly with your partner or loved ones. For those seeking a partner, the stars suggest that patience and being true to yourself will attract the right connection."
-        elif category.lower() == "health":
-            content = "Your vitality is generally good, but the stars suggest paying more attention to your sleep patterns and daily routine. Incorporating minor physical activity or mindfulness practices will greatly benefit your long-term well-being. Listen to your body's signals."
-        else:
-            content = f"Your personalized astrology guide for {category} suggests a time of reflection and gradual progress. Align your actions with your inner values to find the best path forward in this area of your life. The universe supports those who seek balance."
+        """Generate a personalized PDF report using an LLM."""
+        try:
+            # 1. Fetch User Profile
+            users_col = get_db_collection("users")
+            user = users_col.find_one({"mobile": mobile}, {"_id": 0})
+            if not user:
+                user = {"name": "User", "dob": "N/A", "tob": "N/A", "pob": "N/A", "gender": "N/A"}
+
+            # 2. Load Report Prompt
+            prompt_path = os.path.join(os.getcwd(), "guruji_detailed_report_prompt.txt")
+            if os.path.exists(prompt_path):
+                with open(prompt_path, "r", encoding="utf-8") as f:
+                    system_prompt = f.read()
+            else:
+                system_prompt = "Generate a short astrology report for {name} about {category}."
+
+            # 3. Format Prompt
+            formatted_prompt = system_prompt.format(
+                name=user.get("name", "User"),
+                dob=user.get("dob", "N/A"),
+                tob=user.get("tob", "N/A"),
+                pob=user.get("pob", "N/A"),
+                gender=user.get("gender", "N/A"),
+                category=category
+            )
+
+            # 4. Generate Content with LLM
+            # We'll use GPT-4o-mini as default for reports for high quality
+            try:
+                content, usage = generate_with_openai(
+                    system_prompt=formatted_prompt,
+                    context_chunks=[],
+                    chat_history=[],
+                    user_query=f"Generate my detailed {category} report.",
+                    model="gpt-4o-mini"
+                )
+            except Exception as e:
+                print(f"LLM Generation failed, falling back to Gemini: {e}")
+                content, usage = generate_with_gemini(
+                    system_prompt=formatted_prompt,
+                    context_chunks=[],
+                    chat_history=[],
+                    user_query=f"Generate my detailed {category} report.",
+                    model="gemini-1.5-flash"
+                )
+
+            # 5. Create PDF
+            pdf = FPDF()
+            pdf.add_page()
             
-        pdf.multi_cell(0, 10, content)
-        
-        pdf.ln(20)
-        pdf.set_font("helvetica", "I", 10)
-        pdf.cell(0, 10, "Disclaimer: Astrology is for guidance and entertainment purposes.", ln=True, align='C')
-        
-        # Return bytes directly
-        return bytes(pdf.output())
+            # Header
+            pdf.set_font("helvetica", "B", 18)
+            pdf.set_text_color(44, 62, 80) # Dark blue/gray
+            pdf.cell(0, 15, f"Personalized Astrology Report", ln=True, align='C')
+            
+            pdf.set_font("helvetica", "B", 14)
+            pdf.cell(0, 10, f"Focus: {category.capitalize()}", ln=True, align='C')
+            pdf.ln(10)
+            
+            # User Info
+            pdf.set_font("helvetica", "B", 10)
+            pdf.set_text_color(127, 140, 141) # Gray
+            pdf.cell(0, 5, f"Prepared for: {user.get('name', 'User')} | {mobile}", ln=True, align='L')
+            pdf.ln(5)
+            
+            # Line separator
+            pdf.set_draw_color(230, 230, 230)
+            pdf.line(10, pdf.get_y(), 200, pdf.get_y())
+            pdf.ln(10)
+            
+            # Main Content
+            pdf.set_font("helvetica", "", 12)
+            pdf.set_text_color(0, 0, 0)
+            pdf.multi_cell(0, 8, content.strip())
+            
+            # Footer
+            pdf.ln(20)
+            pdf.set_font("helvetica", "I", 10)
+            pdf.set_text_color(149, 165, 166)
+            pdf.multi_cell(0, 5, "Disclaimer: Astrology is an interpretative art based on celestial patterns. This report is for guidance and entertainment purposes only.", align='C')
+            
+            # Return bytes
+            return bytes(pdf.output())
+
+        except Exception as e:
+            print(f"Error in generate_report_pdf: {e}")
+            import traceback
+            traceback.print_exc()
+            # Absolute fallback
+            pdf = FPDF()
+            pdf.add_page()
+            pdf.set_font("helvetica", "B", 16)
+            pdf.cell(0, 10, "Astrology Report", ln=True, align='C')
+            pdf.ln(10)
+            pdf.set_font("helvetica", "", 12)
+            pdf.multi_cell(0, 10, f"Your report for {category} is currently being prepared. Please contact support if this message persists.")
+            return bytes(pdf.output())

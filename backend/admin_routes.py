@@ -301,9 +301,12 @@ async def get_user_details(mobile: str):
         if not user:
             raise HTTPException(status_code=404, detail="User not found")
             
-        # 2. Chats
-        chats_col = get_db_collection("chats")
-        chats = list(chats_col.find({"mobile": mobile}, {"_id": 0}).sort("timestamp", -1))
+        # 2. History (Unified from conversation_history)
+        conv_col = get_db_collection("conversation_history")
+        history = list(conv_col.find({"mobile": mobile}, {"_id": 0}).sort("timestamp", -1))
+        
+        for msg in history:
+            msg['type'] = 'chat' 
         
         # 3. Summaries
         summaries_col = get_db_collection("summaries")
@@ -330,7 +333,7 @@ async def get_user_details(mobile: str):
         
         return {
             "profile": user,
-            "chats": chats,
+            "chats": history,
             "summaries": summaries,
             "wallet": wallet,
             "transactions": transactions
@@ -373,6 +376,27 @@ async def update_maya_prompt(request: SystemPromptRequest):
         with open("maya_system_prompt.txt", "w", encoding="utf-8") as f:
             f.write(request.prompt)
         return {"message": "Maya prompt updated successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.get("/report-prompt")
+async def get_report_prompt():
+    try:
+        prompt_path = os.path.join(os.getcwd(), "guruji_detailed_report_prompt.txt")
+        if os.path.exists(prompt_path):
+            with open(prompt_path, "r", encoding="utf-8") as f:
+                return {"prompt": f.read()}
+        return {"prompt": "Default Report Prompt (File not found)."}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/report-prompt")
+async def update_report_prompt(request: SystemPromptRequest):
+    try:
+        prompt_path = os.path.join(os.getcwd(), "guruji_detailed_report_prompt.txt")
+        with open(prompt_path, "w", encoding="utf-8") as f:
+            f.write(request.prompt)
+        return {"message": "Report prompt updated successfully"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 

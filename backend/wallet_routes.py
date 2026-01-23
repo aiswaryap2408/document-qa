@@ -67,13 +67,13 @@ async def generate_report(request: ReportRequest):
     try:
         # 1. Determine price based on category
         pricing = {
-            "career": 20,
-            "relationship": 15,
-            "marriage": 15,
-            "health": 20
+            "career": 49,
+            "relationship": 49,
+            "marriage": 49,
+            "health": 49
         }
         
-        amount = pricing.get(request.category.lower(), 10) # Default to 10 if unknown
+        amount = pricing.get(request.category.lower(), 49) # Default to 49
         
         # 2. Attempt to debit
         success = WalletService.debit_money(

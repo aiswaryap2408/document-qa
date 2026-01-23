@@ -277,7 +277,7 @@ async def register_user(reg: UserRegistration, background_tasks: BackgroundTasks
                 "correction": reg.correction,
                 "processed_doc_id": reg.mobile,
                 "status": "processing",
-                "wallet_balance": 100,
+                "wallet_balance": 0.0,
                 "created_at": time.time()
             }
             users_col.insert_one(user_doc)
@@ -378,12 +378,13 @@ async def chat(request: ChatMessage):
         wallet = WalletService.get_wallet(request.mobile)
         current_balance = wallet.get("balance", 0)
         
-        # If pass_to_guruji is False, Maya handles it directly
-        if not pass_to_guruji:
-            # Store conversation history
-            try:
-                conv_col = get_db_collection("conversation_history")
-                # Store user message
+        # Store Maya's response in conversation_history regardless of pass_to_guruji
+        try:
+            conv_col = get_db_collection("conversation_history")
+            # We don't save user message here yet if passing to Guruji, 
+            # as Guruji block will handle the full pair. 
+            # But if Maya handles it, we save both.
+            if not pass_to_guruji:
                 conv_col.insert_one({
                     "mobile": request.mobile,
                     "session_id": request.session_id,
@@ -391,41 +392,33 @@ async def chat(request: ChatMessage):
                     "message": request.message,
                     "timestamp": time.time()
                 })
-                # Store Maya's response
-                conv_col.insert_one({
-                    "mobile": request.mobile,
-                    "session_id": request.session_id,
-                    "role": "maya",
-                    "message": maya_message,
-                    "category": category,
-                    "usage": maya_res.get("usage"),
-                    "timestamp": time.time()
-                })
-            except Exception as e:
-                print(f"Error storing Maya conversation: {e}")
             
+            conv_col.insert_one({
+                "mobile": request.mobile,
+                "session_id": request.session_id,
+                "role": "maya",
+                "message": maya_message or "",
+                "category": category,
+                "usage": maya_res.get("usage"),
+                "timestamp": time.time()
+            })
+        except Exception as e:
+            print(f"Error storing Maya conversation: {e}")
+
+        # If pass_to_guruji is False, Maya handles it directly
+        if not pass_to_guruji:
             return {
                 "answer": maya_message if maya_message else "I'm sorry, I cannot process this request. Please ask an astrology question.",
                 "amount": 0,
                 "flag": category,
                 "assistant": "maya",
                 "wallet_balance": current_balance,
-                "maya_json": maya_res  # Include Maya's raw JSON response
+                "maya_json": maya_res
             }
 
-        # Wallet check for passed queries (if any cost and wallet system is enabled)
-        if wallet_enabled and cost > 0:
-            success = WalletService.debit_money(request.mobile, cost, f"AI Chat: {category}", category="dakshina", source="wallet")
-            if not success:
-                return {
-                    "answer": "You have insufficient coins for this detailed analysis. Please top up your wallet. 🙏",
-                    "amount": 0,
-                    "flag": "INSUFFICIENT_FUNDS",
-                    "assistant": "maya",
-                    "wallet_balance": current_balance,
-                    "maya_json": maya_res
-                }
-            current_balance -= cost
+        # Automated chat fees are disabled as per latest requirements.
+        # Only detailed report generation (manual trigger) will incur costs.
+        pass
 
         # ----------------------------------------------------
         # 3. Guruji RAG Logic
@@ -561,24 +554,6 @@ async def chat(request: ChatMessage):
         # ----------------------------------------------------
         # 4. Save to History
         # ----------------------------------------------------
-        # Save to Chat History (legacy format)
-        try:
-            chats_col = get_db_collection("chats")
-            chats_col.insert_one({
-                "mobile": request.mobile,
-                "user_message": request.message,
-                "bot_response": final_answer,
-                "timestamp": time.time(),
-                "assistant": "guruji",
-                "cost": cost,
-                "metrics": {
-                    "rag_score": round(max_score * 100, 1),
-                    "modelling_score": round(avg_score * 100, 1)
-                },
-                "usage": usage,
-                "maya_usage": maya_res.get("usage")
-            })
-        except: pass
         
         # Save to Conversation History (new format with roles)
         try:
