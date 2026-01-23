@@ -20,7 +20,7 @@ app = FastAPI(
 # if cors_origins_str:
 #     origins = [origin.strip() for origin in cors_origins_str.split(",") if origin.strip()]
 # else:
-origins = ["http://localhost:5173","http://localhost:5174"]
+origins = ["http://localhost:5173","http://localhost:5174","https://testchat.findastro.com"]
 
 app.add_middleware(
     CORSMiddleware,
