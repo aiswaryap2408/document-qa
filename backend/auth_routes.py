@@ -679,8 +679,22 @@ async def end_chat(request: EndChatRequest):
                 upsert=True
             )
             print(f"DEBUG: Saved summary for session {request.session_id}")
+
+            # Also mark the session itself as ended in a dedicated sessions collection
+            sessions_col = get_db_collection("sessions")
+            sessions_col.update_one(
+                {"session_id": request.session_id},
+                {
+                    "$set": {
+                        "mobile": request.mobile,
+                        "status": "ended",
+                        "ended_at": time.time()
+                    }
+                },
+                upsert=True
+            )
         except Exception as db_err:
-            print(f"DEBUG: Failed to save summary to DB: {db_err}")
+            print(f"DEBUG: Failed to save session state to DB: {db_err}")
             
         return {"summary": summary}
         
@@ -695,10 +709,28 @@ async def get_history(mobile: str):
     """
     try:
         conv_col = get_db_collection("conversation_history")
+        summaries_col = get_db_collection("summaries")
+        
+        # Get all ended session IDs for this mobile from both summaries and sessions collections
+        ended_sessions = set()
+        
+        # Check summaries
+        summary_cursor = summaries_col.find({"mobile": mobile}, {"session_id": 1})
+        for s in summary_cursor:
+            if s.get("session_id"):
+                ended_sessions.add(s["session_id"])
+        
+        # Check sessions for status="ended"
+        sessions_db_col = get_db_collection("sessions")
+        ended_cursor = sessions_db_col.find({"mobile": mobile, "status": "ended"}, {"session_id": 1})
+        for s in ended_cursor:
+            if s.get("session_id"):
+                ended_sessions.add(s["session_id"])
+
         # Find all messages for this mobile, sorted by timestamp
         cursor = conv_col.find({"mobile": mobile}).sort("timestamp", 1)
         
-        sessions = {} # session_id -> {topic, timestamp, messages: []}
+        sessions = {} # session_id -> {topic, timestamp, messages: [], is_ended}
         
         for doc in cursor:
             role = doc.get("role")
@@ -725,7 +757,8 @@ async def get_history(mobile: str):
                     "session_id": sid,
                     "topic": "Consultation",
                     "timestamp": doc.get("timestamp"),
-                    "messages": []
+                    "messages": [],
+                    "is_ended": sid in ended_sessions
                 }
             
             # Use first user message as topic if still default
