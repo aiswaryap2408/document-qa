@@ -12,3 +12,4 @@ pydantic
 certifi
 python-multipart
 websockets
+fpdf2

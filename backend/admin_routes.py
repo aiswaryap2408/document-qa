@@ -23,17 +23,23 @@ class TestChatRequest(BaseModel):
     doc_id: str = None # Optional filter
     model: str = "gpt-4o-mini"
 
-# Mock Admin Auth Logic
+# Admin Auth Logic
 @router.post("/login")
 async def admin_login(request: AdminLoginRequest):
-    # For development, use hardcoded credentials
-    if request.username == "admin" and request.password == "admin123":
-        return {
-            "access_token": "mock-admin-token",
-            "token_type": "bearer",
-            "status": "success"
-        }
-    raise HTTPException(status_code=401, detail="Invalid admin credentials")
+    try:
+        admins_col = get_db_collection("admins")
+        admin = admins_col.find_one({"username": request.username, "password": request.password})
+        
+        if admin:
+            return {
+                "access_token": "mock-admin-token",
+                "token_type": "bearer",
+                "status": "success"
+            }
+        raise HTTPException(status_code=401, detail="Invalid admin credentials")
+    except Exception as e:
+        print(f"Admin login error: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
 
 @router.get("/users")
 async def get_all_users():

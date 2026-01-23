@@ -15,6 +15,10 @@ class DebitRequest(BaseModel):
     amount: float
     description: str
 
+class ReportRequest(BaseModel):
+    mobile: str
+    category: str
+
 @router.get("/status")
 async def get_system_status():
     """Check if wallet system is enabled."""
@@ -54,6 +58,48 @@ async def recharge(request: RechargeRequest):
             return {"status": "success", "message": f"Credited {request.amount}"}
         raise HTTPException(status_code=400, detail="Recharge failed")
     except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/generate-report")
+async def generate_report(request: ReportRequest):
+    """Generate a PDF report after deducting coins."""
+    try:
+        # 1. Determine price based on category
+        pricing = {
+            "career": 20,
+            "relationship": 15,
+            "marriage": 15,
+            "health": 20
+        }
+        
+        amount = pricing.get(request.category.lower(), 10) # Default to 10 if unknown
+        
+        # 2. Attempt to debit
+        success = WalletService.debit_money(
+            request.mobile, 
+            amount, 
+            description=f"Detailed Report: {request.category}", 
+            category="report"
+        )
+        
+        if not success:
+            return {"status": "insufficient_funds", "required_amount": amount}
+            
+        # 3. Generate PDF
+        pdf_bytes = WalletService.generate_report_pdf(request.mobile, request.category)
+        
+        # 4. Return as Response
+        from fastapi import Response
+        return Response(
+            content=pdf_bytes, 
+            media_type="application/pdf",
+            headers={"Content-Disposition": f"attachment; filename=report_{request.category}.pdf"}
+        )
+        
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.post("/toggle-system")

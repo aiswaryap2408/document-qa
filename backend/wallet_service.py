@@ -1,6 +1,7 @@
 import time
 from backend.db import get_db_collection
 from typing import Optional, List, Dict
+from fpdf import FPDF
 
 class WalletService:
     @staticmethod
@@ -132,3 +133,34 @@ class WalletService:
     def handle_refund(mobile: str, amount: float, original_desc: str):
         """Refund money in case of service failure."""
         return WalletService.credit_money(mobile, amount, f"Refund: {original_desc}")
+
+    @staticmethod
+    def generate_report_pdf(mobile: str, category: str) -> bytes:
+        """Generate a simple one-paragraph PDF report based on category."""
+        pdf = FPDF()
+        pdf.add_page()
+        pdf.set_font("helvetica", "B", 16)
+        pdf.cell(0, 10, f"Astrology Insights: {category.capitalize()}", ln=True, align='C')
+        pdf.ln(10)
+        
+        pdf.set_font("helvetica", "", 12)
+        
+        # Simple paragraph based on category
+        content = ""
+        if category.lower() == "career":
+            content = "Based on your celestial alignments, the coming period shows significant opportunities for growth in your professional life. Your determination and hard work will likely lead to recognition and potentially a new responsibility or position. Focus on networking and staying disciplined."
+        elif "relation" in category.lower() or "marriage" in category.lower():
+             content = "Your relationship dynamics are entering a phase of harmony and deeper understanding. It is a good time to communicate openly with your partner or loved ones. For those seeking a partner, the stars suggest that patience and being true to yourself will attract the right connection."
+        elif category.lower() == "health":
+            content = "Your vitality is generally good, but the stars suggest paying more attention to your sleep patterns and daily routine. Incorporating minor physical activity or mindfulness practices will greatly benefit your long-term well-being. Listen to your body's signals."
+        else:
+            content = f"Your personalized astrology guide for {category} suggests a time of reflection and gradual progress. Align your actions with your inner values to find the best path forward in this area of your life. The universe supports those who seek balance."
+            
+        pdf.multi_cell(0, 10, content)
+        
+        pdf.ln(20)
+        pdf.set_font("helvetica", "I", 10)
+        pdf.cell(0, 10, "Disclaimer: Astrology is for guidance and entertainment purposes.", ln=True, align='C')
+        
+        # Return bytes directly
+        return bytes(pdf.output())
