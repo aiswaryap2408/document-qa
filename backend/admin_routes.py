@@ -2,6 +2,7 @@ from fastapi import APIRouter, HTTPException, Depends, File, UploadFile, Form
 from pydantic import BaseModel
 from backend.db import get_db_collection
 from backend.rag_service import get_rag_engine
+from backend.settings_service import get_setting, set_setting
 from rag_modules.chunking import extract_hierarchy, chunk_hierarchy_for_rag
 from rag_modules.chat_handler import generate_with_openai, generate_with_gemini
 import time
@@ -10,6 +11,10 @@ import os
 import json
 
 router = APIRouter(prefix="/admin", tags=["Admin"])
+
+class SettingsRequest(BaseModel):
+    key: str
+    value: bool # For now mainly boolean toggles
 
 class AdminLoginRequest(BaseModel):
     username: str
@@ -397,6 +402,24 @@ async def update_report_prompt(request: SystemPromptRequest):
         with open(prompt_path, "w", encoding="utf-8") as f:
             f.write(request.prompt)
         return {"message": "Report prompt updated successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.get("/settings")
+async def get_system_settings():
+    try:
+        payment_enabled = get_setting("payment_enabled", False)
+        return {"payment_enabled": payment_enabled}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/settings")
+async def update_system_settings(request: SettingsRequest):
+    try:
+        if request.key == "payment_enabled":
+            set_setting("payment_enabled", request.value)
+            return {"message": f"Payment enabled set to {request.value}"}
+        raise HTTPException(status_code=400, detail="Invalid setting key")
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 

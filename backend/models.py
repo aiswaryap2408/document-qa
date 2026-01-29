@@ -61,3 +61,19 @@ class LoginResponse(BaseModel):
     access_token: str
     token_type: str
     user_profile: dict
+
+class Transaction(BaseModel):
+    mobile: str
+    amount: float
+    type: str # credit / debit
+    category: Optional[str] = None # recharge, dakshina, etc
+    status: str # pending, success, failed
+    razorpay_order_id: Optional[str] = None
+    razorpay_payment_id: Optional[str] = None
+    description: Optional[str] = None
+    timestamp: float
+
+class WebhookLog(BaseModel):
+    event_id: str
+    payload: dict
+    timestamp: float

@@ -35,15 +35,20 @@ async def send_otp(request: MobileRequest):
         # 2. Check if a valid (non-expired) request already exists
         existing_record = otp_col.find_one({"mobile": request.mobile})
         
-        # 3. Generate Random OTP
-        # otp_value = str(random.randint(1000, 9999))
-        otp_value = "1234"
-        
         # 4. Send via SMS API
         print(f"DEBUG: Sending SMS OTP via threadpool...")
-        from starlette.concurrency import run_in_threadpool
-        # sms_sent = await run_in_threadpool(send_sms_otp, request.mobile, otp_value)
-        sms_sent = True # Mocking success
+        
+        use_real_sms = os.getenv("USE_REAL_SMS", "false").lower() == "true"
+        
+        if use_real_sms:
+            from starlette.concurrency import run_in_threadpool
+            otp_value = str(random.randint(1000, 9999))
+            sms_sent = await run_in_threadpool(send_sms_otp, request.mobile, otp_value)
+        else:
+            # Mock Mode
+            otp_value = "1234"
+            sms_sent = True
+            print(f"DEBUG: Mock OTP Mode. Using static OTP: {otp_value}")
         
         # Update or create OTP record
         otp_col.update_one(
@@ -413,7 +418,8 @@ async def chat(request: ChatMessage):
                 "flag": category,
                 "assistant": "maya",
                 "wallet_balance": current_balance,
-                "maya_json": maya_res
+                "maya_json": maya_res,
+                "timestamp": time.time()
             }
 
         # Automated chat fees are disabled as per latest requirements.
@@ -597,7 +603,8 @@ async def chat(request: ChatMessage):
                 "modelling_score": round(avg_score * 100, 1)
             },
             "maya_json": maya_res,
-            "guruji_json": guruji_json
+            "guruji_json": guruji_json,
+            "timestamp": time.time()
         }
         
     except Exception as e:
