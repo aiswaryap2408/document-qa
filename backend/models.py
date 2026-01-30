@@ -63,6 +63,7 @@ class LoginResponse(BaseModel):
     user_profile: dict
 
 class Transaction(BaseModel):
+    transaction_id: str
     mobile: str
     amount: float
     type: str # credit / debit

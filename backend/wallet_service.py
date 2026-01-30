@@ -1,4 +1,5 @@
 import time
+import uuid
 from backend.db import get_db_collection
 from typing import Optional, List, Dict
 from fpdf import FPDF
@@ -60,7 +61,9 @@ class WalletService:
         )
         
         # 2. Record Transaction
+        txn_id = f"TXN_{int(time.time())}_{uuid.uuid4().hex[:6].upper()}"
         transaction = {
+            "transaction_id": txn_id,
             "mobile": mobile,
             "amount": float(amount),
             "type": "credit",
@@ -98,7 +101,9 @@ class WalletService:
         if res.modified_count == 0:
             # Insufficient balance or user doesn't exist
             # Record failed transaction
+            txn_id = f"TXN_{int(time.time())}_{uuid.uuid4().hex[:6].upper()}"
             transaction = {
+                "transaction_id": txn_id,
                 "mobile": mobile,
                 "amount": float(amount),
                 "type": "debit",
@@ -112,7 +117,9 @@ class WalletService:
             return False
             
         # Record successful transaction
+        txn_id = f"TXN_{int(time.time())}_{uuid.uuid4().hex[:6].upper()}"
         transaction = {
+            "transaction_id": txn_id,
             "mobile": mobile,
             "amount": float(amount),
             "type": "debit",
