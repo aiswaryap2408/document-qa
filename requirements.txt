@@ -13,3 +13,4 @@ certifi
 python-multipart
 websockets
 fpdf2
+razorpay
