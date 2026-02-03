@@ -76,18 +76,23 @@ async def generate_report(request: ReportRequest):
         amount = pricing.get(request.category.lower(), 49) # Default to 49
         
         # 2. Attempt to debit
-        success = WalletService.debit_money(
+        debit_res = WalletService.debit_money(
             request.mobile, 
             amount, 
             description=f"Detailed Report: {request.category}", 
             category="report"
         )
         
-        if not success:
+        if not debit_res["success"]:
             return {"status": "insufficient_funds", "required_amount": amount}
             
         # 3. Generate PDF
-        pdf_bytes = WalletService.generate_report_pdf(request.mobile, request.category)
+        pdf_bytes = WalletService.generate_report_pdf(
+            request.mobile, 
+            request.category, 
+            transaction_id=debit_res["transaction_id"],
+            transaction_db_id=debit_res["transaction_db_id"]
+        )
         
         # 4. Return as Response
         from fastapi import Response
@@ -108,5 +113,42 @@ async def toggle_system(enabled: bool):
     try:
         WalletService.toggle_wallet_system(enabled)
         return {"status": "success", "enabled": enabled}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.get("/reports/{mobile}")
+async def get_user_reports(mobile: str):
+    """Fetch all reports for a specific user."""
+    try:
+        reports_col = WalletService.get_db_collection("reports") # This won't work, get_db_collection is from backend.db
+        from backend.db import get_db_collection
+        reports_col = get_db_collection("reports")
+        reports = list(reports_col.find({"mobile": mobile}, {"_id": 0}).sort("timestamp", -1))
+        return {"reports": reports}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.get("/report/{report_id}")
+async def get_report_pdf(report_id: str):
+    """Re-generate or fetch PDF by report ID."""
+    try:
+        from backend.db import get_db_collection
+        reports_col = get_db_collection("reports")
+        report = reports_col.find_one({"report_id": report_id}, {"_id": 0})
+        if not report:
+            raise HTTPException(status_code=404, detail="Report not found")
+        
+        # We can either store PDF bytes or re-generate. 
+        # Since WalletService.generate_report_pdf takes mobile/category and generates fresh content,
+        # but we want the SAME content, let's add a method to WalletService to generate from existing content.
+        
+        pdf_bytes = WalletService.generate_pdf_from_content(report['mobile'], report['category'], report['content'], report['user_name'])
+        
+        from fastapi import Response
+        return Response(
+            content=pdf_bytes, 
+            media_type="application/pdf",
+            headers={"Content-Disposition": f"attachment; filename=report_{report['category']}.pdf"}
+        )
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

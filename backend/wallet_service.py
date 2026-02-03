@@ -113,8 +113,8 @@ class WalletService:
                 "description": f"Insufficient funds: {description}",
                 "timestamp": time.time()
             }
-            transactions_col.insert_one(transaction)
-            return False
+            res_ins = transactions_col.insert_one(transaction)
+            return {"success": False, "transaction_id": txn_id, "transaction_db_id": str(res_ins.inserted_id)}
             
         # Record successful transaction
         txn_id = f"TXN_{int(time.time())}_{uuid.uuid4().hex[:6].upper()}"
@@ -129,8 +129,8 @@ class WalletService:
             "description": description,
             "timestamp": time.time()
         }
-        transactions_col.insert_one(transaction)
-        return True
+        res_ins = transactions_col.insert_one(transaction)
+        return {"success": True, "transaction_id": txn_id, "transaction_db_id": str(res_ins.inserted_id)}
 
     @staticmethod
     def get_history(mobile: str, limit: int = 50) -> List[Dict]:
@@ -144,7 +144,7 @@ class WalletService:
         return WalletService.credit_money(mobile, amount, f"Refund: {original_desc}")
 
     @staticmethod
-    def generate_report_pdf(mobile: str, category: str) -> bytes:
+    def generate_report_pdf(mobile: str, category: str, transaction_id: Optional[str] = None, transaction_db_id: Optional[str] = None) -> bytes:
         """Generate a personalized PDF report using an LLM."""
         try:
             # 1. Fetch User Profile
@@ -226,6 +226,21 @@ class WalletService:
             pdf.set_text_color(149, 165, 166)
             pdf.multi_cell(0, 5, "Disclaimer: Astrology is an interpretative art based on celestial patterns. This report is for guidance and entertainment purposes only.", align='C')
             
+            # 6. Save to DB for later re-download
+            reports_col = get_db_collection("reports")
+            report_id = f"REP_{int(time.time())}_{uuid.uuid4().hex[:6].upper()}"
+            report_doc = {
+                "report_id": report_id,
+                "mobile": mobile,
+                "category": category,
+                "content": content,
+                "timestamp": time.time(),
+                "user_name": user.get("name", "User"),
+                "transaction_id": transaction_id,
+                "transaction_db_id": transaction_db_id
+            }
+            reports_col.insert_one(report_doc)
+
             # Return bytes
             return bytes(pdf.output())
 
@@ -242,3 +257,46 @@ class WalletService:
             pdf.set_font("helvetica", "", 12)
             pdf.multi_cell(0, 10, f"Your report for {category} is currently being prepared. Please contact support if this message persists.")
             return bytes(pdf.output())
+
+    @staticmethod
+    def generate_pdf_from_content(mobile: str, category: str, content: str, user_name: str) -> bytes:
+        """Utility to generate a PDF from pre-existing content (used for re-downloads)."""
+        try:
+            pdf = FPDF()
+            pdf.add_page()
+            
+            # Header
+            pdf.set_font("helvetica", "B", 18)
+            pdf.set_text_color(44, 62, 80)
+            pdf.cell(0, 15, f"Personalized Astrology Report", ln=True, align='C')
+            
+            pdf.set_font("helvetica", "B", 14)
+            pdf.cell(0, 10, f"Focus: {category.capitalize()}", ln=True, align='C')
+            pdf.ln(10)
+            
+            # User Info
+            pdf.set_font("helvetica", "B", 10)
+            pdf.set_text_color(127, 140, 141)
+            pdf.cell(0, 5, f"Prepared for: {user_name} | {mobile}", ln=True, align='L')
+            pdf.ln(5)
+            
+            # Line separator
+            pdf.set_draw_color(230, 230, 230)
+            pdf.line(10, pdf.get_y(), 200, pdf.get_y())
+            pdf.ln(10)
+            
+            # Main Content
+            pdf.set_font("helvetica", "", 12)
+            pdf.set_text_color(0, 0, 0)
+            pdf.multi_cell(0, 8, content.strip())
+            
+            # Footer
+            pdf.ln(20)
+            pdf.set_font("helvetica", "I", 10)
+            pdf.set_text_color(149, 165, 166)
+            pdf.multi_cell(0, 5, "Disclaimer: Astrology is an interpretative art based on celestial patterns. This report is for guidance and entertainment purposes only.", align='C')
+            
+            return bytes(pdf.output())
+        except Exception as e:
+            print(f"Error in generate_pdf_from_content: {e}")
+            return b""
