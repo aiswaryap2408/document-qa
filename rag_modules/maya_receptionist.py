@@ -2,20 +2,29 @@
 import json
 import os
 from rag_modules.chat_handler import get_openai_client
+from pydantic import BaseModel, Field, ValidationError
+
+class MayaResponse(BaseModel):
+    category: str
+    language_detected: str = "English"
+    show_translation_alert: bool = False
+    response_message: str = ""
+    pass_to_guruji: bool = True
+    amount: int = 0
 
 def load_maya_prompt():
     prompt_path = "maya_system_prompt.txt"
     if os.path.exists(prompt_path):
         with open(prompt_path, "r", encoding="utf-8") as f:
             return f.read()
-    return "" # Should probably handle this better, but for now empty string or fallback
+    return "" 
 
 SYSTEM_PROMPT = load_maya_prompt()
 
 def check_with_maya(question: str, history: list, user_details: dict = None) -> dict:
     """
     Analyzes the question using Maya's logic.
-    Returns dict: {"category": str, "response_message": str, "pass_to_guruji": bool}
+    Returns dict: {"category": str, "response_message": str, "pass_to_guruji": bool, "amount": int}
     """
     try:
         client = get_openai_client()
@@ -45,7 +54,7 @@ def check_with_maya(question: str, history: list, user_details: dict = None) -> 
         messages.append({"role": "user", "content": question})
         
         response = client.chat.completions.create(
-            model="gpt-4o-mini", # Use a cheaper model for this triage
+            model="gpt-4o-mini",
             messages=messages,
             response_format={"type": "json_object"},
             temperature=0.0
@@ -57,28 +66,31 @@ def check_with_maya(question: str, history: list, user_details: dict = None) -> 
             "completion_tokens": response.usage.completion_tokens,
             "total_tokens": response.usage.total_tokens
         }
-        print(f"MAYA RAW RESPONSE: {content}")  # Debug: Print raw response
-        result = json.loads(content)
+        print(f"MAYA RAW RESPONSE: {content}")
+        
+        # Parse and Validate with Pydantic
+        try:
+            parsed_json = json.loads(content)
+            maya_response = MayaResponse(**parsed_json)
+            result = maya_response.model_dump()
+        except (json.JSONDecodeError, ValidationError) as e:
+            print(f"MAYA VALIDATION ERROR: {e}. Fallback to default.")
+            result = MayaResponse(
+                category="PROCEED",
+                pass_to_guruji=True,
+                response_message=""
+            ).model_dump()
+
         result["usage"] = usage
-        print(f"MAYA PARSED JSON: {result}")  # Debug: Print parsed JSON
+        print(f"MAYA VALIDATED JSON: {result}")
         
-        # Fallback validation
-        if "pass_to_guruji" not in result:
-            print(f"MAYA WARNING: Missing 'pass_to_guruji' in response, defaulting to True.")
-            result["pass_to_guruji"] = True
-        
-        if "amount" not in result:
-            print(f"MAYA WARNING: Missing 'amount' in response, defaulting to 0.")
-            result["amount"] = 0
-            
         return result
 
     except Exception as e:
         print(f"MAYA ERROR: {e}")
-        print(f"MAYA ERROR TYPE: {type(e).__name__}")
         import traceback
         print(f"MAYA TRACEBACK: {traceback.format_exc()}")
-        # Fail safe: Open the gate if Maya crashes
+        # Fail safe
         return {
             "category": "ERROR",
             "response_message": "",
