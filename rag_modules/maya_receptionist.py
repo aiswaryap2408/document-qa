@@ -10,7 +10,9 @@ class MayaResponse(BaseModel):
     show_translation_alert: bool = False
     response_message: str = ""
     pass_to_guruji: bool = True
-    amount: int = 0
+    # amount removed to allow dynamic prompt control
+    
+    model_config = {"extra": "allow"}
 
 def load_maya_prompt():
     prompt_path = "maya_system_prompt.txt"
@@ -19,13 +21,14 @@ def load_maya_prompt():
             return f.read()
     return "" 
 
-SYSTEM_PROMPT = load_maya_prompt()
+# SYSTEM_PROMPT = load_maya_prompt()  <-- Removed global load
 
 def check_with_maya(question: str, history: list, user_details: dict = None) -> dict:
     """
     Analyzes the question using Maya's logic.
     Returns dict: {"category": str, "response_message": str, "pass_to_guruji": bool, "amount": int}
     """
+    SYSTEM_PROMPT = load_maya_prompt() # Reload prompt on every request
     try:
         client = get_openai_client()
         
@@ -81,7 +84,7 @@ def check_with_maya(question: str, history: list, user_details: dict = None) -> 
                 response_message=""
             ).model_dump()
 
-        result["usage"] = usage
+        # result["usage"] = usage  <-- Removed as per user request to hide usage
         print(f"MAYA VALIDATED JSON: {result}")
         
         return result
