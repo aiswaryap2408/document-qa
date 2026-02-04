@@ -11,8 +11,16 @@ import random
 import re
 from pydantic import BaseModel
 from typing import Optional
+from backend.settings_service import get_setting
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
+
+@router.get("/json-settings")
+async def get_json_settings():
+    return {
+        "maya_json_enabled": get_setting("maya_json_enabled", False),
+        "guruji_json_enabled": get_setting("guruji_json_enabled", False)
+    }
 
 class FeedbackRequest(BaseModel):
     mobile: str
@@ -405,6 +413,7 @@ async def chat(request: ChatMessage):
                 "message": maya_message or "",
                 "category": category,
                 "usage": maya_res.get("usage"),
+                "maya_json": maya_res,
                 "timestamp": time.time()
             })
         except Exception as e:
@@ -586,6 +595,8 @@ async def chat(request: ChatMessage):
                 },
                 "usage": usage,
                 "maya_usage": maya_res.get("usage"),
+                "maya_json": maya_res,
+                "guruji_json": guruji_json,
                 "timestamp": time.time()
             })
         except Exception as e:
@@ -732,6 +743,10 @@ async def get_history(mobile: str):
                 msg_obj["assistant"] = "guruji"
                 msg_obj["metrics"] = doc.get("metrics")
                 msg_obj["cost"] = doc.get("cost")
+            
+            # Add raw JSON for debugging/toggling
+            msg_obj["maya_json"] = doc.get("maya_json")
+            msg_obj["guruji_json"] = doc.get("guruji_json")
             
             if sid not in sessions:
                 # Initialize new session group

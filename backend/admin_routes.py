@@ -409,7 +409,13 @@ async def update_report_prompt(request: SystemPromptRequest):
 async def get_system_settings():
     try:
         payment_enabled = get_setting("payment_enabled", False)
-        return {"payment_enabled": payment_enabled}
+        maya_json_enabled = get_setting("maya_json_enabled", False)
+        guruji_json_enabled = get_setting("guruji_json_enabled", False)
+        return {
+            "payment_enabled": payment_enabled,
+            "maya_json_enabled": maya_json_enabled,
+            "guruji_json_enabled": guruji_json_enabled
+        }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -419,6 +425,12 @@ async def update_system_settings(request: SettingsRequest):
         if request.key == "payment_enabled":
             set_setting("payment_enabled", request.value)
             return {"message": f"Payment enabled set to {request.value}"}
+        elif request.key == "maya_json_enabled":
+            set_setting("maya_json_enabled", request.value)
+            return {"message": f"Maya JSON output set to {request.value}"}
+        elif request.key == "guruji_json_enabled":
+            set_setting("guruji_json_enabled", request.value)
+            return {"message": f"Guruji JSON output set to {request.value}"}
         raise HTTPException(status_code=400, detail="Invalid setting key")
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
