@@ -29,6 +29,8 @@ def check_with_maya(question: str, history: list, user_details: dict = None) -> 
     Returns dict: {"category": str, "response_message": str, "pass_to_guruji": bool, "amount": int}
     """
     SYSTEM_PROMPT = load_maya_prompt() # Reload prompt on every request
+    print(f"DEBUG: LOADED PROMPT LENGTH: {len(SYSTEM_PROMPT)}")
+    print(f"DEBUG: LOADED PROMPT CONTENT: {SYSTEM_PROMPT[:100]}...") # Print first 100 chars
     try:
         client = get_openai_client()
         
