@@ -500,3 +500,62 @@ async def test_chat(request: TestChatRequest):
         return {"response": ans, "context_used": [c['heading'] for c in context_chunks]}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+@router.get("/login-logs")
+async def get_login_logs(mobile: str = None, email: str = None, name: str = None, date: str = None):
+    try:
+        logs_col = get_db_collection("login_logs")
+        
+        pipeline = [
+            {
+                "$lookup": {
+                    "from": "users",
+                    "localField": "mobile",
+                    "foreignField": "mobile",
+                    "as": "user_info"
+                }
+            },
+            {
+                "$unwind": {
+                    "path": "$user_info",
+                    "preserveNullAndEmptyArrays": True
+                }
+            },
+            {
+                "$project": {
+                    "_id": 0,
+                    "mobile": 1,
+                    "timestamp": 1,
+                    "status": 1,
+                    "method": 1,
+                    "ip_address": 1,
+                    "user_agent": 1,
+                    "name": "$user_info.name",
+                    "email": "$user_info.email"
+                }
+            },
+            {"$sort": {"timestamp": -1}}
+        ]
+        
+        # Apply filters
+        match_query = {}
+        if mobile:
+            match_query["mobile"] = {"$regex": mobile, "$options": "i"}
+        if email:
+            match_query["email"] = {"$regex": email, "$options": "i"}
+        if name:
+            match_query["name"] = {"$regex": name, "$options": "i"}
+        if date:
+            # Assuming date format YYYY-MM-DD
+            start_of_day = datetime.datetime.strptime(date, "%Y-%m-%d").replace(hour=0, minute=0, second=0).timestamp()
+            end_of_day = start_of_day + 86400
+            match_query["timestamp"] = {"$gte": start_of_day, "$lt": end_of_day}
+            
+        if match_query:
+            pipeline.insert(3, {"$match": match_query})
+            
+        logs = list(logs_col.aggregate(pipeline))
+        return logs
+    except Exception as e:
+        print(f"Error fetching login logs: {e}")
+        raise HTTPException(status_code=500, detail=str(e))

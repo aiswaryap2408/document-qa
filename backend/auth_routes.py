@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, BackgroundTasks
+from fastapi import APIRouter, HTTPException, BackgroundTasks, Request
 from backend.models import MobileRequest, OTPRequest, UserRegistration, LoginResponse
 from backend.db import get_db_collection
 from backend.astrology_service import generate_astrology_report, send_sms_otp
@@ -27,6 +27,25 @@ class FeedbackRequest(BaseModel):
     session_id: Optional[str] = None
     rating: int
     feedback: str
+
+async def log_login_event(mobile: str, status: str, method: str, request: Request):
+    """
+    Log a login attempt or registration event.
+    """
+    try:
+        logs_col = get_db_collection("login_logs")
+        log_entry = {
+            "mobile": mobile,
+            "timestamp": time.time(),
+            "status": status,
+            "method": method,
+            "ip_address": request.client.host if request.client else None,
+            "user_agent": request.headers.get("user-agent")
+        }
+        logs_col.insert_one(log_entry)
+        print(f"DEBUG: Login log recorded for {mobile} [{status}] via {method}")
+    except Exception as e:
+        print(f"ERROR recording login log: {e}")
 
 @router.post("/send-otp")
 async def send_otp(request: MobileRequest):
@@ -81,7 +100,7 @@ async def send_otp(request: MobileRequest):
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.post("/verify-otp")
-async def verify_otp(request: OTPRequest):
+async def verify_otp(request: OTPRequest, fastapi_req: Request):
     try:
         print(f"DEBUG: Received verify-otp request for mobile: {request.mobile}, otp: {request.otp}")
         otp_col = get_db_collection("otps")
@@ -99,11 +118,15 @@ async def verify_otp(request: OTPRequest):
         
         if request.otp != otp_record["otp"]:
             print(f"WARN: Invalid OTP attempt for {request.mobile}. Expected {otp_record['otp']}, got {request.otp}")
+            await log_login_event(request.mobile, "failed", "otp_verify", fastapi_req)
             raise HTTPException(status_code=400, detail="Invalid OTP")
 
         # Success! Delete OTP record
         print(f"DEBUG: OTP verified successfully for {request.mobile}")
         otp_col.delete_one({"mobile": request.mobile})
+        
+        # Log success
+        await log_login_event(request.mobile, "success", "otp_verify", fastapi_req)
         
         # Check if user exists in DB
         users_col = get_db_collection("users")
@@ -223,7 +246,7 @@ async def process_user_registration_background(reg: UserRegistration):
             print(f"ERROR: [BACKGROUND] Failed to update user status: {db_err}")
 
 @router.post("/register")
-async def register_user(reg: UserRegistration, background_tasks: BackgroundTasks):
+async def register_user(reg: UserRegistration, background_tasks: BackgroundTasks, fastapi_req: Request):
     try:
         print(f"DEBUG: Registering user {reg.name} with mobile {reg.mobile}")
         
@@ -297,6 +320,9 @@ async def register_user(reg: UserRegistration, background_tasks: BackgroundTasks
         
         print("DEBUG: User profile saved to users collection with status 'processing'.")
         
+        # Log registration as a successful login event
+        await log_login_event(reg.mobile, "success", "register", fastapi_req)
+        
         # 2. Queue background processing
         background_tasks.add_task(process_user_registration_background, reg)
         print("DEBUG: Background processing task queued.")
@@ -368,12 +394,31 @@ async def chat(request: ChatMessage):
         print(f"DEBUG: Chat request received for mobile: {request.mobile}")
 
         # ----------------------------------------------------
-        # 1. Fetch User Details
+        # 1. Fetch User Details & Handle New Session
         # ----------------------------------------------------
         users_col = get_db_collection("users")
         user = users_col.find_one({"mobile": request.mobile})
         if not user:
             raise HTTPException(status_code=404, detail="User not found")
+
+        # Check for new session (no messages for this session_id)
+        conv_col = get_db_collection("conversation_history")
+        session_id = request.session_id or "legacy"
+        
+        # Count messages for this session
+        msg_count = conv_col.count_documents({"session_id": session_id})
+        
+        if msg_count == 0:
+            print(f"DEBUG: New session detected ({session_id}). Inserting Welcome message.")
+            conv_col.insert_one({
+                "mobile": request.mobile,
+                "session_id": session_id,
+                "role": "maya",
+                "message": "Welcome! I'll connect you to our astrologer.\nYou may call him as 'Guruji'",
+                "category": "WELCOME",
+                "assistant": "maya",
+                "timestamp": time.time() - 1.0 # Ensure it appears before the user's message
+            })
 
         # ----------------------------------------------------
         # 2. Maya Classification & Gatekeeping
@@ -393,7 +438,6 @@ async def chat(request: ChatMessage):
         
         # Store Maya's response in conversation_history regardless of pass_to_guruji
         try:
-            conv_col = get_db_collection("conversation_history")
             # We don't save user message here yet if passing to Guruji, 
             # as Guruji block will handle the full pair. 
             # But if Maya handles it, we save both.

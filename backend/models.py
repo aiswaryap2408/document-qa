@@ -78,3 +78,11 @@ class WebhookLog(BaseModel):
     event_id: str
     payload: dict
     timestamp: float
+
+class LoginLog(BaseModel):
+    mobile: str
+    timestamp: float
+    status: str  # "success" or "failed"
+    method: str  # "otp_verify" or "register"
+    ip_address: Optional[str] = None
+    user_agent: Optional[str] = None
