@@ -183,19 +183,28 @@ def get_daily_prediction(sunsign_code: str, date_str: str = None):
     date_str format: YYYYMMDD (Defaults to today)
     sunsign_code: 01-12
     """
+    # print(f"DEBUG: Moon sign {sunsign_code}, date {date_str}")
+    
     try:
-        # Ensure sunsign_code is string and 2 digits
-        s_code_str = str(sunsign_code).zfill(2)
-        
+        # Validate sunsign_code/moonsign_code is 1-12
+        try:
+            val = int(sunsign_code)
+            if not (1 <= val <= 12):
+                raise ValueError
+            s_code_str = str(val).zfill(2)
+        except (ValueError, TypeError):
+            print(f"ERROR: Invalid sunsign/moonsign code provided: {sunsign_code}")
+            return None
+            
         if not date_str:
             date_str = datetime.now().strftime("%Y%m%d")
             
         api_key = "1b8f3e7c-59a2-4f01-9d44-a6c2e8f71b90"
-        url = "https://api.clickastro.com/horoscope-apis/get_sunsign_prediction.php"
+        url = "https://api.clickastro.com/horoscope-apis/get_moonsign_prediction.php"
         
         req_data = {
             "date": date_str,
-            "sunsign": s_code_str,
+            "moonsign": s_code_str,
             "lan": "ENG",
             "scope": "D"
         }

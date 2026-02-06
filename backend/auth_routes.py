@@ -12,6 +12,7 @@ import re
 from pydantic import BaseModel
 from typing import Optional
 from backend.settings_service import get_setting
+from datetime import datetime
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
 
@@ -562,14 +563,21 @@ async def chat(request: ChatMessage):
         avg_score = sum(scores) / len(scores) if scores else 0
         print(f"DEBUG: Max Score: {max_score:.4f}, Avg Score: {avg_score:.4f}")
 
-        # Generate OpenAI Response
+        t_gen_start = time.time()
+        
+        # Extract detected language from Maya's response
+        language_detected = maya_res.get("language_detected", "English")
+        
         from rag_modules.chat_handler import generate_with_openai
         system_prompt = "You are Astrology Guruji. Answer using only HTML tags (<b>, <ul>, <li>, <table>) for formatting. DO NOT use markdown stars (**). Answer using only context if possible. Speak with wisdom and compassion."
         if os.path.exists("system_prompt.txt"):
             with open("system_prompt.txt", "r", encoding="utf-8") as f:
                 system_prompt = f.read()
+                # Replace placeholders if present
+                system_prompt = system_prompt.replace("{{language_detected}}", language_detected)
+                current_date_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                system_prompt = system_prompt.replace("{{current_date}}", current_date_str)
 
-        t_gen_start = time.time()
         response, usage = generate_with_openai(
             system_prompt=system_prompt,
             context_chunks=clean_chunks,
@@ -881,30 +889,32 @@ async def get_user_daily_prediction(mobile: str):
                 except:
                     params = {}
             
-            s_code = params.get("sunsign")
+            s_code = params.get("moonsign")
             if not s_code:
                 # Try to fallback to profile/DOB
-                print(f"DEBUG: Sunsign not in report params for {mobile}. checking profile...")
+                print(f"DEBUG: Moonsign not in report params for {mobile}. checking profile...")
                 users_col = get_db_collection("users")
                 user = users_col.find_one({"mobile": mobile})
-                if user and user.get("sunsign"):
-                    s_code = user["sunsign"]
+                if user and user.get("moonsign"):
+                    s_code = user["moonsign"]
                 elif user and user.get("dob"):
                     s_code = calculate_sunsign_code(user["dob"])
-                    users_col.update_one({"mobile": mobile}, {"$set": {"sunsign": s_code}})
+                    print(f"DEBUG: Falling back to Sunsign ({s_code}) calculated from DOB for {mobile}")
+                    users_col.update_one({"mobile": mobile}, {"$set": {"moonsign": s_code}})
                 else:
-                    raise HTTPException(status_code=404, detail="Sunsign not found. Please complete profile.")
+                    raise HTTPException(status_code=404, detail="Moonsign not found. Please complete profile.")
         else:
             # No report at all
             users_col = get_db_collection("users")
             user = users_col.find_one({"mobile": mobile})
-            if user and user.get("sunsign"):
-                s_code = user["sunsign"]
+            if user and user.get("moonsign"):
+                s_code = user["moonsign"]
             elif user and user.get("dob"):
                 s_code = calculate_sunsign_code(user["dob"])
-                users_col.update_one({"mobile": mobile}, {"$set": {"sunsign": s_code}})
+                print(f"DEBUG: No report found, using Sunsign ({s_code}) from DOB for {mobile}")
+                users_col.update_one({"mobile": mobile}, {"$set": {"moonsign": s_code}})
             else:
-                 raise HTTPException(status_code=404, detail="No report or profile found.")
+                 raise HTTPException(status_code=404, detail="No report or birth details found to calculate sign.")
 
         # 3. Fetch from API (defaults to today)
         s_code_str = str(s_code)
