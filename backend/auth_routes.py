@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, BackgroundTasks, Request
 from backend.models import MobileRequest, OTPRequest, UserRegistration, LoginResponse
 from backend.db import get_db_collection
-from backend.astrology_service import generate_astrology_report, send_sms_otp
+from backend.astrology_service import generate_astrology_report, send_sms_otp, get_daily_prediction, calculate_sunsign_code
 from backend.wallet_service import WalletService
 from backend.rag_service import get_rag_engine
 from rag_modules.chunking import extract_hierarchy, chunk_hierarchy_for_rag
@@ -167,9 +167,13 @@ async def process_user_registration_background(reg: UserRegistration):
         
         # 1. Generate Report
         print("DEBUG: [BACKGROUND] Calling generate_astrology_report...")
-        report_text = generate_astrology_report(
+        report_data = generate_astrology_report(
             reg.name, reg.gender, reg.dob, reg.tob, reg.pob, reg.mobile, reg.email, reg.chart_style, reg.txt_place_search, reg.longdeg, reg.longmin, reg.longdir, reg.latdeg, reg.latmin, reg.latdir, reg.timezone
         )
+        
+        report_text = report_data.get("report_text") if isinstance(report_data, dict) else report_data
+        report_params = report_data.get("params") if isinstance(report_data, dict) else {}
+        
         print(f"DEBUG: [BACKGROUND] Report generated. Length: {len(report_text) if report_text else 0}")
         
         if not report_text:
@@ -187,7 +191,14 @@ async def process_user_registration_background(reg: UserRegistration):
         reports_col = get_db_collection("reports")
         reports_col.update_one(
             {"mobile": reg.mobile},
-            {"$set": {"mobile": reg.mobile, "report_text": report_text, "created_at": time.time()}},
+            {
+                "$set": {
+                    "mobile": reg.mobile, 
+                    "report_text": report_text, 
+                    "params": report_params,
+                    "created_at": time.time()
+                }
+            },
             upsert=True
         )
         print("DEBUG: [BACKGROUND] Astrology report saved to reports collection.")
@@ -838,4 +849,63 @@ async def submit_feedback(request: FeedbackRequest):
         print(f"ERROR in submit_feedback: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
+@router.get("/daily-prediction/{mobile}")
+async def get_user_daily_prediction(mobile: str):
+    try:
+        from datetime import datetime
+        today_str = datetime.now().strftime("%Y%m%d")
+        
+        # 1. Check Cache
+        cache_col = get_db_collection("daily_predictions")
+        cached = cache_col.find_one({"mobile": mobile, "date": today_str})
+        if cached:
+            print(f"DEBUG: Returning cached prediction for {mobile} on {today_str}")
+            cached.pop("_id", None)
+            return cached
+            
+        # 2. Get Sunsign from Reports
+        reports_col = get_db_collection("reports")
+        report = reports_col.find_one({"mobile": mobile})
+        
+        if not report or "params" not in report or "sunsign" not in report["params"]:
+            print(f"DEBUG: No sunsign found in reports for {mobile}. Checking user profile...")
+            users_col = get_db_collection("users")
+            user = users_col.find_one({"mobile": mobile})
+            
+            if user and "sunsign" in user:
+                s_code = user["sunsign"]
+            elif user and "dob" in user:
+                print(f"DEBUG: Calculating sunsign from DOB: {user['dob']}")
+                s_code = calculate_sunsign_code(user["dob"])
+            else:
+                raise HTTPException(status_code=404, detail="User profile or DOB not found. Please complete your profile.")
+        else:
+            s_code = report["params"]["sunsign"]
 
+        # 3. Fetch from API
+        prediction = get_daily_prediction(s_code, today_str)
+        if not prediction:
+            raise HTTPException(status_code=500, detail="Failed to fetch prediction from ClickAstro.")
+            
+        # 4. Save to Cache
+        prediction_doc = {
+            "mobile": mobile,
+            "date": today_str,
+            "prediction": prediction,
+            "updated_at": time.time()
+        }
+        cache_col.update_one(
+            {"mobile": mobile},
+            {"$set": prediction_doc},
+            upsert=True
+        )
+        
+        return prediction_doc
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"ERROR in get_user_daily_prediction: {e}")
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=str(e))

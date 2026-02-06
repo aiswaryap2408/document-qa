@@ -88,10 +88,24 @@ def generate_astrology_report(name, gender, dob, tob, pob, mobile, email, chart_
                         if "mainHtml" in json_response:
                             content = unquote_plus(json_response["mainHtml"])
                             print(f"DEBUG: [BACKGROUND] mainHtml length: {len(content)}")
-                            return content
+                            return {
+                                "report_text": content,
+                                "params": {
+                                    "sunsign": "06",
+                                    "moonsign": "01",
+                                    "language": "ENG"
+                                }
+                            }
                         
                         print("DEBUG: [BACKGROUND] mainHtml not found in response.")
-                        return json.dumps(json_response, indent=2)
+                        return {
+                            "report_text": json.dumps(json_response, indent=2),
+                            "params": {
+                                "sunsign": "06",
+                                "moonsign": "01",
+                                "language": "ENG"       
+                            }
+                        }
                     except Exception as e:
                         # Not JSON?
                         raise ValueError(f"API returned non-JSON response. Raw output: {response.text}")
@@ -153,3 +167,76 @@ def send_sms_otp(mobile: str, otp: str):
     except Exception as e:
         print(f"ERROR in send_sms_otp: {str(e)}")
         return False
+
+def get_daily_prediction(sunsign_code: str, date_str: str):
+    """
+    Fetch daily sunsign prediction from ClickAstro.
+    date_str format: YYYYMMDD
+    sunsign_code: 01-12
+    """
+    try:
+        api_key = "1b8f3e7c-59a2-4f01-9d44-a6c2e8f71b90"
+        url = "https://api.clickastro.com/horoscope-apis/get_sunsign_prediction.php"
+        
+        req_data = {
+            "date": date_str,
+            "sunsign": sunsign_code,
+            "lan": "ENG",
+            "scope": "D"
+        }
+        
+        params = {
+            "apiKey": api_key,
+            "reqData": json.dumps(req_data)
+        }
+        
+        print(f"DEBUG: Calling Daily Prediction API for sign {sunsign_code}, date {date_str}")
+        response = requests.get(url, params=params, timeout=20)
+        
+        if response.status_code == 200:
+            return response.json()
+        else:
+            print(f"ERROR: Daily Prediction API returned {response.status_code}: {response.text}")
+            return None
+            
+    except Exception as e:
+        print(f"ERROR in get_daily_prediction: {e}")
+        return None
+
+def calculate_sunsign_code(dob_str: str):
+    """
+    Calculate ClickAstro sunsign code (01-12) from DOB (YYYY-MM-DD).
+    1: Aries, 2: Taurus, 3: Gemini, 4: Cancer, 5: Leo, 6: Virgo,
+    7: Libra, 8: Scorpio, 9: Sagittarius, 10: Capricorn, 11: Aquarius, 12: Pisces
+    """
+    try:
+        # dob_str is expected as YYYY-MM-DD
+        year, month, day = map(int, dob_str.split("-"))
+        
+        if (month == 3 and day >= 21) or (month == 4 and day <= 19):
+            return "01"
+        elif (month == 4 and day >= 20) or (month == 5 and day <= 20):
+            return "02"
+        elif (month == 5 and day >= 21) or (month == 6 and day <= 20):
+            return "03"
+        elif (month == 6 and day >= 21) or (month == 7 and day <= 22):
+            return "04"
+        elif (month == 7 and day >= 23) or (month == 8 and day <= 22):
+            return "05"
+        elif (month == 8 and day >= 23) or (month == 9 and day <= 22):
+            return "06"
+        elif (month == 9 and day >= 23) or (month == 10 and day <= 22):
+            return "07"
+        elif (month == 10 and day >= 23) or (month == 11 and day <= 21):
+            return "08"
+        elif (month == 11 and day >= 22) or (month == 12 and day <= 21):
+            return "09"
+        elif (month == 12 and day >= 22) or (month == 1 and day <= 19):
+            return "10"
+        elif (month == 1 and day >= 20) or (month == 2 and day <= 18):
+            return "11"
+        elif (month == 2 and day >= 19) or (month == 3 and day <= 20):
+            return "12"
+        return "01" # Default
+    except:
+        return "01" # Default fallback
