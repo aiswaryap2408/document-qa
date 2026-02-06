@@ -373,7 +373,81 @@ async def register_user(reg: UserRegistration, background_tasks: BackgroundTasks
         traceback.print_exc()
         raise HTTPException(status_code=500, detail=str(e))
 
+@router.post("/update-profile")
+async def update_profile(reg: UserRegistration, background_tasks: BackgroundTasks, fastapi_req: Request):
+    try:
+        print(f"DEBUG: Updating profile for user {reg.name} with mobile {reg.mobile}")
+        
+        users_col = get_db_collection("users")
+        
+        # Check if user exists
+        existing_user = users_col.find_one({"mobile": reg.mobile})
+        if not existing_user:
+            raise HTTPException(status_code=404, detail="User not found")
+            
+        # Update user in DB
+        users_col.update_one(
+            {"mobile": reg.mobile},
+            {"$set": {
+                "name": reg.name,
+                "email": reg.email,
+                "gender": reg.gender,
+                "chart_style": reg.chart_style,
+                "dob": reg.dob,
+                "tob": reg.tob,
+                "pob": reg.pob,
+                "country": reg.country,
+                "state": reg.state,
+                "region_dist": reg.region_dist,
+                "txt_place_search": reg.txt_place_search,
+                "longdeg": reg.longdeg,
+                "longmin": reg.longmin,
+                "longdir": reg.longdir,
+                "latdeg": reg.latdeg,
+                "latmin": reg.latmin,
+                "latdir": reg.latdir,
+                "timezone": reg.timezone,
+                "timezone_name": reg.timezone_name,
+                "latitude_google": reg.latitude_google,
+                "longitude_google": reg.longitude_google,
+                "correction": reg.correction,
+                "status": "processing", # Set back to processing while report is regenerated
+                "updated_at": time.time()
+            }}
+        )
+        
+        print("DEBUG: User profile updated in users collection. Status set to 'processing'.")
+        
+        # Queue background processing (regenerates report and re-indexes RAG)
+        background_tasks.add_task(process_user_registration_background, reg)
+        print("DEBUG: Background processing task queued for profile update.")
+        
+        return {
+            "status": "success",
+            "message": "Profile updated. Astrology report is being regenerated.",
+            "user_profile": {
+                "mobile": reg.mobile,
+                "name": reg.name,
+                "email": reg.email,
+                "gender": reg.gender,
+                "chart_style": reg.chart_style,
+                "dob": reg.dob,
+                "tob": reg.tob,
+                "pob": reg.pob,
+                "status": "processing"
+            }
+        }
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"ERROR in update_profile: {e}")
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=str(e))
+
 @router.get("/user-status/{mobile}")
+
 async def get_user_status(mobile: str):
     """
     Check the status of user registration processing.
@@ -917,18 +991,27 @@ async def get_user_daily_prediction(mobile: str):
                  raise HTTPException(status_code=404, detail="No report or birth details found to calculate sign.")
 
         # 3. Fetch from API (defaults to today)
-        s_code_str = str(s_code)
+        s_code_str = str(s_code).zfill(2)
         print(f"DEBUG: Calling get_daily_prediction for s_code: {s_code_str}")
         prediction = get_daily_prediction(s_code_str)
         print(f"DEBUG: get_daily_prediction returned: {prediction}")
         if not prediction:
             raise HTTPException(status_code=500, detail="Failed to fetch prediction from ClickAstro.")
             
+        # Get Sign Name from code
+        sign_names = {
+            "01": "Aries", "02": "Taurus", "03": "Gemini", "04": "Cancer",
+            "05": "Leo", "06": "Virgo", "07": "Libra", "08": "Scorpio",
+            "09": "Sagittarius", "10": "Capricorn", "11": "Aquarius", "12": "Pisces"
+        }
+        sign_name = sign_names.get(s_code_str, "Your Sign")
+
         # 4. Save to Cache
         prediction_doc = {
             "mobile": mobile,
             "date": today_str,
             "prediction": prediction,
+            "sign_name": sign_name,
             "updated_at": time.time()
         }
         cache_col.update_one(
