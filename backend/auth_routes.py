@@ -448,8 +448,7 @@ async def chat(request: ChatMessage):
         maya_res = check_with_maya(request.message, request.history, user_details=user)
         print(f"DEBUG: Maya took {time.time() - t_start:.2f}s")
         # category = maya_res.get("category", "PROCEED") # Removed category
-        # pass_to_guruji = maya_res.get("pass_to_guruji", True)
-        pass_to_guruji = False # TEMPORARY: Always show Maya's response for debugging
+        pass_to_guruji = maya_res.get("pass_to_guruji", False)
         maya_message = maya_res.get("response_message", "")
         
         cost = 0 # Maya no longer returns amount
