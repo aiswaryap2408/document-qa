@@ -59,12 +59,12 @@ def check_with_maya(question: str, history: list, user_details: dict = None) -> 
             result = json.loads(content)
             # Ensure pass_to_guruji defaults to True if missing
             if "pass_to_guruji" not in result:
-                result["pass_to_guruji"] = True
+                result["pass_to_guruji"] = False
         except json.JSONDecodeError as e:
             print(f"MAYA JSON ERROR: {e}. Fallback to default.")
             result = {
                 "response_message": "",
-                "pass_to_guruji": True
+                "pass_to_guruji": False
             }
 
         print(f"MAYA FINAL JSON: {result}")
@@ -77,5 +77,5 @@ def check_with_maya(question: str, history: list, user_details: dict = None) -> 
         # Fail safe
         return {
             "response_message": "",
-            "pass_to_guruji": True
+            "pass_to_guruji": False
         }
