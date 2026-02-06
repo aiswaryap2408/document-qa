@@ -1,6 +1,7 @@
 import requests
 import json
 import time
+from datetime import datetime
 from urllib.parse import unquote_plus
 
 def generate_astrology_report(name, gender, dob, tob, pob, mobile, email, chart_style, place, longdeg, longmin, longdir, latdeg, latmin, latdir, timezone):
@@ -84,27 +85,35 @@ def generate_astrology_report(name, gender, dob, tob, pob, mobile, email, chart_
                         json_response = response.json()
                         print(f"DEBUG: [BACKGROUND] ClickAstro API Response keys: {list(json_response.keys())}")
                         
-                        # Check for mainHtml and decode it
-                        if "mainHtml" in json_response:
-                            content = unquote_plus(json_response["mainHtml"])
-                            print(f"DEBUG: [BACKGROUND] mainHtml length: {len(content)}")
+                        # Check for mainHTML and decode it
+                        if "mainHTML" in json_response:
+                            content = unquote_plus(json_response["mainHTML"])
+                            print(f"DEBUG: [BACKGROUND] mainHTML length: {len(content)}")
+                            
+                            params = json_response.get("params", {})
+                            if isinstance(params, str):
+                                try:
+                                    params = json.loads(params)
+                                except:
+                                    params = {}
+
                             return {
-                                "report_text": content,
-                                "params": {
-                                    "sunsign": "06",
-                                    "moonsign": "01",
-                                    "language": "ENG"
-                                }
+                                "mainHTML": content,
+                                "params": params
                             }
                         
-                        print("DEBUG: [BACKGROUND] mainHtml not found in response.")
+                        print("DEBUG: [BACKGROUND] mainHTML not found in response.")
+                        # Fallback: if mainHTML is missing, return the raw JSON in mainHTML key
+                        params = json_response.get("params", {})
+                        if isinstance(params, str):
+                            try:
+                                params = json.loads(params)
+                            except:
+                                params = {}
+
                         return {
-                            "report_text": json.dumps(json_response, indent=2),
-                            "params": {
-                                "sunsign": "06",
-                                "moonsign": "01",
-                                "language": "ENG"       
-                            }
+                            "mainHTML": json.dumps(json_response, indent=2),
+                            "params": params
                         }
                     except Exception as e:
                         # Not JSON?
@@ -168,19 +177,25 @@ def send_sms_otp(mobile: str, otp: str):
         print(f"ERROR in send_sms_otp: {str(e)}")
         return False
 
-def get_daily_prediction(sunsign_code: str, date_str: str):
+def get_daily_prediction(sunsign_code: str, date_str: str = None):
     """
     Fetch daily sunsign prediction from ClickAstro.
-    date_str format: YYYYMMDD
+    date_str format: YYYYMMDD (Defaults to today)
     sunsign_code: 01-12
     """
     try:
+        # Ensure sunsign_code is string and 2 digits
+        s_code_str = str(sunsign_code).zfill(2)
+        
+        if not date_str:
+            date_str = datetime.now().strftime("%Y%m%d")
+            
         api_key = "1b8f3e7c-59a2-4f01-9d44-a6c2e8f71b90"
         url = "https://api.clickastro.com/horoscope-apis/get_sunsign_prediction.php"
         
         req_data = {
             "date": date_str,
-            "sunsign": sunsign_code,
+            "sunsign": s_code_str,
             "lan": "ENG",
             "scope": "D"
         }
@@ -190,11 +205,17 @@ def get_daily_prediction(sunsign_code: str, date_str: str):
             "reqData": json.dumps(req_data)
         }
         
-        print(f"DEBUG: Calling Daily Prediction API for sign {sunsign_code}, date {date_str}")
+        print(f"DEBUG: Calling Daily Prediction API for sign {s_code_str}, date {date_str}")
         response = requests.get(url, params=params, timeout=20)
         
         if response.status_code == 200:
-            return response.json()
+            try:
+                res_json = response.json()
+                print(f"DEBUG: Daily Prediction API Response JSON: {res_json}")
+                return res_json
+            except Exception as json_err:
+                print(f"ERROR: Failed to parse Daily Prediction JSON: {json_err}. Raw text: {response.text}")
+                return None
         else:
             print(f"ERROR: Daily Prediction API returned {response.status_code}: {response.text}")
             return None
