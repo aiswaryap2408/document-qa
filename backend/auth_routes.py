@@ -171,7 +171,7 @@ async def process_user_registration_background(reg: UserRegistration):
             reg.name, reg.gender, reg.dob, reg.tob, reg.pob, reg.mobile, reg.email, reg.chart_style, reg.txt_place_search, reg.longdeg, reg.longmin, reg.longdir, reg.latdeg, reg.latmin, reg.latdir, reg.timezone
         )
         
-        report_text = report_data.get("report_text") if isinstance(report_data, dict) else report_data
+        report_text = report_data.get("mainHTML") if isinstance(report_data, dict) else report_data
         report_params = report_data.get("params") if isinstance(report_data, dict) else {}
         
         print(f"DEBUG: [BACKGROUND] Report generated. Length: {len(report_text) if report_text else 0}")
@@ -201,7 +201,7 @@ async def process_user_registration_background(reg: UserRegistration):
             },
             upsert=True
         )
-        print("DEBUG: [BACKGROUND] Astrology report saved to reports collection.")
+        print(f"DEBUG: [BACKGROUND] Astrology report saved. Params type: {type(report_params)}")
 
         # 4. RAG Processing
         print("DEBUG: [BACKGROUND] Starting RAG indexing...")
@@ -233,13 +233,22 @@ async def process_user_registration_background(reg: UserRegistration):
         })
         print("DEBUG: [BACKGROUND] Document mapping saved to MongoDB.")
         
-        # 6. Update User Status to Ready
+        # 6. Update User Status to Ready and sync params
         users_col = get_db_collection("users")
+        update_fields = {"status": "ready"}
+        
+        # Sync sunsign and moonsign if available
+        if report_params:
+            if "sunsign" in report_params:
+                update_fields["sunsign"] = report_params["sunsign"]
+            if "moonsign" in report_params:
+                update_fields["moonsign"] = report_params["moonsign"]
+                
         users_col.update_one(
             {"mobile": reg.mobile},
-            {"$set": {"status": "ready"}}
+            {"$set": update_fields}
         )
-        print(f"DEBUG: [BACKGROUND] User {reg.mobile} status updated to 'ready'.")
+        print(f"DEBUG: [BACKGROUND] User {reg.mobile} status updated to 'ready' with params: {report_params}")
         
     except Exception as e:
         print(f"ERROR: [BACKGROUND] Processing failed for {reg.mobile}: {e}")
@@ -438,11 +447,12 @@ async def chat(request: ChatMessage):
         from rag_modules.maya_receptionist import check_with_maya
         maya_res = check_with_maya(request.message, request.history, user_details=user)
         print(f"DEBUG: Maya took {time.time() - t_start:.2f}s")
-        category = maya_res.get("category", "PROCEED")
-        pass_to_guruji = maya_res.get("pass_to_guruji", True)
+        # category = maya_res.get("category", "PROCEED") # Removed category
+        # pass_to_guruji = maya_res.get("pass_to_guruji", True)
+        pass_to_guruji = False # TEMPORARY: Always show Maya's response for debugging
         maya_message = maya_res.get("response_message", "")
         
-        cost = maya_res.get("amount", 0) 
+        cost = 0 # Maya no longer returns amount
         wallet_enabled = WalletService.is_wallet_enabled()
         wallet = WalletService.get_wallet(request.mobile)
         current_balance = wallet.get("balance", 0)
@@ -466,8 +476,7 @@ async def chat(request: ChatMessage):
                 "session_id": request.session_id,
                 "role": "maya",
                 "message": maya_message or "",
-                "category": category,
-                "usage": maya_res.get("usage"),
+                "pass_to_guruji": pass_to_guruji,
                 "maya_json": maya_res,
                 "timestamp": time.time()
             })
@@ -479,7 +488,6 @@ async def chat(request: ChatMessage):
             return {
                 "answer": maya_message if maya_message else "I'm sorry, I cannot process this request. Please ask an astrology question.",
                 "amount": 0,
-                "flag": category,
                 "assistant": "maya",
                 "wallet_balance": current_balance,
                 "maya_json": maya_res,
@@ -643,7 +651,6 @@ async def chat(request: ChatMessage):
                 "role": "guruji",
                 "message": response, # Raw string (could be JSON)
                 "cost": cost,
-                "category": category,
                 "metrics": {
                     "rag_score": round(max_score * 100, 1),
                     "modelling_score": round(avg_score * 100, 1)
@@ -660,7 +667,6 @@ async def chat(request: ChatMessage):
         return {
             "answer": final_answer,
             "amount": cost,
-            "flag": category,
             "assistant": "guruji",
             "wallet_balance": current_balance,
             "context": clean_chunks,
@@ -867,23 +873,45 @@ async def get_user_daily_prediction(mobile: str):
         reports_col = get_db_collection("reports")
         report = reports_col.find_one({"mobile": mobile})
         
-        if not report or "params" not in report or "sunsign" not in report["params"]:
-            print(f"DEBUG: No sunsign found in reports for {mobile}. Checking user profile...")
+        if report:
+            params = report.get("params", {})
+            if isinstance(params, str):
+                try:
+                    import json
+                    params = json.loads(params)
+                except:
+                    params = {}
+            
+            s_code = params.get("sunsign")
+            if not s_code:
+                # Try to fallback to profile/DOB
+                print(f"DEBUG: Sunsign not in report params for {mobile}. checking profile...")
+                users_col = get_db_collection("users")
+                user = users_col.find_one({"mobile": mobile})
+                if user and user.get("sunsign"):
+                    s_code = user["sunsign"]
+                elif user and user.get("dob"):
+                    s_code = calculate_sunsign_code(user["dob"])
+                    users_col.update_one({"mobile": mobile}, {"$set": {"sunsign": s_code}})
+                else:
+                    raise HTTPException(status_code=404, detail="Sunsign not found. Please complete profile.")
+        else:
+            # No report at all
             users_col = get_db_collection("users")
             user = users_col.find_one({"mobile": mobile})
-            
-            if user and "sunsign" in user:
+            if user and user.get("sunsign"):
                 s_code = user["sunsign"]
-            elif user and "dob" in user:
-                print(f"DEBUG: Calculating sunsign from DOB: {user['dob']}")
+            elif user and user.get("dob"):
                 s_code = calculate_sunsign_code(user["dob"])
+                users_col.update_one({"mobile": mobile}, {"$set": {"sunsign": s_code}})
             else:
-                raise HTTPException(status_code=404, detail="User profile or DOB not found. Please complete your profile.")
-        else:
-            s_code = report["params"]["sunsign"]
+                 raise HTTPException(status_code=404, detail="No report or profile found.")
 
-        # 3. Fetch from API
-        prediction = get_daily_prediction(s_code, today_str)
+        # 3. Fetch from API (defaults to today)
+        s_code_str = str(s_code)
+        print(f"DEBUG: Calling get_daily_prediction for s_code: {s_code_str}")
+        prediction = get_daily_prediction(s_code_str)
+        print(f"DEBUG: get_daily_prediction returned: {prediction}")
         if not prediction:
             raise HTTPException(status_code=500, detail="Failed to fetch prediction from ClickAstro.")
             
